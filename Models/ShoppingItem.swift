@@ -1,0 +1,48 @@
+//
+//  ShoppingItem.swift
+//  shopping_reminder
+//
+//  Created by Koichi Kishimoto on 2023/05/04.
+//
+
+import Foundation
+
+struct ShoppingItem: Identifiable, Codable {
+    let id: UUID
+    var name: String
+    var category: String
+    var addedAt: Date
+    var customURL: String?
+    let expirationDate: Date
+    
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case category
+        case addedAt = "added_at"
+        case customURL = "custom_url"
+        case expirationDate = "expiration_date"
+    }
+    
+    init(name: String, category: String, addedAt: Date, expirationDate: Date, customURL: String? = nil, id: UUID = UUID()) {
+        self.id = id
+        self.name = name
+        self.category = category
+        self.addedAt = addedAt
+        self.expirationDate = expirationDate
+        self.customURL = customURL
+    }
+    
+//    func moveItem(_ item: ShoppingItem, fromCategory sourceCategory: Category, toCategory destinationCategory: Category) {
+//        // 1. 移動元のカテゴリーからアイテムを削除する。
+//        sourceCategory.items.removeAll(where: { $0.id == item.id })
+//
+//        // 2. 移動先のカテゴリーにアイテムを追加する。
+//        destinationCategory.items.append(item)
+//
+//        // 3. Firebase のデータベース上で、アイテムの `categoryId` を移動先のカテゴリーの ID に更新する。
+//        let db = Firestore.firestore()
+//        let itemRef = db.collection("shoppingItems").document(item.id.uuidString)
+//        itemRef.updateData(["categoryId": destinationCategory.id.uuidString])
+//    }
+}

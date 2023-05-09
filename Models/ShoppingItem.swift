@@ -18,11 +18,12 @@ struct ShoppingItem: Identifiable, Codable {
         return formatter.string(from: addedAt)
     }
     var customURL: String?
-    var expirationDate: Date
+    var expirationDate: Date?
     var expirationDateString: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy年M月d日 H時m分"
-        return formatter.string(from: expirationDate)
+        return formatter.string(from: expirationDate ?? Date()
+        )
     }
     
     
@@ -39,7 +40,7 @@ struct ShoppingItem: Identifiable, Codable {
     init(name: String,
 //         category: String,
          category: Category,
-         addedAt: Date, expirationDate: Date, customURL: String? = nil, id: UUID = UUID()) {
+         addedAt: Date, expirationDate: Date? = nil, customURL: String? = nil, id: UUID = UUID()) {
         self.id = id
         self.name = name
         self.category = category

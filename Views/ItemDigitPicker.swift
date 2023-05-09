@@ -22,7 +22,6 @@ struct ItemDigitPicker: View {
                     }
                 }.pickerStyle(.wheel)
                     .frame(width: 100)
-                Text("選択\(selectedDigitsValue)")
             }
             VStack {
                 Picker("", selection: $selectedUnitsValue) {
@@ -31,7 +30,6 @@ struct ItemDigitPicker: View {
                     }
                 }.pickerStyle(.wheel)
                     .frame(width: 100)
-                Text("選択\(selectedUnitsValue)")
             }
         }
     }

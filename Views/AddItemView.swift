@@ -14,12 +14,15 @@ struct AddItemView: View {
     @FocusState private var focusedField: Field?
     @Binding var isShowSheet: Bool
     @State private var itemName = ""
+    @State private var itemUrl = ""
     @State private var categoryList: [Category] = []
     @State private var categoryItemList: [CategoryItem] = []
     @State private var selectedCategory: Category = Category(name: "", color: CategoryColor.black)
     @State private var selectedDigitsValue = "1"
     @State private var selectedUnitsValue = "時間"
     @State private var timeIntervalSinceNow = 0
+    @State private var isAlermSettingOn = false
+    @State private var isUrlSettingOn = false
     //    @State private var isSelected = false
     //    @State private var selectedValue: Category?
     //    @ObservedObject var keyboardHelper = KeyboardHelper()
@@ -58,24 +61,34 @@ struct AddItemView: View {
                                 }
                                 VibrationHelper().feedbackVibration()
                             }
-                        //                    ForEach(categoryItemList) { categoryItem in
-                        //                        Button(action: {
-                        //                            categoryItemList.indices.forEach { index in
-                        //                                categoryItemList[index].isSelected = categoryItemList[index].id == categoryItem.id
-                        //                            }
-                        //                        }) {
-                        //                            Text(categoryItem.category.name)
-                        //                        }
-                        //                        .background(categoryItem.isSelected ? Color.blue : Color.clear)
-                        //                    }
                     }
                 }
                 .padding(.vertical, 5)
                 .padding(.leading)
             }
-            ItemDigitPicker(
-                selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
-            )
+            Toggle("アラーム設定", isOn: $isAlermSettingOn).padding()
+            HStack {
+                Text("アラーム周期")
+                Spacer()
+                ItemDigitPicker(
+                    selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
+                )
+            }
+            .padding()
+            .opacity(isAlermSettingOn ? 1 : 0)
+            .frame(height: isAlermSettingOn ? 70 : 0)
+            Toggle("買い物URL設定", isOn: $isUrlSettingOn).padding()
+            HStack {
+                Text("買い物URL")
+                Spacer()
+                TextField("URL", text: $itemUrl)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+                    .padding(.bottom)
+            }
+            .padding()
+            .opacity(isUrlSettingOn ? 1 : 0)
+            .frame(height: isUrlSettingOn ? 20 : 0)
             HStack(alignment: .center) {
                 TextField("Item Name", text: $itemName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -101,21 +114,23 @@ struct AddItemView: View {
                         name: itemName,
                         category: selectedCategory,
                         addedAt: Date(),
-                        expirationDate: Date(timeIntervalSinceNow: TimeInterval(timeIntervalSinceNow))))
-                    
+                        expirationDate: isAlermSettingOn ? Date(timeIntervalSinceNow: TimeInterval(timeIntervalSinceNow)) : nil,
+                        customURL: itemUrl
+                    )
+                    )
                     Task {
                         do {
                             try await ShoppingItemRepository().addShoppingItem(shoppingItem: ShoppingItem(
                                 name: itemName,
                                 category: selectedCategory,
                                 addedAt: Date(),
-                                expirationDate: Date(timeIntervalSinceNow: TimeInterval(timeIntervalSinceNow))
+                                expirationDate: isAlermSettingOn ? Date(timeIntervalSinceNow: TimeInterval(timeIntervalSinceNow)) : nil
                             )
                             )
                             //                            let result = try await ShoppingItemRepository().fetchRealtimeShoppingItem()
                             //                            print(result ?? "nil")
                             //                            addusersnapshotlistener でitemsコレクションの変更を監視
-                            ShoppingItemRepository().addUserSnapshotListener()
+                            //                            ShoppingItemRepository().addUserSnapshotListener()
                         } catch {
                             print("error occured while adding shopping item: \(error)")
                         }

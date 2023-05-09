@@ -13,11 +13,11 @@ struct ShoppingItemComponent: View {
     @State var isPresented = false
     var body: some View {
         NavigationStack {
-            VStack (alignment: .leading){
+            VStack (alignment: .leading) {
                 Text(shoppingItem.name).strikethrough(isDeleted)
                 Text(shoppingItem.category.name)
                 Text("color: \(shoppingItem.category.color.colorName)")
-                Text(shoppingItem.expirationDate.ISO8601Format())
+                Text(shoppingItem.expirationDate?.ISO8601Format() ?? "There is no epirationDate")
                 Text(shoppingItem.addedAt.ISO8601Format())
             }
             .background(shoppingItem.category.color.colorData)

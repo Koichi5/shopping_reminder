@@ -41,7 +41,7 @@ final class NotificationManager {
         content.sound = UNNotificationSound.default
         
         let calender = Calendar(identifier: .gregorian)
-        let dateComponents = calender.dateComponents([.year, .month, .day, .hour, .minute], from: shoppingItem.expirationDate)
+        let dateComponents = calender.dateComponents([.year, .month, .day, .hour, .minute], from: shoppingItem.expirationDate!)
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         
         let request = UNNotificationRequest(identifier: shoppingItem.id.uuidString, content: content, trigger: trigger)

@@ -8,6 +8,7 @@
 import Foundation
 
 public enum AuthError: Error {
+    // ネットワークエラー
     case networkError
     // パスワードが条件より脆弱であることを示します。
     case weakPassword

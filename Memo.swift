@@ -484,3 +484,33 @@ struct MemoView_Previews: PreviewProvider {
 //        hasher.combine(id)
 //    }
 //}
+
+//Firestore.firestore().collection("users").document(currentUser!.uid).collection("items").addSnapshotListener { (querySnapshot, error) in
+//    // ドキュメントスナップショットの取得に失敗した場合はエラー内容を表示
+//    guard let documents = querySnapshot?.documents else {
+//        print("No documents")
+//        return
+//    }
+//
+//    result = documents.map { (queryDocumentSnapshot) -> ShoppingItem in
+//        let data = queryDocumentSnapshot.data()
+//        let name = data["name"] as? String ?? ""
+//        let category = data["category"] as? Category ?? Category(name: "", color: CategoryColor.black)
+//        let addea_at = (data["added_at"] as? Timestamp)?.dateValue() ?? Date()
+//        let custom_url = data["custom_url"] as? String ?? ""
+//        let expiration_date = (data["expiration_date"] as? Timestamp)?.dateValue() ?? Date()
+//        result.append(ShoppingItem(
+//            name: name,
+//            category: category,
+//            addedAt: addea_at,
+//            expirationDate: expiration_date,
+//            customURL: custom_url
+//        ))
+//        return ShoppingItem(
+//            name: name,
+//            category: category,
+//            addedAt: addea_at,
+//            expirationDate: expiration_date,
+//            customURL: custom_url
+//        )
+//    }

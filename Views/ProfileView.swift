@@ -21,12 +21,109 @@ struct ProfileView: View {
                 .frame(width: 50.0, height: 50.0)
                 Spacer()
                 Text("This Is Profile")
-                    .font(
-                        .largeTitle)
-                    .foregroundColor(
-                        .white)
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                 Spacer()
+                HStack (){
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().successVibration()
+                    }) {
+                        Text("success")
+                    }
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().errorVibration()
+                    }) {
+                        Text("error")
+                    }
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().warningVibration()
+                    }) {
+                        Text("warning")
+                    }
+                    Spacer()
+                }
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().lightVibration()
+                    }) {
+                        Text("light")
+                    }
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().mediumVibration()
+                    }) {
+                        Text("medium")
+                    }
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().heavyVibration()
+                    }) {
+                        Text("heavy")
+                    }
+                    Spacer()
+                }
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().feedbackVibration()
+                    }) {
+                        Text("feedback")
+                    }
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().longVibration()
+                    }) {
+                        Text("long")
+                    }
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().firstSoundVibration()
+                    }) {
+                        Text("firstSound")
+                    }
+                    Spacer()
+                }
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().secondSoundVibration()
+                    }) {
+                        Text("secondSound")
+                    }
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().thirdSoundVibration()
+                    }) {
+                        Text("thirdSound")
+                    }
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().fourthSoundVibration()
+                    }) {
+                        Text("fourthSound")
+                    }
+                    Spacer()
+                }
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().threeTimesVibration()
+                    }) {
+                        Text("threeTimes")
+                    }
+                    Spacer()
+                    Button(action: {
+                        VibrationHelper().noLimitVibration()
+                    }) {
+                        Text("noLimit")
+                    }
+                    Spacer()
+                }
             }.padding(.horizontal) .frame(maxWidth: .infinity)
         }
         .offset(x: showingMenu ? 200.0 : 0.0, y: 0)

@@ -27,23 +27,26 @@ class FirebaseUserRepository {
                         Category(name: "Groceries", color: CategoryColor.green),
                         Category(name: "Clothing", color: CategoryColor.blue),
                         Category(name: "Electronics", color: CategoryColor.orange),
+                        Category(name: "Furnitures", color: CategoryColor.gray),
+                        Category(name: "Foods", color: CategoryColor.pink),
+                        Category(name: "Bikes", color: CategoryColor.purple),
+                        Category(name: "Cars", color: CategoryColor.yellow),
                     ]
                 )
                 let encoder = JSONEncoder()
                 let data = try encoder.encode(firebaseUser)
                 let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-//                userRef.addDocument(data: dict) { error in
-//                    if let error = error {
-//                        print("--Error adding document: \(error)--")
-//                    } else {
-//                        print("--Document added successfully--")
-//                    }
-//                }
                 userRef.setData(dict) { error in
                     if let error = error {
                         print("--Error adding document: \(error)--")
                     } else {
                         print("--Document added successfully--")
+                    }
+                }
+                
+                for category in firebaseUser.categories {
+                    Task {
+                        try await CategoryRepository().addCategory(category: category)
                     }
                 }
             }
@@ -52,7 +55,6 @@ class FirebaseUserRepository {
             }
         }
     }
-    
     func deleteFirebaseUser(userUid: String) {
         let userRef = db.collection("users").document(userUid)
         userRef.delete()

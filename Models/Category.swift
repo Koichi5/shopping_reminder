@@ -6,26 +6,37 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct Category: Identifiable, Codable {
+    
     let id: UUID
     var name: String
     var color: CategoryColor
+//    var customColor: Color
     var items: [ShoppingItem]
     
     private enum CodingKeys: String, CodingKey {
         case id
         case name
         case color
+//        case customColor
         case items
     }
     
-    init(id: UUID = UUID(), name: String, color: CategoryColor, items: [ShoppingItem] = []) {
+    init(id: UUID = UUID(), name: String, color: CategoryColor,
+//         customColor: Color,
+         items: [ShoppingItem] = []) {
         self.id = id
         self.name = name
         self.color = color
+//        self.customColor = color.colorData
         self.items = items
     }
+    
+//    func empty () -> Category {
+//        return Category(name: "", color: CategoryColor.black)
+//    }
 }
 
 enum CategoryColor: Int, Codable, CaseIterable {
@@ -62,6 +73,31 @@ enum CategoryColor: Int, Codable, CaseIterable {
             return "Gray"
         case .black:
             return "Black"
+        }
+    }
+    
+    var colorData: Color {
+        switch self {
+        case .red:
+            return Color.red
+        case .orange:
+            return Color.orange
+        case .yellow:
+            return Color.yellow
+        case .green:
+            return Color.green
+        case .tealBlue:
+            return Color.teal
+        case .blue:
+            return Color.blue
+        case .purple:
+            return Color.purple
+        case .pink:
+            return Color.pink
+        case .gray:
+            return Color.gray
+        case .black:
+            return Color.black
         }
     }
 }

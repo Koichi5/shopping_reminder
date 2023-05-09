@@ -37,7 +37,7 @@ final class NotificationManager {
         print("Send calender notification fired")
         let content = UNMutableNotificationContent()
         content.title = "\(shoppingItem.name) is expiring"
-        content.body = "Let's go to buy \(shoppingItem.name) !"
+        content.body = "Let's go to buy \(shoppingItem.name) ! The expire date of this alerm is \(shoppingItem.expirationDate). The created at date of this alerm is \(shoppingItem.addedAt)"
         content.sound = UNNotificationSound.default
         
         let calender = Calendar(identifier: .gregorian)

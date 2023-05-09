@@ -10,21 +10,36 @@ import Foundation
 struct ShoppingItem: Identifiable, Codable {
     let id: UUID
     var name: String
-    var category: String
+    var category: Category
     var addedAt: Date
+    var addedAtString: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy年M月d日 H時m分"
+        return formatter.string(from: addedAt)
+    }
     var customURL: String?
-    let expirationDate: Date
+    var expirationDate: Date
+    var expirationDateString: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy年M月d日 H時m分"
+        return formatter.string(from: expirationDate)
+    }
+    
     
     private enum CodingKeys: String, CodingKey {
         case id
         case name
+//        case categoryName = "category_name"
         case category
         case addedAt = "added_at"
         case customURL = "custom_url"
         case expirationDate = "expiration_date"
     }
     
-    init(name: String, category: String, addedAt: Date, expirationDate: Date, customURL: String? = nil, id: UUID = UUID()) {
+    init(name: String,
+//         category: String,
+         category: Category,
+         addedAt: Date, expirationDate: Date, customURL: String? = nil, id: UUID = UUID()) {
         self.id = id
         self.name = name
         self.category = category

@@ -29,14 +29,15 @@ struct HomeView: View {
                     //                            .foregroundColor(Color.foreground)
                     //                    }
                     //                    .frame(width: 50.0, height: 50.0)
-                    Spacer()
-                    Text("This Is Home")
-                        .font(
-                            .largeTitle)
-                        .foregroundColor(
-                            .foreground)
-                        .frame(maxWidth: .infinity)
-                    Spacer()
+//                    Spacer()
+//                    Text("This Is Home")
+//                        .font(
+//                            .largeTitle)
+//                        .foregroundColor(
+//                            .foreground)
+//                        .frame(maxWidth: .infinity)
+//                    Spacer()
+                    ShoppingItemView()
                 }.padding(.horizontal) .frame(maxWidth: .infinity)
             }
             .navigationBarTitle("Home")
@@ -72,6 +73,7 @@ struct HomeView: View {
             }
         }.sheet(isPresented: $isShowSheet) {
             AddItemView(isShowSheet: $isShowSheet)
+//                .presentationDetents([.height(120)])
             //            VStack {
             //                HStack {
             //                    Spacer()

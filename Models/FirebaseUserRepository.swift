@@ -51,7 +51,7 @@ class FirebaseUserRepository {
                 }
             }
             catch {
-                print("--Error when trying to encode book: \(error)--")
+                print("--Error when trying to encode category: \(error)--")
             }
         }
     }

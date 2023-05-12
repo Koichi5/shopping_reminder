@@ -12,7 +12,7 @@ struct ContentView: View {
         VStack {
             Text("Local Notification Demo").padding()
             Button(action:{
-                NotificationManager.instance.sendIntervalNotification(intervalSeconds: 5)
+//                NotificationManager.instance.sendIntervalNotification(intervalSeconds: 5)
             }) {
                 Text("Send Notification after 5 seconds !")
             }

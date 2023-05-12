@@ -21,9 +21,7 @@ struct CategoryItem: View, Identifiable {
             .overlay(
                 RoundedRectangle(cornerRadius: 20)
                     .stroke(category.color.colorData, lineWidth: 1.5)
-            ).onTapGesture {
-//                isSelected.toggle()
-            }
+            ).onTapGesture {}
     }
 }
 

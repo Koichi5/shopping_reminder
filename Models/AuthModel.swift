@@ -17,22 +17,4 @@ class AuthModel {
     public func getCurrentUser() -> User? {
         return auth.currentUser
     }
-
-//    public let defaultName = "no name"
-//
-//    public func credentialSignIn(credential: AuthCredential) async -> Void {
-//        do {
-//            self.auth.signIn(with: credential) { (authResult, error) in
-//                if error == nil {
-//                    if authResult?.user != nil {
-//                        if authResult!.user.displayName == nil {
-////                            if user sign in with Apple account, there is no displayName
-//                        }
-//
-//                    }
-//                }
-//            }
-//        }
-//    }
-    
 }

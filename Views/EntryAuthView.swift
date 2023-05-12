@@ -27,7 +27,7 @@ struct EntryAuthView: View {
                 Button(action: {
                      AuthViewModel().createUserWithEmailAndPassword(email: email, password: password)
                     isRegisterSuccess = true
-                    ShoppingItemRepository().addUserSnapshotListener()
+//                    ShoppingItemRepository().addUserSnapshotListener()
                 }, label: {
                     Text("新規登録")
                 }).padding().fullScreenCover(

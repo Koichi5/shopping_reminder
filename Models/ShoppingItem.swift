@@ -18,14 +18,15 @@ struct ShoppingItem: Identifiable, Codable {
         return formatter.string(from: addedAt)
     }
     var customURL: String?
-    var expirationDate: Date?
-    var expirationDateString: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy年M月d日 H時m分"
-        return formatter.string(from: expirationDate ?? Date()
-        )
-    }
-    
+    var isAlermRepeatOn: Bool
+    var alermCycleSeconds: Int?
+//    var expirationDate: Date?
+//    var expirationDateString: String {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "yyyy年M月d日 H時m分"
+//        return formatter.string(from: expirationDate ?? Date()
+//        )
+//    }
     
     private enum CodingKeys: String, CodingKey {
         case id
@@ -34,18 +35,28 @@ struct ShoppingItem: Identifiable, Codable {
         case category
         case addedAt = "added_at"
         case customURL = "custom_url"
-        case expirationDate = "expiration_date"
+        case isAlermRepeatOn = "is_alerm_repeat_on"
+        case alermCycleSeconds = "alerm_cycle_seconds"
+//        case expirationDate = "expiration_date"
     }
     
     init(name: String,
 //         category: String,
          category: Category,
-         addedAt: Date, expirationDate: Date? = nil, customURL: String? = nil, id: UUID = UUID()) {
+         addedAt: Date,
+//         expirationDate: Date? = nil,
+         isAlermRepeatOn: Bool,
+         alermCycleSeconds: Int?,
+//         customURL: String? = nil,
+         customURL: String?,
+         id: UUID = UUID()) {
         self.id = id
         self.name = name
         self.category = category
         self.addedAt = addedAt
-        self.expirationDate = expirationDate
+//        self.expirationDate = expirationDate
+        self.alermCycleSeconds = alermCycleSeconds
+        self.isAlermRepeatOn = isAlermRepeatOn
         self.customURL = customURL
     }
     

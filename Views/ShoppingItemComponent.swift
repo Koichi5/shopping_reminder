@@ -17,7 +17,6 @@ struct ShoppingItemComponent: View {
                 Text(shoppingItem.name).strikethrough(isDeleted)
                 Text(shoppingItem.category.name)
                 Text("color: \(shoppingItem.category.color.colorName)")
-                Text(shoppingItem.expirationDate?.ISO8601Format() ?? "There is no epirationDate")
                 Text(shoppingItem.addedAt.ISO8601Format())
             }
             .background(shoppingItem.category.color.colorData)
@@ -27,6 +26,7 @@ struct ShoppingItemComponent: View {
             }
             .onTapGesture {
                 isPresented.toggle()
+                print("shoppingItem id on component: \(shoppingItem.id.uuidString)")
             }
         }
     }
@@ -34,6 +34,14 @@ struct ShoppingItemComponent: View {
 
 struct ShoppingItemComponent_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingItemComponent(shoppingItem: ShoppingItem(name: "name", category: Category(name: "category", color: CategoryColor.blue), addedAt: Date(), expirationDate: Date(), customURL: "", id: UUID()))
+        ShoppingItemComponent(shoppingItem: ShoppingItem(
+            name: "name",
+            category: Category(name: "category", color: CategoryColor.blue),
+            addedAt: Date(),
+            isAlermRepeatOn: false,
+//            expirationDate: Date(),
+            alermCycleSeconds: 100,
+            customURL: "",
+            id: UUID()))
     }
 }

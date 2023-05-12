@@ -30,8 +30,9 @@ struct ShoppingReminderApp: App {
     var body: some Scene {
         WindowGroup {
 //            SideMenuContentView()
-            EntryAuthView()
+//            EntryAuthView()
 //            MemoView()
+            IntroSliderView()
         }
     }
 }

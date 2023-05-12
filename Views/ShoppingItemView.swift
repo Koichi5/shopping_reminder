@@ -34,19 +34,19 @@ struct ShoppingItemView: View {
         .task {
             do {
                 try await shoppingItemRepository.addUserSnapshotListener()
-                                    updateCategories()
+//                                    updateCategories()
             } catch {
                 print(error)
             }
         }
     }
-        private func updateCategories() {
-            var categories = Set<String>()
-            for item in shoppingItemRepository.shoppingItemList {
-                categories.insert(item.category.name)
-            }
-            self.categories = Array(categories)
-        }
+//        private func updateCategories() {
+//            var categories = Set<String>()
+//            for item in shoppingItemRepository.shoppingItemList {
+//                categories.insert(item.category.name)
+//            }
+//            self.categories = Array(categories)
+//        }
 }
 
 struct ShoppingItemView_Previews: PreviewProvider {

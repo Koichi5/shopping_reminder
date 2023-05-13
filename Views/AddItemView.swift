@@ -111,6 +111,7 @@ struct AddItemView: View {
 //                                expirationDate: isAlermSettingOn ? Date(timeIntervalSinceNow: TimeInterval(timeIntervalSinceNow)) : nil
                                 isAlermRepeatOn: isAlermRepeatOn,
                                 alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
+                                alermCycleString: "\(selectedDigitsValue)\(selectedUnitsValue)",
                                 customURL: itemUrl
                             )
                             )
@@ -138,6 +139,7 @@ struct AddItemView: View {
                                             addedAt: Date(),
                                             isAlermRepeatOn: isAlermRepeatOn,
                                             alermCycleSeconds: 10,
+                                            alermCycleString: "\(selectedDigitsValue)\(selectedUnitsValue)",
                                             customURL: itemUrl
                                         ),
                                         shoppingItemId: shoppingItemId

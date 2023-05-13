@@ -12,7 +12,7 @@ struct EntryAuthView: View {
     @State var name:String = ""
     @State var email: String = ""
     @State var password: String = ""
-//    Todo change this to false
+    //    Todo change this to false
     @State var isRegisterSuccess: Bool = false
     @ObservedObject var authViewModel:AuthViewModel = AuthViewModel()
     var body: some View {
@@ -25,19 +25,27 @@ struct EntryAuthView: View {
                 Text("password")
                 SecureField("password", text: $password).padding(.bottom).textFieldStyle(.roundedBorder)
                 Button(action: {
-                     AuthViewModel().createUserWithEmailAndPassword(email: email, password: password)
+                    AuthViewModel().createUserWithEmailAndPassword(email: email, password: password)
                     isRegisterSuccess = true
-//                    ShoppingItemRepository().addUserSnapshotListener()
+                    //                    ShoppingItemRepository().addUserSnapshotListener()
                 }, label: {
                     Text("新規登録")
-                }).padding().fullScreenCover(
-//                    isPresented: $authViewModel.isRegisterSuccess
-                    isPresented: $isRegisterSuccess
-                ) {
-                    SideMenuContentView()
-                }
-            }.navigationTitle(Text("新規登録"))
-        })
+                })
+                //                .padding()
+                //                    .fullScreenCover(
+                ////                    isPresented: $authViewModel.isRegisterSuccess
+                //                    isPresented: $isRegisterSuccess
+                //                ) {
+                //                    SideMenuContentView()
+                //                }
+                GoogleSignInButton()
+            }
+            .sheet(isPresented: $isRegisterSuccess) {
+                IntroView()
+            }
+            .navigationTitle(Text("新規登録"))
+        }
+        )
     }
 }
 
@@ -46,4 +54,3 @@ struct EntryAuthView_Previews: PreviewProvider {
         EntryAuthView()
     }
 }
-

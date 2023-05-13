@@ -20,6 +20,7 @@ struct ShoppingItem: Identifiable, Codable {
     var customURL: String?
     var isAlermRepeatOn: Bool
     var alermCycleSeconds: Int?
+    var alermCycleString: String?
 //    var expirationDate: Date?
 //    var expirationDateString: String {
 //        let formatter = DateFormatter()
@@ -37,6 +38,7 @@ struct ShoppingItem: Identifiable, Codable {
         case customURL = "custom_url"
         case isAlermRepeatOn = "is_alerm_repeat_on"
         case alermCycleSeconds = "alerm_cycle_seconds"
+        case alermCycleString = "alerm_cycle_string"
 //        case expirationDate = "expiration_date"
     }
     
@@ -47,6 +49,7 @@ struct ShoppingItem: Identifiable, Codable {
 //         expirationDate: Date? = nil,
          isAlermRepeatOn: Bool,
          alermCycleSeconds: Int?,
+         alermCycleString: String?,
 //         customURL: String? = nil,
          customURL: String?,
          id: UUID = UUID()) {
@@ -56,6 +59,7 @@ struct ShoppingItem: Identifiable, Codable {
         self.addedAt = addedAt
 //        self.expirationDate = expirationDate
         self.alermCycleSeconds = alermCycleSeconds
+        self.alermCycleString = alermCycleString
         self.isAlermRepeatOn = isAlermRepeatOn
         self.customURL = customURL
     }

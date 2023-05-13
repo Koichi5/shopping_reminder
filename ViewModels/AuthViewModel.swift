@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseAuth
 import FirebaseCore
+import GoogleSignIn
 
 class AuthViewModel: ObservableObject {
     
@@ -20,6 +21,134 @@ class AuthViewModel: ObservableObject {
 //        Category(name: "Household", color: CategoryColor.blue),
 //        Category(name: "Electronics", color: CategoryColor.green)
 //    ]
+    
+    enum SignInState {
+        case signedIn
+        case signedOut
+    }
+    
+    @Published var state: SignInState = .signedOut
+    
+    private func authenticateUser(for user: GIDGoogleUser?, with error: Error?) {
+      // 1
+      if let error = error {
+        print(error.localizedDescription)
+        return
+      }
+      
+      // 2
+//      guard let authentication = user?.authentication, let idToken = authentication.idToken else { return }
+      
+        guard let idToken = user?.idToken else { return }
+        guard let accessToken = user?.accessToken else { return }
+        
+        let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString, accessToken: accessToken.tokenString)
+      
+      // 3
+      Auth.auth().signIn(with: credential) { [unowned self] (_, error) in
+        if let error = error {
+          print(error.localizedDescription)
+        } else {
+          self.state = .signedIn
+        }
+      }
+    }
+    
+//    func signInWithGoogle() {
+//        if GIDSignIn.sharedInstance.hasPreviousSignIn() {
+//          GIDSignIn.sharedInstance.restorePreviousSignIn { [unowned self] user, error in
+////              authenticateUser(for: user, with: error)
+//          }
+//        } else {
+//          // 2
+//          guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+//
+//          // 3
+//          let configuration = GIDConfiguration(clientID: clientID)
+//
+//          // 4
+//          guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+//          guard let rootViewController = windowScene.windows.first?.rootViewController else { return }
+//
+//          // 5
+//          GIDSignIn.sharedInstance.signIn(with: configuration, presenting: rootViewController) { [unowned self] user, error in
+////            authenticateUser(for: user, with: error)
+//          }
+//        }
+//    }
+    
+    func signInWithGoogle() async -> Bool {
+      guard let clientID = FirebaseApp.app()?.options.clientID else {
+        fatalError("No client ID found in Firebase configuration")
+      }
+      let config = GIDConfiguration(clientID: clientID)
+      GIDSignIn.sharedInstance.configuration = config
+//
+//        GIDSignIn.sharedInstance.signIn(withPresenting: self) { [unowned self] result, error in
+//            guard error == nil else {
+//        }
+//
+//            guard let user = result?.user,
+//                  let idToken = user.idToken?.tokenString
+//            else {}
+//
+//            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
+//
+//            Auth.auth().signIn(with: credential) { result, error in}
+            
+            
+        
+        guard let windowScene = await UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = await windowScene.windows.first,
+              let rootViewController = await window.rootViewController else {
+        print("There is no root view controller!")
+        return false
+      }
+
+        do {
+          let userAuthentication = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
+
+          let user = userAuthentication.user
+          guard let idToken = user.idToken else {
+              print("error occured during google sign in")
+//              throw AuthenticationError.tokenError(message: "ID token missing")
+              return false
+          }
+          let accessToken = user.accessToken
+
+          let credential = GoogleAuthProvider.credential(
+            withIDToken: idToken.tokenString,
+            accessToken: accessToken.tokenString
+          )
+
+          let result = try await Auth.auth().signIn(with: credential)
+          let firebaseUser = result.user
+            if (firebaseUser != nil) {
+                isRegisterSuccess = true
+            }
+          print("User \(firebaseUser.uid) signed in with email \(firebaseUser.email ?? "unknown")")
+          return true
+        }
+        catch {
+          print(error.localizedDescription)
+//          self.errorMessage = error.localizedDescription
+          return false
+        }
+    }
+    
+    func signOut() {
+      // 1
+      GIDSignIn.sharedInstance.signOut()
+      
+      do {
+        // 2
+        try Auth.auth().signOut()
+        
+        state = .signedOut
+      } catch {
+        print(error.localizedDescription)
+      }
+    }
     
     func createUserWithEmailAndPassword(email: String, password: String) -> Void {
         auth.createUser(withEmail: email, password: password) { result, error in

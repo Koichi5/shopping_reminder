@@ -15,13 +15,13 @@ struct ShoppingItemView: View {
     var body: some View {
         VStack {
             ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
-                if categories.contains(shoppingItem.category.name) {
-                    //                    CategoryView(shoppingItem: shoppingItem)
-                    Text("リストを正確に取得できませんでした。")
-                } else {
+//                if categories.contains(shoppingItem.category.name) {
+//                    //                    CategoryView(shoppingItem: shoppingItem)
+//                    Text("リストを正確に取得できませんでした。")
+//                } else {
                     ShoppingItemComponent(shoppingItem: shoppingItem)
                 }
-            }
+//            }
             //            ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
             //                ShoppingItemComponent(shoppingItem: shoppingItem)
             //            }
@@ -34,7 +34,7 @@ struct ShoppingItemView: View {
         .task {
             do {
                 try await shoppingItemRepository.addUserSnapshotListener()
-//                                    updateCategories()
+//              updateCategories()
             } catch {
                 print(error)
             }

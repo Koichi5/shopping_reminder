@@ -41,6 +41,7 @@ struct ShoppingItemComponent_Previews: PreviewProvider {
             isAlermRepeatOn: false,
 //            expirationDate: Date(),
             alermCycleSeconds: 100,
+            alermCycleString: "",
             customURL: "",
             id: UUID()))
     }

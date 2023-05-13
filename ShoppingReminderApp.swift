@@ -9,18 +9,21 @@ import SwiftUI
 
 import SwiftUI
 import FirebaseCore
+import GoogleSignIn
 
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication,
+//                     open url: URL,
+//                     options: [UIApplication.OpenURLOptionsKey: Any] = [:],
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
-        
         NotificationManager.instance.requestPermission()
-        
-        UNUserNotificationCenter.current().delegate = self
-        
+        DispatchQueue.main.async {
+            UNUserNotificationCenter.current().delegate = self
+        }
         return true
+//        return GIDSignIn.sharedInstance.handle(url)
     }
 }
 
@@ -30,9 +33,9 @@ struct ShoppingReminderApp: App {
     var body: some Scene {
         WindowGroup {
 //            SideMenuContentView()
-//            EntryAuthView()
+            EntryAuthView()
 //            MemoView()
-            IntroSliderView()
+//            IntroSliderView()
         }
     }
 }

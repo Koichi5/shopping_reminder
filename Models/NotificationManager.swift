@@ -21,7 +21,30 @@ final class NotificationManager {
         }
     }
     
-    func sendIntervalNotification(shoppingItem: ShoppingItem, shoppingItemId: String?) {
+    func getNotificationStrring() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .notDetermined:
+                print("not determined")
+            case .denied:
+                print("denied")
+            case .authorized:
+                print("authorized")
+            case .provisional:
+                print("provisional")
+            case .ephemeral:
+                print("ephemeral")
+            @unknown default:
+                fatalError()
+            }
+        }
+    }
+    
+    func sendIntervalNotification(
+        shoppingItem: ShoppingItem,
+        shoppingItemDocId: String
+//                                  shoppingItemId: String?
+    ) {
         print("Send interval notification fired")
         let content = UNMutableNotificationContent()
         content.title = "\(shoppingItem.name) is expiring"
@@ -30,7 +53,7 @@ final class NotificationManager {
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(shoppingItem.alermCycleSeconds!), repeats: shoppingItem.isAlermRepeatOn)
         let request = UNNotificationRequest(
-            identifier: shoppingItemId ?? shoppingItem.id.uuidString,
+            identifier: shoppingItemDocId,
 //            identifier: "identifier",
             content: content, trigger: trigger)
         print("Identifier of this notification is: \(request.identifier)")

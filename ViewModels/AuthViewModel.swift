@@ -16,12 +16,6 @@ class AuthViewModel: ObservableObject {
     static let shared = AuthViewModel()
     private var auth = Auth.auth()
     
-//    let initialCategories = [
-//        Category(name: "Grocery", color: CategoryColor.red),
-//        Category(name: "Household", color: CategoryColor.blue),
-//        Category(name: "Electronics", color: CategoryColor.green)
-//    ]
-    
     enum SignInState {
         case signedIn
         case signedOut

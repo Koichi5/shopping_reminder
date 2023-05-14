@@ -66,7 +66,7 @@ struct MenuCell: View {
                 .foregroundColor(
                     .gray)
             Spacer()
-        }.frame(minWidth: 200, maxWidth: .infinity)
+        }.frame(minWidth: 200)
     }
  }
 

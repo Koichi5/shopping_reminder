@@ -12,7 +12,6 @@ struct EntryAuthView: View {
     @State var name:String = ""
     @State var email: String = ""
     @State var password: String = ""
-    //    Todo change this to false
     @State var isRegisterSuccess: Bool = false
     @ObservedObject var authViewModel:AuthViewModel = AuthViewModel()
     var body: some View {
@@ -30,7 +29,7 @@ struct EntryAuthView: View {
                     //                    ShoppingItemRepository().addUserSnapshotListener()
                 }, label: {
                     Text("新規登録")
-                })
+                }).padding()
                 //                .padding()
                 //                    .fullScreenCover(
                 ////                    isPresented: $authViewModel.isRegisterSuccess

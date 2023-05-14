@@ -13,18 +13,21 @@ struct AddItemView: View {
     }
     @FocusState private var focusedField: Field?
     @Binding var isShowSheet: Bool
+//    @Binding var existCategoryList: [Category]
+//    @Binding var shoppingItemDict: [String: [ShoppingItem]]
     @State private var itemName = ""
     @State private var itemUrl = ""
     @State private var categoryList: [Category] = []
     @State private var categoryItemList: [CategoryItem] = []
-    @State private var selectedCategory: Category = Category(name: "", color: CategoryColor.black)
+    @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
     @State private var selectedDigitsValue = "1"
     @State private var selectedUnitsValue = "時間"
     @State private var timeIntervalSinceNow = 0
     @State private var isAlermSettingOn = false
     @State private var isUrlSettingOn = false
     @State private var isAlermRepeatOn = false
-    @State private var shoppingItemId = ""
+    @State private var shoppingItemDocId = ""
+    @State var screen: CGSize!
     //    @ObservedObject var keyboardHelper = KeyboardHelper()
     
     var body: some View {
@@ -66,105 +69,134 @@ struct AddItemView: View {
                 .padding(.vertical, 10)
                 .padding(.leading)
             }
-            Toggle("アラーム設定", isOn: $isAlermSettingOn).padding(.horizontal)
-            VStack {
-                HStack (alignment: .center){
-                    Text("アラーム周期")
-                    Spacer()
-                    ItemDigitPicker(
-                        selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
-                    )
+            List {
+                Section(header: Text("アラーム")) {
+                    Toggle("アラーム設定", isOn: $isAlermSettingOn).padding(.horizontal)
+                    isAlermSettingOn ?
+    //                VStack {
+                        //                HStack (alignment: .center){
+                        //                    Text("周期")
+                        //                    Spacer()
+                        //                    ItemDigitPicker(
+                        //                        selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
+                        //                    )
+                        //                }
+                        ItemDigitPicker(
+                            selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
+                        )
+                        .frame(height: 100) : nil
+                        //                .padding(.horizontal)
+                        //                .opacity(isAlermSettingOn ? 1 : 0)
+                        //                .frame(height: isAlermSettingOn ? 70 : 0)
+                    isAlermSettingOn ?
+                    Toggle("繰り返し", isOn: $isAlermRepeatOn)
+                        //                    .opacity(isAlermSettingOn ? 1 : 0)
+                        //                    .frame(height: isAlermSettingOn ? 30 : 0)
+                        //                    .padding(.horizontal)
+                        //                    .padding(.bottom)
+    //                }
+                        .padding(.horizontal) : nil
+    //                .opacity(isAlermSettingOn ? 1 : 0)
+    //                .frame(height: isAlermSettingOn ? 70 : 0) : nil
                 }
-                .padding(.horizontal)
-                .opacity(isAlermSettingOn ? 1 : 0)
-                .frame(height: isAlermSettingOn ? 90 : 0)
-                Toggle("繰り返し", isOn: $isAlermRepeatOn).padding(.horizontal)
-                    .opacity(isAlermSettingOn ? 1 : 0)
-                    .frame(height: isAlermSettingOn ? 30 : 0)
+                Section(header: Text("URLから買い物")) {
+                    Toggle("買い物URL設定", isOn: $isUrlSettingOn).padding(.horizontal)
+                    isUrlSettingOn ?
+    //                HStack (alignment: .center){
+    //                    Text("買い物URL")
+    //                    Spacer()
+                        TextField("URL", text: $itemUrl)
+    //                        .textFieldStyle(RoundedBorderTextFieldStyle())
+    //                }
                     .padding(.horizontal)
                     .padding(.bottom)
-            }
-            Toggle("買い物URL設定", isOn: $isUrlSettingOn).padding(.horizontal)
-            HStack (alignment: .center){
-                Text("買い物URL")
-                Spacer()
-                TextField("URL", text: $itemUrl)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-            }
-            .padding(.horizontal)
-            .padding(.bottom)
-            .opacity(isUrlSettingOn ? 1 : 0)
-            .frame(height: isUrlSettingOn ? 90 : 0)
-            HStack(alignment: .center) {
-                TextField("Item Name", text: $itemName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
-                    .padding(.bottom)
-                    .focused($focusedField, equals: .itemName)
-                Button(action: {
-                    Task {
-                        do {
-                            shoppingItemId = try await ShoppingItemRepository().addShoppingItemWithDocumentId(shoppingItem: ShoppingItem(
-                                name: itemName,
-                                category: selectedCategory,
-                                addedAt: Date(),
-//                                expirationDate: isAlermSettingOn ? Date(timeIntervalSinceNow: TimeInterval(timeIntervalSinceNow)) : nil
-                                isAlermRepeatOn: isAlermRepeatOn,
-                                alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                alermCycleString: "\(selectedDigitsValue)\(selectedUnitsValue)",
-                                customURL: itemUrl
-                            )
-                            )
-                            if (isAlermSettingOn) {
-                                let intSelectedDigitsValue = Int(selectedDigitsValue)
-                                VibrationHelper().feedbackVibration()
-                                if (selectedUnitsValue == "時間") {
-                                    timeIntervalSinceNow = (intSelectedDigitsValue ?? 0) * 3600
-                                } else if (selectedUnitsValue == "日") {
-                                    timeIntervalSinceNow = (intSelectedDigitsValue ?? 0) * 86400
-                                } else if (selectedUnitsValue == "週間") {
-                                    timeIntervalSinceNow = (intSelectedDigitsValue ?? 0) * 604800
-                                } else if (selectedUnitsValue == "ヶ月") {
-                                    timeIntervalSinceNow = (intSelectedDigitsValue ?? 0) * 2592000
-                                } else {
-                                    print("selected units value is incorrect")
-                                }
-                                if(shoppingItemId == "") {
-                                    print("shopping item id is nil")
-                                } else {
+    //                .opacity(isUrlSettingOn ? 1 : 0)
+                    .frame(height: isUrlSettingOn ? 40 : 0)
+                    : nil
+                }
+                HStack(alignment: .center) {
+                    TextField("アイテム名", text: $itemName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.horizontal)
+                    //                    .padding(.bottom)
+                        .focused($focusedField, equals: .itemName)
+                    Button(action: {
+                        let intSelectedDigitsValue = Int(selectedDigitsValue)
+                        VibrationHelper().feedbackVibration()
+                        if (selectedUnitsValue == "時間") {
+                            timeIntervalSinceNow = (intSelectedDigitsValue ?? 0) * 3600
+                        } else if (selectedUnitsValue == "日") {
+                            timeIntervalSinceNow = (intSelectedDigitsValue ?? 0) * 86400
+                        } else if (selectedUnitsValue == "週間") {
+                            timeIntervalSinceNow = (intSelectedDigitsValue ?? 0) * 604800
+                        } else if (selectedUnitsValue == "ヶ月") {
+                            timeIntervalSinceNow = (intSelectedDigitsValue ?? 0) * 2592000
+                        } else {
+                            print("selected units value is incorrect")
+                        }
+                        Task {
+                            do {
+                                shoppingItemDocId =
+                                try await ShoppingItemRepository().addShoppingItemWithDocumentId(shoppingItem: ShoppingItem(
+                                    name: itemName,
+                                    category: selectedCategory,
+                                    addedAt: Date(),
+                                    isAlermRepeatOn: isAlermRepeatOn,
+                                    alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
+                                    alermCycleString: "\(selectedDigitsValue)\(selectedUnitsValue)",
+                                    customURL: itemUrl
+                                )
+                                )
+                                if (isAlermSettingOn) {
                                     NotificationManager().sendIntervalNotification(
                                         shoppingItem: ShoppingItem(
                                             name: itemName,
                                             category: selectedCategory,
                                             addedAt: Date(),
                                             isAlermRepeatOn: isAlermRepeatOn,
-                                            alermCycleSeconds: 10,
+                                            alermCycleSeconds: 61,
                                             alermCycleString: "\(selectedDigitsValue)\(selectedUnitsValue)",
                                             customURL: itemUrl
                                         ),
-                                        shoppingItemId: shoppingItemId
+                                        shoppingItemDocId: shoppingItemDocId
                                     )
                                 }
                                 NotificationManager().fetchAllRegisteredNotifications()
+                                
+                            } catch {
+                                print("error occured while adding shopping item: \(error)")
                             }
-                        } catch {
-                            print("error occured while adding shopping item: \(error)")
                         }
+                        //                    for shoppingItem in shoppingItemList {
+                        //                        if let categoryName = shoppingItem.category?.name {
+                        //                            if shoppingItemDict[categoryName] == nil {
+                        //                                shoppingItemDict[categoryName] = [shoppingItem]
+                        //                            } else {
+                        //                                shoppingItemDict[categoryName]?.append(shoppingItem)
+                        //                            }
+                        //                        }
+                        //                    }
+                        //                    if(!shoppingItemDict.contains(where: shoppingItemDict[categoryName] == selectedCategory.name)) {
+                        //
+                        //                    }
+                        //                    if (!existCategoryList.contains(where: {$0.name == selectedCategory.name})) {
+                        //                        existCategoryList.append(selectedCategory)
+                        //                        print("existCategoryList: \(existCategoryList)")
+                        //                    }
+                        isShowSheet = false
+                    }) {
+                        Text("追加")
                     }
-                    isShowSheet = false
-                }) {
-                    Text("追加")
-                }.padding()
-            }
+                }.padding(.horizontal)
+            }.listStyle(.plain)
         }.onAppear {
+            screen = UIScreen.main.bounds.size
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
                 focusedField = .itemName
             }
             Task {
                 do {
-                    categoryList = try await CategoryRepository().fetchCategories() ?? []
-                    print("onAppear categoryList[0].color: \(categoryList[0].color)")
-                    print("onAppear categoryList[1].name: \(categoryList[1].name)")
+                    categoryList = try await CategoryRepository().fetchCategories()
                     for category in categoryList {
                         categoryItemList.append(CategoryItem(category: category))
                     }
@@ -182,3 +214,4 @@ struct AddItemView: View {
 //        AddItemView(isShowSheet: $isShowSheet)
 //    }
 //}
+

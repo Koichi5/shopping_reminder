@@ -11,7 +11,7 @@ struct ItemDigitPicker: View {
     @Binding var selectedDigitsValue: String
     @Binding var selectedUnitsValue: String
     let digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"]
-    let units = ["時間", "日", "週間", "ヶ月"]
+    let units = ["時間ごと", "日ごと", "週間ごと", "ヶ月ごと"]
     
     var body: some View {
         HStack {
@@ -21,7 +21,7 @@ struct ItemDigitPicker: View {
                         Text(item).tag(digits.indices)
                     }
                 }.pickerStyle(.wheel)
-                    .frame(width: 100)
+//                    .frame(width: 100)
             }
             VStack {
                 Picker("", selection: $selectedUnitsValue) {
@@ -29,7 +29,7 @@ struct ItemDigitPicker: View {
                         Text(item).tag(units.indices)
                     }
                 }.pickerStyle(.wheel)
-                    .frame(width: 100)
+//                    .frame(width: 100)
             }
         }
     }

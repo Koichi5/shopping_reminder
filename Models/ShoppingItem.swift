@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import FirebaseFirestoreSwift
 
 struct ShoppingItem: Identifiable, Codable {
-    let id: UUID
+//    let id: UUID
+    @DocumentID var id: String?
     var name: String
     var category: Category
     var addedAt: Date
@@ -51,9 +53,11 @@ struct ShoppingItem: Identifiable, Codable {
          alermCycleSeconds: Int?,
          alermCycleString: String?,
 //         customURL: String? = nil,
-         customURL: String?,
-         id: UUID = UUID()) {
-        self.id = id
+         customURL: String?
+//         id: UUID = UUID()
+//         id: String? = UUID().uuidString
+    ) {
+//        self.id = id
         self.name = name
         self.category = category
         self.addedAt = addedAt

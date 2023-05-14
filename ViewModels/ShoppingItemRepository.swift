@@ -40,12 +40,13 @@ class ShoppingItemRepository: ObservableObject {
                             self.shoppingItemList = try documentSnapshot.documents.compactMap {
                                 try $0.data(as: ShoppingItem.self)
                             }
+                            print("shoppingItemList: \(self.shoppingItemList)")
                         } catch {
                             print(error)
                         }
                     }
                     if (diff.type == .modified){
-                        // 更新された値を取得
+//                         更新された値を取得
                         itemsRef.getDocuments { (snap, error) in
                             if let error = error {
                                 fatalError("\(error)")
@@ -53,7 +54,6 @@ class ShoppingItemRepository: ObservableObject {
                             guard let data = snap?.documents else {
                                 print("データがなかった？")
                                 return
-                                
                             }
                             print(data)
                         }
@@ -69,28 +69,38 @@ class ShoppingItemRepository: ObservableObject {
     }
     
     func addShoppingItemWithDocumentId(shoppingItem: ShoppingItem) async throws -> String {
-        var shoppingItemId = ""
+//        var shoppingItemId = ""
+        var newDocReference = ""
+        var docId = ""
         let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
             print("current user is nil")
         } else {
             let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
             let itemsRef = userRef.collection("items")
+            docId = itemsRef.document().documentID
             do {
-                let newDocReference = try itemsRef.addDocument(from: shoppingItem)
+//                set data from shoppingItem and then update id
+                try itemsRef.document(docId).setData(from: shoppingItem)
+                try await itemsRef.document(docId).updateData([
+                    "id": docId
+                ])
+//                let newDocReference = try itemsRef.addDocument(from: shoppingItem)
 //                let newDocReference = try itemRef.addDocument(from: shoppingItem)
 //                let newDocReference: () = try itemRef.setData(shoppingItem)
-                shoppingItemId = newDocReference.documentID
+//                shoppingItemId = newDocReference.documentID
 //                try await itemsRef.document(shoppingItemId).updateData(["id": "\(shoppingItemId)"])
 //                print("shoppingItemId in addShoppingItemWithDocumentId func: \(shoppingItemId)")
-                print("Item stored with new document reference: \(newDocReference)")
+//                print("shopping item id in add shopping item with document id func : \(shoppingItemId)")
+//                print("Item stored with new document reference: \(newDocReference)")
+                print("newDocReference:  \(docId)")
             }
             catch {
                 print(error)
             }
         }
-        print("shoppingItemId in addnshopping item with document id func: \(shoppingItemId)")
-        return shoppingItemId
+        print("newDocReference in addnshopping item with document id func: \(docId)")
+        return docId
     }
     
     func updateShoppingItem(shoppingItem: ShoppingItem) async throws -> Void {
@@ -99,7 +109,7 @@ class ShoppingItemRepository: ObservableObject {
             print("current user is nil")
         } else {
             let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
-            let itemRef = userRef.collection("items").document(shoppingItem.id.uuidString)
+            let itemRef = userRef.collection("items").document(shoppingItem.id ?? "")
             do {
                 try await itemRef.updateData([
                     "id": shoppingItem.id,
@@ -115,6 +125,23 @@ class ShoppingItemRepository: ObservableObject {
             }
         }
     }
+    
+    func updateShoppingItemId(shoppingItemId: String, oldShoppingItemId: String) async throws -> Void {
+        let currentUser = AuthModel().getCurrentUser()
+        if currentUser == nil {
+            print("current user is nil")
+        } else {
+            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+            let itemRef = userRef.collection("items").document(oldShoppingItemId)
+            do {
+                try await itemRef.updateData([
+                    "id": shoppingItemId,
+                    ])
+            } catch {
+                print(error)
+            }
+        }
+    }
         
     
     func deleteShoppingItem(shoppingItem: ShoppingItem) async throws -> Void {
@@ -122,8 +149,9 @@ class ShoppingItemRepository: ObservableObject {
         if currentUser == nil {
             print("current user is nil")
         } else {
+            print("delete shopping item fired")
             let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
-            let itemRef = userRef.collection("items").document(shoppingItem.id.uuidString)
+            let itemRef = userRef.collection("items").document(shoppingItem.id ?? "")
             do {
                 try await itemRef.delete()
             } catch {

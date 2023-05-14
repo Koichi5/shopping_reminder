@@ -17,6 +17,7 @@ struct HomeView: View {
     @State private var itemName = ""
     @State private var showingMenu = false
     @State private var isShowSheet: Bool = false
+    @State private var existCategoryList: [Category] = []
     //    @FocusState var focused: Bool
     var body: some View {
         NavigationStack {

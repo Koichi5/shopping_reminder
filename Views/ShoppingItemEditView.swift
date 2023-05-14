@@ -36,7 +36,7 @@ struct ShoppingItemEditView: View {
                             primaryButtonAction: nil,
                             secondaryButtonAction: {
                                 print("secondary button action fired")
-                                NotificationManager().deleteNotification(shoppingItemIndentifier: [shoppingItem.id.uuidString])
+                                NotificationManager().deleteNotification(shoppingItemIndentifier: [shoppingItem.id ?? ""])
                             Task {
                                 do {
                                     try await ShoppingItemRepository().deleteShoppingItem(shoppingItem: shoppingItem)
@@ -72,6 +72,8 @@ struct ShoppingItemEditView_Previews: PreviewProvider {
                 isAlermRepeatOn: false,
                 alermCycleSeconds: 100,
                 alermCycleString: "10日",
-                customURL: "https://swappli.com/switcheditmode/"))
+                customURL: "https://swappli.com/switcheditmode/"
+//                id: nil
+            ))
     }
 }

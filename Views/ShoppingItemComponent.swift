@@ -26,7 +26,7 @@ struct ShoppingItemComponent: View {
             }
             .onTapGesture {
                 isPresented.toggle()
-                print("shoppingItem id on component: \(shoppingItem.id.uuidString)")
+                print("shoppingItem id on component: \(shoppingItem.id)")
             }
         }
     }
@@ -42,7 +42,8 @@ struct ShoppingItemComponent_Previews: PreviewProvider {
 //            expirationDate: Date(),
             alermCycleSeconds: 100,
             alermCycleString: "",
-            customURL: "",
-            id: UUID()))
+            customURL: ""
+//            id: nil
+        ))
     }
 }

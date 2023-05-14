@@ -20,7 +20,7 @@ struct ShoppingItemEditModal: View {
     @State private var isAlermSettingOn = false
     @State private var isUrlSettingOn = false
     @State private var isAlermRepeatOn = false
-    @State private var shoppingItemId = ""
+    @State private var shoppingItemDocId = ""
     let shoppingItem: ShoppingItem
     var body: some View {
         NavigationStack {
@@ -91,7 +91,7 @@ struct ShoppingItemEditModal: View {
                     Button(action: {
                         Task {
                             do {
-                                try await ShoppingItemRepository().addShoppingItemWithDocumentId(shoppingItem: ShoppingItem(
+                                shoppingItemDocId = try await ShoppingItemRepository().addShoppingItemWithDocumentId(shoppingItem: ShoppingItem(
                                     name: itemName,
                                     category: selectedCategory,
                                     addedAt: Date(),
@@ -100,6 +100,7 @@ struct ShoppingItemEditModal: View {
                                     alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
                                     alermCycleString: "\(selectedDigitsValue)\(selectedUnitsValue)",
                                     customURL: isUrlSettingOn ? itemUrl : nil
+//                                    id: nil
                                 )
                                 )
                             } catch {
@@ -130,7 +131,10 @@ struct ShoppingItemEditModal: View {
                                 alermCycleSeconds: timeIntervalSinceNow,
                                 alermCycleString: "\(selectedDigitsValue)\(selectedUnitsValue)",
                                 customURL: itemUrl
-                                ), shoppingItemId: nil
+//                                id: nil
+                                ),
+                                shoppingItemDocId: shoppingItemDocId
+//                                , shoppingItemId: nil
                             )
                             NotificationManager().fetchAllRegisteredNotifications()
                         }

@@ -73,7 +73,6 @@ struct ShoppingItemEditView_Previews: PreviewProvider {
                 alermCycleSeconds: 100,
                 alermCycleString: "10日",
                 customURL: "https://swappli.com/switcheditmode/"
-//                id: nil
             ))
     }
 }

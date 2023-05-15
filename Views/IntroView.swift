@@ -47,17 +47,6 @@ struct IntroView: View {
                         .background(Color.red.cornerRadius(10))
                         .padding(.horizontal, 32)
                 }
-//                NavigationLink {
-//                    SideMenuContentView()
-//                } label: {
-//                    Text("続ける")
-//                        .fontWeight(.bold)
-//                        .font(.system(size: 20))
-//                        .foregroundColor(Color.white)
-//                        .frame(maxWidth: .infinity, minHeight: 48)
-//                        .background(Color.red.cornerRadius(10))
-//                        .padding(.horizontal, 32)
-//                }
             }
             .fullScreenCover(isPresented: $isFullScreenPresented) {
                 SideMenuContentView()

@@ -30,13 +30,6 @@ struct EntryAuthView: View {
                 }, label: {
                     Text("新規登録")
                 }).padding()
-                //                .padding()
-                //                    .fullScreenCover(
-                ////                    isPresented: $authViewModel.isRegisterSuccess
-                //                    isPresented: $isRegisterSuccess
-                //                ) {
-                //                    SideMenuContentView()
-                //                }
                 GoogleSignInButton()
             }
             .sheet(isPresented: $isRegisterSuccess) {

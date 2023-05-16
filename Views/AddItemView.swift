@@ -28,6 +28,7 @@ struct AddItemView: View {
     @State private var isAlermRepeatOn = false
     @State private var shoppingItemDocId = ""
     @State var screen: CGSize!
+    @State private var isSidebarOpen = false
     //    @ObservedObject var keyboardHelper = KeyboardHelper()
     
     var body: some View {
@@ -70,8 +71,8 @@ struct AddItemView: View {
                 .padding(.leading)
             }
             List {
-                Section(header: Text("アラーム")) {
-                    Toggle("アラーム設定", isOn: $isAlermSettingOn).padding(.horizontal)
+                Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
+//                    Toggle("アラーム設定", isOn: $isAlermSettingOn).padding(.horizontal)
                     isAlermSettingOn ?
     //                VStack {
                         //                HStack (alignment: .center){
@@ -84,12 +85,15 @@ struct AddItemView: View {
                         ItemDigitPicker(
                             selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
                         )
-                        .frame(height: 100) : nil
+                        .frame(height: 100)
+                        .listRowBackground(Color.clear)
+                    : nil
                         //                .padding(.horizontal)
                         //                .opacity(isAlermSettingOn ? 1 : 0)
                         //                .frame(height: isAlermSettingOn ? 70 : 0)
                     isAlermSettingOn ?
                     Toggle("繰り返し", isOn: $isAlermRepeatOn)
+                        .listRowBackground(Color.clear)
                         //                    .opacity(isAlermSettingOn ? 1 : 0)
                         //                    .frame(height: isAlermSettingOn ? 30 : 0)
                         //                    .padding(.horizontal)
@@ -99,13 +103,14 @@ struct AddItemView: View {
     //                .opacity(isAlermSettingOn ? 1 : 0)
     //                .frame(height: isAlermSettingOn ? 70 : 0) : nil
                 }
-                Section(header: Text("URLから買い物")) {
-                    Toggle("買い物URL設定", isOn: $isUrlSettingOn).padding(.horizontal)
+                Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
+//                    Toggle("買い物URL設定", isOn: $isUrlSettingOn).padding(.horizontal)
                     isUrlSettingOn ?
     //                HStack (alignment: .center){
     //                    Text("買い物URL")
     //                    Spacer()
                         TextField("URL", text: $itemUrl)
+                        .listRowBackground(Color.clear)
     //                        .textFieldStyle(RoundedBorderTextFieldStyle())
     //                }
                     .padding(.horizontal)
@@ -114,6 +119,7 @@ struct AddItemView: View {
                     .frame(height: isUrlSettingOn ? 40 : 0)
                     : nil
                 }
+            }.listStyle(.plain)
                 HStack(alignment: .center) {
                     TextField("アイテム名", text: $itemName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -188,7 +194,6 @@ struct AddItemView: View {
                         Text("追加")
                     }
                 }.padding(.horizontal)
-            }.listStyle(.plain)
         }.onAppear {
             screen = UIScreen.main.bounds.size
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
@@ -205,6 +210,26 @@ struct AddItemView: View {
                 }
             }
         }
+    }
+}
+
+extension AddItemView {
+    private func sectionHeader(title: String, isExpanded: Binding<Bool>) -> some View {
+        Button(action: {isExpanded.wrappedValue.toggle()}) {
+            VStack {
+                HStack {
+                    Text(title)
+                    Spacer()
+                    Image(systemName: isExpanded.wrappedValue ? "chevron.up" : "chevron.down")
+                }
+                if !isExpanded.wrappedValue {
+                    Divider()
+                } else {
+                    Divider().frame(width: 0, height: 0)
+                }
+            }
+        }
+        .foregroundColor(Color.gray)
     }
 }
 

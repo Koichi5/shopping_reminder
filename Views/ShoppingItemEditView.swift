@@ -9,22 +9,37 @@ import SwiftUI
 
 struct ShoppingItemEditView: View {
     @State private var isShowSheet: Bool = false
+    @State private var defaultShoppingItemName = ""
+    @State private var categoryList: [Category] = []
+    @State private var categoryItemList: [CategoryItem] = []
+    @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
     let shoppingItem: ShoppingItem
     var body: some View {
         NavigationStack {
             VStack {
-                Text(shoppingItem.name)
+                TextField("", text: $defaultShoppingItemName)
+                    .onAppear {
+                        defaultShoppingItemName = shoppingItem.name
+                    }
+                    .font(.largeTitle.bold())
+                    .padding(.horizontal)
+                Spacer()
+                CategoryItemList(categoryItemList: $categoryItemList, selectedCategory: $selectedCategory)
                 shoppingItem.customURL != ""
-                ? UrlButton(
-                    buttonText: "URL",
+                ?
+                HStack {
+                    UrlButton(
+                        systemName: "cart",
+                        buttonText: "\(shoppingItem.customURL ?? "URL")",
                     sourceUrl: shoppingItem.customURL!
-                )
+                )}
                 : nil
                 shoppingItem.alermCycleString != ""
-                ? Text(shoppingItem.alermCycleString!)
+                ? Text(shoppingItem.alermCycleString ?? "")
                 : nil
+                Spacer()
             }
-            .navigationTitle("\(shoppingItem.name)")
+//            .navigationTitle("\(shoppingItem.name)")
             .toolbar {
                 ToolbarItemGroup (placement: .bottomBar) {
                         DialogHelper(
@@ -56,6 +71,16 @@ struct ShoppingItemEditView: View {
             }
         }.sheet(isPresented: $isShowSheet) {
             ShoppingItemEditModal(isShowSheet: $isShowSheet, shoppingItem: shoppingItem)
+        }
+        .task {
+            do {
+                categoryList = try await CategoryRepository().fetchCategories()
+                for category in categoryList {
+                    categoryItemList.append(CategoryItem(category: category))
+                }
+            } catch {
+                print(error)
+            }
         }
     }
 }

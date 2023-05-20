@@ -10,24 +10,54 @@ import SwiftUI
 struct ShoppingItemComponent: View {
     let shoppingItem: ShoppingItem
     @State private var isDeleted = false
-    @State var isPresented = false
+    @State var isEditPresented = false
+    @State var isUrlLinkPresented = false
     var body: some View {
         NavigationStack {
-            VStack (alignment: .leading) {
-                Text(shoppingItem.name).strikethrough(isDeleted)
-                Text(shoppingItem.category.name)
-                Text("color: \(shoppingItem.category.color.colorName)")
-                Text(shoppingItem.addedAt.ISO8601Format())
+            HStack {
+                Text("\(shoppingItem.name)")
+                Spacer()
+                shoppingItem.customURL == "" ? nil :
+                Menu {
+                    Button(action: {
+                            print("is url link presented")
+                            if let url = URL(string: shoppingItem.customURL ?? "") {
+                                if(shoppingItem.customURL == "") {
+                                    print("custom url is nil")
+                                }
+                                UIApplication.shared.open(url, options: [.universalLinksOnly: false], completionHandler: { completed in
+                                    print(completed)
+                                })
+                            }
+                    }) {
+                        Text("URLを開く")
+                    }
+                } label: {
+                    Image(systemName: "link")
+                        .foregroundColor(Color.foreground)
+                }
+                Button(action: {
+                    isEditPresented.toggle()
+                }) {
+                    Image(systemName: "pencil")
+                        .foregroundColor(Color.foreground)
+                }
             }
             .background(shoppingItem.category.color.colorData)
             .cornerRadius(10)
-            .navigationDestination(isPresented: $isPresented) {
+            .navigationDestination(isPresented: $isEditPresented) {
                 ShoppingItemEditView(shoppingItem: shoppingItem)
             }
-            .onTapGesture {
-                isPresented.toggle()
-                print("shoppingItem id on component: \(shoppingItem.id)")
-            }
+//            .onTapGesture {
+//                isEditPresented.toggle()
+//                print("shoppingItem id on component: \(shoppingItem.id)")
+//            }
+//            .onLongPressGesture (
+//                minimumDuration: 0.5, maximumDistance: 10
+//            ) {
+//                print("long press")
+//                isEditPresented.toggle()
+//            }
         }
     }
 }

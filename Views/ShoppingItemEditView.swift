@@ -9,22 +9,108 @@ import SwiftUI
 
 struct ShoppingItemEditView: View {
     @State private var isShowSheet: Bool = false
-    @State private var defaultShoppingItemName = ""
+    @State private var shoppingItemName = ""
+    @State private var itemUrl = ""
     @State private var categoryList: [Category] = []
     @State private var categoryItemList: [CategoryItem] = []
     @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
+    @State private var selectedDigitsValue = "1"
+    @State private var selectedUnitsValue = "時間ごと"
+    @State private var timeIntervalSinceNow = 0
+    @State private var isAlermSettingOn = false
+    @State private var isUrlSettingOn = false
+    @State private var isAlermRepeatOn = false
+    @State private var shoppingItemDocId = ""
     let shoppingItem: ShoppingItem
     var body: some View {
         NavigationStack {
             VStack {
-                TextField("", text: $defaultShoppingItemName)
+                TextField("", text: $shoppingItemName)
                     .onAppear {
-                        defaultShoppingItemName = shoppingItem.name
+                        shoppingItemName = shoppingItem.name
                     }
                     .font(.largeTitle.bold())
                     .padding(.horizontal)
                 Spacer()
                 CategoryItemList(categoryItemList: $categoryItemList, selectedCategory: $selectedCategory)
+                
+                List {
+                    Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
+                        isAlermSettingOn ?
+                        ItemDigitPicker(
+                            selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
+                        )
+                        .frame(height: 100)
+                        .listRowBackground(Color.clear)
+                        : nil
+                        isAlermSettingOn ?
+                        Toggle("繰り返し", isOn: $isAlermRepeatOn)
+                            .listRowBackground(Color.clear)
+                            .padding(.horizontal) : nil
+                    }
+                    .onAppear {
+                        isAlermSettingOn = shoppingItem.isAlermRepeatOn
+                    }
+                    Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
+                        isUrlSettingOn ?
+                        
+                        TextField("URL", text: $itemUrl)
+                            .listRowBackground(Color.clear)
+                            .padding(.horizontal)
+                            .padding(.bottom)
+                            .frame(height: isUrlSettingOn ? 40 : 0)
+                        : nil
+                    }
+                    .onAppear {
+                        isUrlSettingOn = shoppingItem.customURL != ""
+                    }
+                }.listStyle(.plain)
+                
+                HStack(alignment: .center) {
+                    Button(action: {
+                        VibrationHelper().feedbackVibration()
+                        let intSelectedDigitsValue = Int(selectedDigitsValue)
+                        timeIntervalSinceNow = TimeHelper().calcSecondsFromString(selectedUnitsValue: selectedUnitsValue, intSelectedDigitsValue: intSelectedDigitsValue ?? 0)
+                        Task {
+                            do {
+                                shoppingItemDocId =
+                                try await ShoppingItemRepository().addShoppingItemWithDocumentId(shoppingItem: ShoppingItem(
+                                    name: shoppingItemName,
+                                    category: selectedCategory,
+                                    addedAt: Date(),
+                                    isAlermRepeatOn: isAlermRepeatOn,
+                                    alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
+                                    alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
+                                    customURL: itemUrl
+                                )
+                                )
+                                if (isAlermSettingOn) {
+                                    NotificationManager().sendIntervalNotification(
+                                        shoppingItem: ShoppingItem(
+                                            name: shoppingItemName,
+                                            category: selectedCategory,
+                                            addedAt: Date(),
+                                            isAlermRepeatOn: isAlermRepeatOn,
+                                            alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
+                                            alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
+                                            customURL: itemUrl
+                                        ),
+                                        shoppingItemDocId: shoppingItemDocId
+                                    )
+                                }
+                                NotificationManager().fetchAllRegisteredNotifications()
+                                
+                            } catch {
+                                print("error occured while adding shopping item: \(error)")
+                            }
+                        }
+                        isShowSheet = false
+                    }) {
+                        Text("追加")
+                    }
+                }.padding(.horizontal)
+                
+                
                 shoppingItem.customURL != ""
                 ?
                 HStack {
@@ -62,11 +148,11 @@ struct ShoppingItemEditView: View {
                                 NotificationManager().fetchAllRegisteredNotifications()
                         }
                         )
-                    Button(action: {
-                        isShowSheet = true
-                    }) {
-                        Image(systemName: "pencil").foregroundColor(Color.foreground)
-                    }
+//                    Button(action: {
+//                        isShowSheet = true
+//                    }) {
+//                        Image(systemName: "pencil").foregroundColor(Color.foreground)
+//                    }
                 }
             }
         }.sheet(isPresented: $isShowSheet) {
@@ -82,6 +168,26 @@ struct ShoppingItemEditView: View {
                 print(error)
             }
         }
+    }
+}
+
+extension ShoppingItemEditView {
+    private func sectionHeader(title: String, isExpanded: Binding<Bool>) -> some View {
+        Button(action: {isExpanded.wrappedValue.toggle()}) {
+            VStack {
+                HStack {
+                    Text(title)
+                    Spacer()
+                    Image(systemName: isExpanded.wrappedValue ? "chevron.up" : "chevron.down")
+                }
+                if !isExpanded.wrappedValue {
+                    Divider()
+                } else {
+                    Divider().frame(width: 0, height: 0)
+                }
+            }
+        }
+        .foregroundColor(Color.gray)
     }
 }
 

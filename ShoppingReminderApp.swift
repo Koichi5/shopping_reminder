@@ -34,6 +34,7 @@ struct ShoppingReminderApp: App {
         WindowGroup {
 //            SideMenuContentView()
             EntryAuthView()
+//            UrlButton(systemName: "app.gift", buttonText: "Visit My App", sourceUrl: "https://play.google.com/store/apps/details?id=com.koichi.techjourney&hl=ja")
 //            MemoView()
 //            IntroSliderView()
         }

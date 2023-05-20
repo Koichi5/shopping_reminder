@@ -86,10 +86,12 @@ struct AddItemView: View {
                                 name: itemName,
                                 category: selectedCategory,
                                 addedAt: Date(),
+                                isUrlSettingOn: isUrlSettingOn,
+                                customURL: itemUrl,
+                                isAlermSettingOn: isAlermSettingOn,
                                 isAlermRepeatOn: isAlermRepeatOn,
                                 alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
-                                customURL: itemUrl
+                                alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil
                             )
                             )
                             if (isAlermSettingOn) {
@@ -98,10 +100,12 @@ struct AddItemView: View {
                                         name: itemName,
                                         category: selectedCategory,
                                         addedAt: Date(),
+                                        isUrlSettingOn: isUrlSettingOn,
+                                        customURL: itemUrl,
+                                        isAlermSettingOn: isAlermSettingOn,
                                         isAlermRepeatOn: isAlermRepeatOn,
                                         alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                        alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
-                                        customURL: itemUrl
+                                        alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil
                                     ),
                                     shoppingItemDocId: shoppingItemDocId
                                 )

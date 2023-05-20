@@ -49,7 +49,7 @@ struct ShoppingItemEditView: View {
                             .padding(.horizontal) : nil
                     }
                     .onAppear {
-                        isAlermSettingOn = shoppingItem.isAlermRepeatOn
+//                        isAlermSettingOn = shoppingItem.isAlermRepeatOn
                     }
                     Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
                         isUrlSettingOn ?
@@ -66,8 +66,22 @@ struct ShoppingItemEditView: View {
                     }
                 }.listStyle(.plain)
                 
-                HStack(alignment: .center) {
-                    Button(action: {
+//                shoppingItem.customURL != ""
+//                ?
+//                HStack {
+//                    UrlButton(
+//                        systemName: "cart",
+//                        buttonText: "\(shoppingItem.customURL ?? "URL")",
+//                        sourceUrl: shoppingItem.customURL!
+//                    )}
+//                : nil
+//                shoppingItem.alermCycleString != ""
+//                ? Text(shoppingItem.alermCycleString ?? "")
+//                : nil
+//                Spacer()
+                ButtonHelper(
+                    buttonText: "変更",
+                    buttonAction: {
                         VibrationHelper().feedbackVibration()
                         let intSelectedDigitsValue = Int(selectedDigitsValue)
                         timeIntervalSinceNow = TimeHelper().calcSecondsFromString(selectedUnitsValue: selectedUnitsValue, intSelectedDigitsValue: intSelectedDigitsValue ?? 0)
@@ -78,10 +92,12 @@ struct ShoppingItemEditView: View {
                                     name: shoppingItemName,
                                     category: selectedCategory,
                                     addedAt: Date(),
+                                    isUrlSettingOn: isUrlSettingOn,
+                                    customURL: itemUrl,
+                                    isAlermSettingOn: isAlermSettingOn,
                                     isAlermRepeatOn: isAlermRepeatOn,
                                     alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                    alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
-                                    customURL: itemUrl
+                                    alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil
                                 )
                                 )
                                 if (isAlermSettingOn) {
@@ -90,54 +106,45 @@ struct ShoppingItemEditView: View {
                                             name: shoppingItemName,
                                             category: selectedCategory,
                                             addedAt: Date(),
+                                            isUrlSettingOn: isUrlSettingOn,
+                                            customURL: itemUrl,
+                                            isAlermSettingOn: isAlermSettingOn,
                                             isAlermRepeatOn: isAlermRepeatOn,
                                             alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                            alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
-                                            customURL: itemUrl
+                                            alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil
                                         ),
                                         shoppingItemDocId: shoppingItemDocId
                                     )
                                 }
                                 NotificationManager().fetchAllRegisteredNotifications()
-                                
                             } catch {
                                 print("error occured while adding shopping item: \(error)")
                             }
                         }
                         isShowSheet = false
-                    }) {
-                        Text("追加")
-                    }
-                }.padding(.horizontal)
-                
-                
-                shoppingItem.customURL != ""
-                ?
-                HStack {
-                    UrlButton(
-                        systemName: "cart",
-                        buttonText: "\(shoppingItem.customURL ?? "URL")",
-                    sourceUrl: shoppingItem.customURL!
-                )}
-                : nil
-                shoppingItem.alermCycleString != ""
-                ? Text(shoppingItem.alermCycleString ?? "")
-                : nil
-                Spacer()
+                    },
+                    foregroundColor: Color.white,
+                    backgroundColor: Color.blue,
+                    buttonTextIsBold: nil,
+                    buttonWidth: nil,
+                    buttonHeight: nil,
+                    buttonTextFontSize: nil
+                ).padding(.horizontal)
             }
-//            .navigationTitle("\(shoppingItem.name)")
+            //            .navigationTitle("\(shoppingItem.name)")
             .toolbar {
-                ToolbarItemGroup (placement: .bottomBar) {
-                        DialogHelper(
-                            systemName: "trash",
-                            titleText: "このアイテムを削除しますか？",
-                            messageText: nil,
-                            primaryButtonText: "キャンセル",
-                            secondaryButtonText: "削除",
-                            primaryButtonAction: nil,
-                            secondaryButtonAction: {
-                                print("secondary button action fired")
-                                NotificationManager().deleteNotification(shoppingItemIndentifier: [shoppingItem.id ?? ""])
+                ToolbarItemGroup (placement: .confirmationAction) {
+                    Spacer()
+                    DialogHelper(
+                        systemName: "trash",
+                        titleText: "このアイテムを削除しますか？",
+                        messageText: nil,
+                        primaryButtonText: "キャンセル",
+                        secondaryButtonText: "削除",
+                        primaryButtonAction: nil,
+                        secondaryButtonAction: {
+                            print("secondary button action fired")
+                            NotificationManager().deleteNotification(shoppingItemIndentifier: [shoppingItem.id ?? ""])
                             Task {
                                 do {
                                     try await ShoppingItemRepository().deleteShoppingItem(shoppingItem: shoppingItem)
@@ -145,14 +152,14 @@ struct ShoppingItemEditView: View {
                                     print(error)
                                 }
                             }
-                                NotificationManager().fetchAllRegisteredNotifications()
+                            NotificationManager().fetchAllRegisteredNotifications()
                         }
-                        )
-//                    Button(action: {
-//                        isShowSheet = true
-//                    }) {
-//                        Image(systemName: "pencil").foregroundColor(Color.foreground)
-//                    }
+                    )
+                    //                    Button(action: {
+                    //                        isShowSheet = true
+                    //                    }) {
+                    //                        Image(systemName: "pencil").foregroundColor(Color.foreground)
+                    //                    }
                 }
             }
         }.sheet(isPresented: $isShowSheet) {
@@ -192,18 +199,22 @@ extension ShoppingItemEditView {
 }
 
 struct ShoppingItemEditView_Previews: PreviewProvider {
+    @State private var isAlermSettingOn: Bool = true
     static var previews: some View {
         ShoppingItemEditView(
             shoppingItem: ShoppingItem(
                 name: "キッチンペーパー",
                 category: Category(
                     name: "clothes",
-                    color: CategoryColor.red),
+                    color: CategoryColor.red
+                ),
                 addedAt: Date(),
+                isUrlSettingOn: false,
+                customURL: "https://swappli.com/switcheditmode/",
+                isAlermSettingOn: true,
                 isAlermRepeatOn: false,
                 alermCycleSeconds: 100,
-                alermCycleString: "10日",
-                customURL: "https://swappli.com/switcheditmode/"
+                alermCycleString: "10日"
             ))
     }
 }

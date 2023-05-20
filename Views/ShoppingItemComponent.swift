@@ -43,6 +43,7 @@ struct ShoppingItemComponent: View {
                         .foregroundColor(Color.foreground)
                 }
             }
+            .padding()
             .background(shoppingItem.category.color.colorData)
             .cornerRadius(10)
             .navigationDestination(isPresented: $isEditPresented) {
@@ -68,11 +69,13 @@ struct ShoppingItemComponent_Previews: PreviewProvider {
             name: "name",
             category: Category(name: "category", color: CategoryColor.blue),
             addedAt: Date(),
+            isUrlSettingOn: false,
+            customURL: "",
+            isAlermSettingOn: true,
             isAlermRepeatOn: false,
 //            expirationDate: Date(),
             alermCycleSeconds: 100,
-            alermCycleString: "",
-            customURL: ""
+            alermCycleString: ""
 //            id: nil
         ))
     }

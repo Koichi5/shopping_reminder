@@ -96,10 +96,12 @@ struct ShoppingItemEditModal: View {
                                     category: selectedCategory,
                                     addedAt: Date(),
     //                                expirationDate: isAlermSettingOn ? Date(timeIntervalSinceNow: TimeInterval(timeIntervalSinceNow)) : nil
+                                    isUrlSettingOn: isUrlSettingOn,
+                                    customURL: itemUrl,
+                                    isAlermSettingOn: isAlermSettingOn,
                                     isAlermRepeatOn: isAlermRepeatOn,
                                     alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                    alermCycleString: "\(selectedDigitsValue)\(selectedUnitsValue)",
-                                    customURL: isUrlSettingOn ? itemUrl : nil
+                                    alermCycleString: "\(selectedDigitsValue)\(selectedUnitsValue)"
 //                                    id: nil
                                 )
                                 )
@@ -127,10 +129,12 @@ struct ShoppingItemEditModal: View {
                                 category: selectedCategory,
                                 addedAt: Date(),
                                 //                        expirationDate: isAlermSettingOn ? Date(timeIntervalSinceNow: TimeInterval(timeIntervalSinceNow)) : nil,
+                                isUrlSettingOn: isUrlSettingOn,
+                                customURL: itemUrl,
+                                isAlermSettingOn: isAlermSettingOn,
                                 isAlermRepeatOn: isAlermRepeatOn,
                                 alermCycleSeconds: timeIntervalSinceNow,
-                                alermCycleString: "\(selectedDigitsValue)\(selectedUnitsValue)",
-                                customURL: itemUrl
+                                alermCycleString: "\(selectedDigitsValue)\(selectedUnitsValue)"
 //                                id: nil
                                 ),
                                 shoppingItemDocId: shoppingItemDocId

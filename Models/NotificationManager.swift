@@ -51,7 +51,7 @@ final class NotificationManager {
         content.body = "Let's go to buy \(shoppingItem.name) ! The expire date of this alerm is \(shoppingItem.alermCycleSeconds). The created at date of this alerm is \(shoppingItem.addedAt)"
         content.sound = UNNotificationSound.default
         
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(shoppingItem.alermCycleSeconds!), repeats: shoppingItem.isAlermRepeatOn)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(shoppingItem.alermCycleSeconds!), repeats: shoppingItem.isAlermRepeatOn ?? false)
         let request = UNNotificationRequest(
             identifier: shoppingItemDocId,
 //            identifier: "identifier",

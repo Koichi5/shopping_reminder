@@ -19,8 +19,10 @@ struct ShoppingItem: Identifiable, Codable {
         formatter.dateFormat = "yyyy年M月d日 H時m分"
         return formatter.string(from: addedAt)
     }
+    var isUrlSettingOn: Bool
     var customURL: String?
-    var isAlermRepeatOn: Bool
+    var isAlermSettingOn: Bool
+    var isAlermRepeatOn: Bool?
     var alermCycleSeconds: Int?
     var alermCycleString: String?
 //    var expirationDate: Date?
@@ -37,7 +39,9 @@ struct ShoppingItem: Identifiable, Codable {
 //        case categoryName = "category_name"
         case category
         case addedAt = "added_at"
+        case isUrlSettingOn = "is_url_setting_on"
         case customURL = "custom_url"
+        case isAlermSettingOn = "is_alerm_setting_on"
         case isAlermRepeatOn = "is_alerm_repeat_on"
         case alermCycleSeconds = "alerm_cycle_seconds"
         case alermCycleString = "alerm_cycle_string"
@@ -49,11 +53,13 @@ struct ShoppingItem: Identifiable, Codable {
          category: Category,
          addedAt: Date,
 //         expirationDate: Date? = nil,
-         isAlermRepeatOn: Bool,
+         isUrlSettingOn: Bool,
+         customURL: String?,
+         isAlermSettingOn: Bool,
+         isAlermRepeatOn: Bool?,
          alermCycleSeconds: Int?,
-         alermCycleString: String?,
+         alermCycleString: String?
 //         customURL: String? = nil,
-         customURL: String?
 //         id: UUID = UUID()
 //         id: String? = UUID().uuidString
     ) {
@@ -62,6 +68,8 @@ struct ShoppingItem: Identifiable, Codable {
         self.category = category
         self.addedAt = addedAt
 //        self.expirationDate = expirationDate
+        self.isUrlSettingOn = isUrlSettingOn
+        self.isAlermSettingOn = isAlermSettingOn
         self.alermCycleSeconds = alermCycleSeconds
         self.alermCycleString = alermCycleString
         self.isAlermRepeatOn = isAlermRepeatOn

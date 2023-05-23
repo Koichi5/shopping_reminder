@@ -137,6 +137,7 @@ struct ShoppingItemEditView: View {
                     Spacer()
                     DialogHelper(
                         systemName: "trash",
+                        buttonText: nil,
                         titleText: "このアイテムを削除しますか？",
                         messageText: nil,
                         primaryButtonText: "キャンセル",

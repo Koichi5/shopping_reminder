@@ -36,17 +36,16 @@ struct IntroView: View {
                     message: "インタラクティブグラフでデータをわかりやすく表示します。"
                 )
                 Spacer()
-                Button(action: {
-                    isFullScreenPresented = true
-                }) {
-                    Text("続ける")
-                        .fontWeight(.bold)
-                        .font(.system(size: 20))
-                        .foregroundColor(Color.white)
-                        .frame(maxWidth: .infinity, minHeight: 48)
-                        .background(Color.red.cornerRadius(10))
-                        .padding(.horizontal, 32)
-                }
+                ButtonHelper(
+                    buttonText: "続ける",
+                    buttonAction: {isFullScreenPresented = true},
+                    foregroundColor: Color.white,
+                    backgroundColor: Color.blue,
+                    buttonTextIsBold: nil,
+                    buttonWidth: nil,
+                    buttonHeight: nil,
+                    buttonTextFontSize: nil
+                )
             }
             .fullScreenCover(isPresented: $isFullScreenPresented) {
                 SideMenuContentView()

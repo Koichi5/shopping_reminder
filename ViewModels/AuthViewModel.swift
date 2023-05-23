@@ -131,6 +131,7 @@ class AuthViewModel: ObservableObject {
     }
     
     func signOut() {
+        print("sign out fired")
       // 1
       GIDSignIn.sharedInstance.signOut()
       

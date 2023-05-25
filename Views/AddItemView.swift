@@ -91,7 +91,7 @@ struct AddItemView: View {
                                 isAlermSettingOn: isAlermSettingOn,
                                 isAlermRepeatOn: isAlermRepeatOn,
                                 alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil
+                                alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue) \(selectedUnitsValue)" : nil
                             )
                             )
                             if (isAlermSettingOn) {
@@ -105,7 +105,7 @@ struct AddItemView: View {
                                         isAlermSettingOn: isAlermSettingOn,
                                         isAlermRepeatOn: isAlermRepeatOn,
                                         alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                        alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil
+                                        alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue) \(selectedUnitsValue)" : nil
                                     ),
                                     shoppingItemDocId: shoppingItemDocId
                                 )

@@ -514,3 +514,28 @@ struct MemoView_Previews: PreviewProvider {
 //            customURL: custom_url
 //        )
 //    }
+
+//func addShoppingItemWithDocumentId(shoppingItem: ShoppingItem) async throws -> String {
+//    var newDocReference = ""
+//    var docId = ""
+//    let currentUser = AuthModel().getCurrentUser()
+//    if currentUser == nil {
+//        print("current user is nil")
+//    } else {
+//        let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+//        let itemsRef = userRef.collection("items")
+//        docId = itemsRef.document().documentID
+//        do {
+//            try itemsRef.document(docId).setData(from: shoppingItem)
+//            try await itemsRef.document(docId).updateData([
+//                "id": docId
+//            ])
+//            print("newDocReference:  \(docId)")
+//        }
+//        catch {
+//            print(error)
+//        }
+//    }
+//    print("newDocReference in addnshopping item with document id func: \(docId)")
+//    return docId
+//}

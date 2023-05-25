@@ -85,14 +85,6 @@ class ShoppingItemRepository: ObservableObject {
                 try await itemsRef.document(docId).updateData([
                     "id": docId
                 ])
-//                let newDocReference = try itemsRef.addDocument(from: shoppingItem)
-//                let newDocReference = try itemRef.addDocument(from: shoppingItem)
-//                let newDocReference: () = try itemRef.setData(shoppingItem)
-//                shoppingItemId = newDocReference.documentID
-//                try await itemsRef.document(shoppingItemId).updateData(["id": "\(shoppingItemId)"])
-//                print("shoppingItemId in addShoppingItemWithDocumentId func: \(shoppingItemId)")
-//                print("shopping item id in add shopping item with document id func : \(shoppingItemId)")
-//                print("Item stored with new document reference: \(newDocReference)")
                 print("newDocReference:  \(docId)")
             }
             catch {
@@ -103,23 +95,27 @@ class ShoppingItemRepository: ObservableObject {
         return docId
     }
     
-    func updateShoppingItem(shoppingItem: ShoppingItem) async throws -> Void {
+    func updateShoppingItem(shoppingItem: ShoppingItem, shoppingItemId: String) async throws -> Void {
         let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
             print("current user is nil")
         } else {
             let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
-            let itemRef = userRef.collection("items").document(shoppingItem.id ?? "")
+            let itemRef = userRef.collection("items").document(shoppingItemId)
             do {
                 try await itemRef.updateData([
-                    "id": shoppingItem.id,
+//                    "id": shoppingItem.id,
                     "name": shoppingItem.name,
-                    "category": shoppingItem.category,
+//                    "category": shoppingItem.category,
                     "added_at": shoppingItem.addedAt,
+                    "is_url_setting_on": shoppingItem.isUrlSettingOn,
                     "custom_url": shoppingItem.customURL,
+                    "is_alerm_setting_on": shoppingItem.isAlermSettingOn,
                     "is_alerm_repeat_on": shoppingItem.isAlermRepeatOn,
                     "alerm_cycle_seconds": shoppingItem.alermCycleSeconds,
+                    "alerm_cycle_string": shoppingItem.alermCycleString,
                     ])
+//                try await itemRef.setData(from: shoppingItem)
             } catch {
                 print(error)
             }

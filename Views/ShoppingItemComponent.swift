@@ -49,6 +49,9 @@ struct ShoppingItemComponent: View {
             .navigationDestination(isPresented: $isEditPresented) {
                 ShoppingItemEditView(shoppingItem: shoppingItem)
             }
+            .onAppear {
+                print("shopping item id in shopping item component is : \(shoppingItem.id)")
+            }
 //            .onTapGesture {
 //                isEditPresented.toggle()
 //                print("shoppingItem id on component: \(shoppingItem.id)")

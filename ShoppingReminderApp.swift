@@ -32,11 +32,7 @@ struct ShoppingReminderApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {
-//            SideMenuContentView()
             EntryAuthView()
-//            UrlButton(systemName: "app.gift", buttonText: "Visit My App", sourceUrl: "https://play.google.com/store/apps/details?id=com.koichi.techjourney&hl=ja")
-//            MemoView()
-//            IntroSliderView()
         }
     }
 }

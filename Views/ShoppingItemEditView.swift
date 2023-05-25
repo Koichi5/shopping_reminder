@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ShoppingItemEditView: View {
     @State private var isShowSheet: Bool = false
+    @State private var shoppingItemId: String = ""
     @State private var shoppingItemName = ""
     @State private var itemUrl = ""
     @State private var categoryList: [Category] = []
@@ -33,13 +34,18 @@ struct ShoppingItemEditView: View {
                     .padding(.horizontal)
                 Spacer()
                 CategoryItemList(categoryItemList: $categoryItemList, selectedCategory: $selectedCategory)
-                
+                    .onAppear {
+                        selectedCategory = shoppingItem.category
+                    }
                 List {
                     Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
                         isAlermSettingOn ?
                         ItemDigitPicker(
                             selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
-                        )
+                        ).onAppear {
+                            selectedDigitsValue = shoppingItem.alermCycleString ?? "1"
+                            selectedUnitsValue = shoppingItem.alermCycleString ?? "時間ごと"
+                        }
                         .frame(height: 100)
                         .listRowBackground(Color.clear)
                         : nil
@@ -84,11 +90,13 @@ struct ShoppingItemEditView: View {
                     buttonAction: {
                         VibrationHelper().feedbackVibration()
                         let intSelectedDigitsValue = Int(selectedDigitsValue)
-                        timeIntervalSinceNow = TimeHelper().calcSecondsFromString(selectedUnitsValue: selectedUnitsValue, intSelectedDigitsValue: intSelectedDigitsValue ?? 0)
+                        timeIntervalSinceNow = TimeHelper()
+                            .calcSecondsFromString(
+                                selectedUnitsValue: selectedUnitsValue,
+                                intSelectedDigitsValue: intSelectedDigitsValue ?? 0)
                         Task {
                             do {
-                                shoppingItemDocId =
-                                try await ShoppingItemRepository().addShoppingItemWithDocumentId(shoppingItem: ShoppingItem(
+                                try await ShoppingItemRepository().updateShoppingItem(shoppingItem: ShoppingItem(
                                     name: shoppingItemName,
                                     category: selectedCategory,
                                     addedAt: Date(),
@@ -98,8 +106,8 @@ struct ShoppingItemEditView: View {
                                     isAlermRepeatOn: isAlermRepeatOn,
                                     alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
                                     alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil
-                                )
-                                )
+                                ),
+                                                                                      shoppingItemId: shoppingItem.id ?? "")
                                 if (isAlermSettingOn) {
                                     NotificationManager().sendIntervalNotification(
                                         shoppingItem: ShoppingItem(
@@ -163,9 +171,10 @@ struct ShoppingItemEditView: View {
                     //                    }
                 }
             }
-        }.sheet(isPresented: $isShowSheet) {
-            ShoppingItemEditModal(isShowSheet: $isShowSheet, shoppingItem: shoppingItem)
         }
+//        .sheet(isPresented: $isShowSheet) {
+//            ShoppingItemEditModal(isShowSheet: $isShowSheet, shoppingItem: shoppingItem)
+//        }
         .task {
             do {
                 categoryList = try await CategoryRepository().fetchCategories()

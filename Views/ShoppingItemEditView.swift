@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Foundation
 
 struct ShoppingItemEditView: View {
     @State private var isShowSheet: Bool = false
@@ -43,8 +44,9 @@ struct ShoppingItemEditView: View {
                         ItemDigitPicker(
                             selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
                         ).onAppear {
-                            selectedDigitsValue = shoppingItem.alermCycleString ?? "1"
-                            selectedUnitsValue = shoppingItem.alermCycleString ?? "時間ごと"
+                            let arr:[String] = shoppingItem.alermCycleString?.components(separatedBy: " ") ?? ["1", "時間ごと"]
+                            selectedDigitsValue = arr[0]
+                            selectedUnitsValue = arr[1]
                         }
                         .frame(height: 100)
                         .listRowBackground(Color.clear)
@@ -55,11 +57,10 @@ struct ShoppingItemEditView: View {
                             .padding(.horizontal) : nil
                     }
                     .onAppear {
-//                        isAlermSettingOn = shoppingItem.isAlermRepeatOn
+                        isAlermSettingOn = shoppingItem.isAlermSettingOn
                     }
                     Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
                         isUrlSettingOn ?
-                        
                         TextField("URL", text: $itemUrl)
                             .listRowBackground(Color.clear)
                             .padding(.horizontal)
@@ -69,6 +70,7 @@ struct ShoppingItemEditView: View {
                     }
                     .onAppear {
                         isUrlSettingOn = shoppingItem.customURL != ""
+                        itemUrl = shoppingItem.customURL ?? ""
                     }
                 }.listStyle(.plain)
                 

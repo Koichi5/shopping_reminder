@@ -15,9 +15,13 @@ class ShoppingItemRepository: ObservableObject {
             self.objectWillChange.send()
         }
     }
+    @Published var shoppingItemCategoryList = [String](){
+        didSet{
+            self.objectWillChange.send()
+        }
+    }
     
-    func addUserSnapshotListener() async throws -> Void{
-//        var shoppingItemList: [ShoppingItem] = []
+    func addUserSnapshotListener() async throws -> Void {
         print("add user snapshot listener fired !")
         let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
@@ -40,13 +44,21 @@ class ShoppingItemRepository: ObservableObject {
                             self.shoppingItemList = try documentSnapshot.documents.compactMap {
                                 try $0.data(as: ShoppingItem.self)
                             }
+                            //                            self.shoppingItemCategoryList = try documentSnapshot.documents.compactMap {
+                            //                                try $0.data(as: )
+                            //                            }
                             print("shoppingItemList: \(self.shoppingItemList)")
+                            for shoppingItem in self.shoppingItemList {
+                                if(!self.shoppingItemCategoryList.contains(shoppingItem.category.name)) {
+                                    self.shoppingItemCategoryList.append(shoppingItem.category.name)
+                                }
+                            }
+//                            self.shoppingItemCategoryList.append(self.shoppingItemList[0].category.name)
                         } catch {
                             print(error)
                         }
                     }
                     if (diff.type == .modified){
-//                         更新された値を取得
                         itemsRef.getDocuments { (snap, error) in
                             if let error = error {
                                 fatalError("\(error)")
@@ -69,7 +81,7 @@ class ShoppingItemRepository: ObservableObject {
     }
     
     func addShoppingItemWithDocumentId(shoppingItem: ShoppingItem) async throws -> String {
-//        var shoppingItemId = ""
+        //        var shoppingItemId = ""
         var newDocReference = ""
         var docId = ""
         let currentUser = AuthModel().getCurrentUser()
@@ -80,7 +92,7 @@ class ShoppingItemRepository: ObservableObject {
             let itemsRef = userRef.collection("items")
             docId = itemsRef.document().documentID
             do {
-//                set data from shoppingItem and then update id
+                //                set data from shoppingItem and then update id
                 try itemsRef.document(docId).setData(from: shoppingItem)
                 try await itemsRef.document(docId).updateData([
                     "id": docId
@@ -104,9 +116,9 @@ class ShoppingItemRepository: ObservableObject {
             let itemRef = userRef.collection("items").document(shoppingItemId)
             do {
                 try await itemRef.updateData([
-//                    "id": shoppingItem.id,
+                    //                    "id": shoppingItem.id,
                     "name": shoppingItem.name,
-//                    "category": shoppingItem.category,
+                    //                    "category": shoppingItem.category,
                     "added_at": shoppingItem.addedAt,
                     "is_url_setting_on": shoppingItem.isUrlSettingOn,
                     "custom_url": shoppingItem.customURL,
@@ -114,8 +126,8 @@ class ShoppingItemRepository: ObservableObject {
                     "is_alerm_repeat_on": shoppingItem.isAlermRepeatOn,
                     "alerm_cycle_seconds": shoppingItem.alermCycleSeconds,
                     "alerm_cycle_string": shoppingItem.alermCycleString,
-                    ])
-//                try await itemRef.setData(from: shoppingItem)
+                ])
+                //                try await itemRef.setData(from: shoppingItem)
             } catch {
                 print(error)
             }
@@ -132,13 +144,13 @@ class ShoppingItemRepository: ObservableObject {
             do {
                 try await itemRef.updateData([
                     "id": shoppingItemId,
-                    ])
+                ])
             } catch {
                 print(error)
             }
         }
     }
-        
+    
     
     func deleteShoppingItem(shoppingItem: ShoppingItem) async throws -> Void {
         let currentUser = AuthModel().getCurrentUser()

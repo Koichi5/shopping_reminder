@@ -11,7 +11,6 @@ import SwiftUI
 import FirebaseCore
 import GoogleSignIn
 
-
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication,
 //                     open url: URL,

@@ -15,6 +15,10 @@ struct ShoppingItemComponent: View {
     var body: some View {
         NavigationStack {
             HStack {
+                Circle()
+                    .fill(shoppingItem.category.color.colorData)
+                    .frame(width: 10, height: 10)
+                    .padding(.horizontal)
                 Text("\(shoppingItem.name)")
                 Spacer()
                 shoppingItem.customURL == "" ? nil :
@@ -44,8 +48,12 @@ struct ShoppingItemComponent: View {
                 }
             }
             .padding()
-            .background(shoppingItem.category.color.colorData)
-            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(shoppingItem.category.color.colorData, lineWidth: 1.5)
+            )
+//            .background(shoppingItem.category.color.colorData)
+//            .cornerRadius(10)
             .navigationDestination(isPresented: $isEditPresented) {
                 ShoppingItemEditView(shoppingItem: shoppingItem)
             }

@@ -31,8 +31,10 @@ struct ShoppingItemView: View {
             }
             ForEach (shoppingItemRepository.shoppingItemCategoryList, id: \.hashValue) { shoppingItemCategory in
                 Text(shoppingItemCategory)
-                ForEach (shoppingItemList) { shoppingItem in
-                    
+                ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
+                    shoppingItem.category.name == shoppingItemCategory
+                    ? Text(shoppingItem.name)
+                    : nil
                 }
             }
         }

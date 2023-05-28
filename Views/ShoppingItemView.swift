@@ -25,27 +25,42 @@ struct ShoppingItemView: View {
     //    @State private var categories: [String] = []
     
     var body: some View {
-        VStack {
-            ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
-                ShoppingItemComponent(shoppingItem: shoppingItem)
-            }
-            ForEach (shoppingItemRepository.shoppingItemCategoryList, id: \.hashValue) { shoppingItemCategory in
-                Text(shoppingItemCategory)
-                ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
-                    shoppingItem.category.name == shoppingItemCategory
-                    ? Text(shoppingItem.name)
-                    : nil
+        ScrollView {
+            //            VStack {
+            //            ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
+            //                ShoppingItemComponent(shoppingItem: shoppingItem)
+            //            }
+//            shoppingItemRepository.shoppingItemList.isEmpty ? nil :
+            ZStack {
+                shoppingItemRepository.shoppingItemList.isEmpty ? nil :
+                Color.white
+                    .cornerRadius(10)
+                    .shadow(color: .gray.opacity(0.7), radius: 2, x: 10, y: 10)
+                VStack {
+                    ForEach (shoppingItemRepository.shoppingItemCategoryList, id: \.hashValue) { shoppingItemCategory in
+                        Text(shoppingItemCategory)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal)
+                            .padding(.top)
+                        ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
+                            shoppingItem.category.name == shoppingItemCategory
+                            ? ShoppingItemComponent(shoppingItem: shoppingItem).padding(.horizontal)
+                            : nil
+                        }.padding(.vertical)
+                    }
                 }
             }
-        }
-        .task {
-            do {
-                try await shoppingItemRepository.addUserSnapshotListener()
-                let shoppingItemDict = Dictionary(grouping: shoppingItemList.filter({ $0.category.name != nil })) { $0.category.name }
-                print("shoppingItemDict in shopping item view: \(shoppingItemDict)")
-                updateCategories()
-            } catch {
-                print(error)
+//            .shadow(color: .gray.opacity(0.7), radius: 5, x: 10, y: 10)
+            .padding()
+            .task {
+                do {
+                    try await shoppingItemRepository.addUserSnapshotListener()
+                    let shoppingItemDict = Dictionary(grouping: shoppingItemList.filter({ $0.category.name != nil })) { $0.category.name }
+                    print("shoppingItemDict in shopping item view: \(shoppingItemDict)")
+                    updateCategories()
+                } catch {
+                    print(error)
+                }
             }
         }
     }

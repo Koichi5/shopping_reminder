@@ -15,8 +15,9 @@ struct HomeView: View {
     }
     @FocusState private var focusedField: Field?
     @State private var itemName = ""
-    @State private var showingMenu = false
+    @State private var showingMenu: Bool = false
     @State private var isShowSheet: Bool = false
+    @State private var isShowSetting: Bool = false
     @State private var existCategoryList: [Category] = []
     var body: some View {
         NavigationStack {
@@ -36,6 +37,14 @@ struct HomeView: View {
                             .foregroundColor(Color.foreground)
                     }
                 }
+                ToolbarItem(placement: .destructiveAction) {
+                    Button(action: {
+                        
+                    }) {
+                        Image(systemName: "gearshape")
+                            .foregroundColor(Color.foreground)
+                    }
+                }
                 ToolbarItemGroup(placement: .bottomBar) {
                     Spacer()
                     Button(action: {
@@ -47,6 +56,9 @@ struct HomeView: View {
             }
         }.sheet(isPresented: $isShowSheet) {
             AddItemView(isShowSheet: $isShowSheet)
+        }
+        .fullScreenCover(isPresented: $isShowSetting) {
+            SettingView()
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .offset(x: showingMenu ? 200.0 : 0.0, y: 0)

@@ -33,16 +33,17 @@ class FirebaseUserRepository {
                         Category(name: "Cars", color: CategoryColor.yellow),
                     ]
                 )
-                let encoder = JSONEncoder()
-                let data = try encoder.encode(firebaseUser)
-                let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-                userRef.setData(dict) { error in
-                    if let error = error {
-                        print("--Error adding document: \(error)--")
-                    } else {
-                        print("--Document added successfully--")
-                    }
-                }
+//                let encoder = JSONEncoder()
+//                let data = try encoder.encode(firebaseUser)
+//                let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+//                userRef.setData(dict) { error in
+//                    if let error = error {
+//                        print("--Error adding document: \(error)--")
+//                    } else {
+//                        print("--Document added successfully--")
+//                    }
+//                }
+                try userRef.setData(from: firebaseUser)
                 
                 for category in firebaseUser.categories {
                     Task {

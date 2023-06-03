@@ -7,10 +7,11 @@
 
 import Foundation
 import SwiftUI
+import FirebaseFirestoreSwift
 
 struct Category: Identifiable, Codable {
     
-    let id: UUID
+    @DocumentID var id: String?
     var name: String
     var color: CategoryColor
     var items: [ShoppingItem]
@@ -22,9 +23,9 @@ struct Category: Identifiable, Codable {
         case items
     }
     
-    init(id: UUID = UUID(), name: String, color: CategoryColor,
+    init(
+        name: String, color: CategoryColor,
          items: [ShoppingItem] = []) {
-        self.id = id
         self.name = name
         self.color = color
         self.items = items
@@ -68,6 +69,31 @@ enum CategoryColor: Int, Codable, CaseIterable {
         }
     }
     
+    var colouNum: Int{
+        switch self {
+        case .red:
+            return 1
+        case .orange:
+            return 2
+        case .yellow:
+            return 3
+        case .green:
+            return 4
+        case .tealBlue:
+            return 5
+        case .blue:
+            return 6
+        case .purple:
+            return 7
+        case .pink:
+            return 8
+        case .gray:
+            return 9
+        case .black:
+            return 10
+        }
+    }
+    
     var colorData: Color {
         switch self {
         case .red:
@@ -93,3 +119,12 @@ enum CategoryColor: Int, Codable, CaseIterable {
         }
     }
 }
+
+//extension CategoryColor {
+//    func toCategoruColor(color: Color) {
+//        switch self {
+//        case color.red:
+//            return 1
+//        }
+//    }
+//}

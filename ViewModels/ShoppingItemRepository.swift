@@ -81,8 +81,7 @@ class ShoppingItemRepository: ObservableObject {
     }
     
     func addShoppingItemWithDocumentId(shoppingItem: ShoppingItem) async throws -> String {
-        //        var shoppingItemId = ""
-        var newDocReference = ""
+//        var newDocReference = ""
         var docId = ""
         let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
@@ -150,7 +149,6 @@ class ShoppingItemRepository: ObservableObject {
             }
         }
     }
-    
     
     func deleteShoppingItem(shoppingItem: ShoppingItem) async throws -> Void {
         let currentUser = AuthModel().getCurrentUser()

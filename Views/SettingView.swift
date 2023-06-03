@@ -11,8 +11,8 @@ struct SettingView: View {
     @State private var showingMenu = false
     @State private var isCategorySettringOn = false
     @State private var categoryList: [Category] = []
-    @State private var categoryItemList: [CategoryItem] = []
     @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
+//    @State private var categoryFieldData: [CategoryFieldModel] = []
     var body: some View {
         NavigationStack {
             ZStack {
@@ -21,12 +21,22 @@ struct SettingView: View {
                     Section("カテゴリ") {
                         sectionHeader(title: "カテゴリ", isExpanded: $isCategorySettringOn)
                         isCategorySettringOn
-                        ? VStack {
-                            ForEach(categoryItemList) { categoryItem in
-                                Text(categoryItem.category.name)
-//                                TextField("\(categoryItem.category.name)", text: T##Binding<String>)
+                        ? ForEach(self.categoryList.indices, id: \.self) { index in
+                            CategoryFieldRow.init(category: self.$categoryList[index]) {
+                                debugPrint("onCommit")
+                                debugPrint(self.categoryList)
                             }
-                        }
+                        }.onDelete(perform: { indexSet in
+                            self.categoryList.remove(atOffsets: indexSet)
+                        })
+//                        .onMove(perform: {indices, newOffset in
+//                            self.categoryFieldData.move(fromOffsets: indices, toOffset: newOffset)
+//                        })
+//                            ForEach(categoryItemList) { categoryItem in
+//                                Text(categoryItem.category.name)
+////                                TextField("\(categoryItem.category.name)", text: T##Binding<String>)
+//                            }
+                        
                         : nil
                     }.listStyle(.automatic)
                     Section("システム") {
@@ -68,9 +78,9 @@ struct SettingView: View {
         .task {
             do {
                 categoryList = try await CategoryRepository().fetchCategories()
-                for category in categoryList {
-                    categoryItemList.append(CategoryItem(category: category))
-                }
+//                for category in categoryList {
+//                    categoryFieldData.append(CategoryFieldModel(text: category.name, color: category.color.colorData))
+//                }
             } catch {
                 print(error)
             }

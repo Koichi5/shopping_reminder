@@ -39,7 +39,7 @@ struct HomeView: View {
                 }
                 ToolbarItem(placement: .destructiveAction) {
                     Button(action: {
-                        
+                        isShowSetting.toggle()
                     }) {
                         Image(systemName: "gearshape")
                             .foregroundColor(Color.foreground)

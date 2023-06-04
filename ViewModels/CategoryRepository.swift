@@ -59,17 +59,33 @@ class CategoryRepository {
         }
     }
     
-    func updateCategory(category: Category) async throws -> Void {
+    func updateCategoryName(categoryId: String, categoryName: String) async throws -> Void {
         let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
             print("current user is nil")
         } else {
             let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
-            let categoriesRef = userRef.collection("categories").document(category.id ?? "")
+            let categoriesRef = userRef.collection("categories").document(categoryId)
             do {
                 try await categoriesRef.updateData([
-                    "name": category.name,
-                    "color": category.color
+                    "name": categoryName,
+                ])
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func updateCategoryColor(categoryId: String, categoryColorNum: Int) async throws -> Void {
+        let currentUser = AuthModel().getCurrentUser()
+        if currentUser == nil {
+            print("current user is nil")
+        } else {
+            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+            let categoriesRef = userRef.collection("categories").document(categoryId)
+            do {
+                try await categoriesRef.updateData([
+                    "color": categoryColorNum
                 ])
             } catch {
                 print(error)

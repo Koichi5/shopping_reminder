@@ -69,7 +69,7 @@ enum CategoryColor: Int, Codable, CaseIterable {
         }
     }
     
-    var colouNum: Int{
+    var colorNum: Int{
         switch self {
         case .red:
             return 1

@@ -18,8 +18,11 @@ struct CategoryFieldRow: View {
     @State private var selectedColor = Color.gray
     @State private var isColorEditing: Bool = false
     @State private var currentTask: Task<(), Never>?
-    private func updateCategory(category: Category) async throws {
-        try await CategoryRepository().updateCategory(category: category)
+    private func updateCategoryColor(categoryId: String, categoryColorNum: Int) async throws {
+        try await CategoryRepository().updateCategoryColor(categoryId: categoryId, categoryColorNum: categoryColorNum)
+    }
+    private func updateCategoryName(categoryId: String, categoryName: String) async throws {
+        try await CategoryRepository().updateCategoryName(categoryId: categoryId, categoryName: categoryName)
     }
     var onCommit: () -> Void
     
@@ -50,29 +53,13 @@ struct CategoryFieldRow: View {
                             currentTask?.cancel()
                             currentTask = Task {
                                 do {
-                                    try await updateCategory(category: Category(name: category.name, color:  CategoryColor.gray))
+                                    try await updateCategoryColor(categoryId: category.id ?? "", categoryColorNum: category.color.colorNum)
+                                    print("category id: \(category.id)")
                                 } catch {
                                     print(error)
                                 }
                             }
                         }, foregroundColor: Color.white, backgroundColor: selectedColor, buttonTextIsBold: nil, buttonWidth: nil, buttonHeight: nil, buttonTextFontSize: nil)
-                        //                        Button(action: {
-                        //                            currentTask?.cancel()
-                        //                            currentTask = Task {
-                        //                                do {
-                        //                                    try await updateCategory(category: Category(name: category.name, color:  CategoryColor.gray))
-                        //                                } catch {
-                        //                                    print(error)
-                        //                                }
-                        //                            }
-                        //                        }) {
-                        //                            Text("変更")
-                        //                                .fontWeight(.bold)
-                        //                                .foregroundColor(Color.white)
-                        //                                .background(selectedColor.cornerRadius(10))
-                        //                                .frame(maxWidth: .infinity, minHeight: 48)
-                        //                                .padding(.horizontal, 32)
-                        //                        }
                         .onDisappear {
                             currentTask?.cancel()
                         }
@@ -92,7 +79,16 @@ struct CategoryFieldRow: View {
             Spacer()
             isEditing
             ? Button(action: {
-                //                CategoryRepository().updateCategory(category: Category(name: self.category.name, color: color))
+                currentTask?.cancel()
+                currentTask = Task {
+                    do {
+                        try await updateCategoryName(categoryId: category.id ?? "", categoryName: self.category.name)
+                        print("category id: \(category.id)")
+                    } catch {
+                        print(error)
+                    }
+                }
+                isEditing = false
             }) {
                 Text("変更")
             }

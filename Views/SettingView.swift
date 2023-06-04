@@ -26,9 +26,10 @@ struct SettingView: View {
                                 debugPrint("onCommit")
                                 debugPrint(self.categoryList)
                             }
-                        }.onDelete(perform: { indexSet in
-                            self.categoryList.remove(atOffsets: indexSet)
-                        })
+                        }
+//                        .onDelete(perform: { indexSet in
+//                            self.categoryList.remove(atOffsets: indexSet)
+//                        })
 //                        .onMove(perform: {indices, newOffset in
 //                            self.categoryFieldData.move(fromOffsets: indices, toOffset: newOffset)
 //                        })

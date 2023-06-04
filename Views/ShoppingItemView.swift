@@ -11,46 +11,33 @@ struct ShoppingItemView: View {
     @ObservedObject private var shoppingItemRepository = ShoppingItemRepository()
     @State private var shoppingItemList = ShoppingItemRepository().shoppingItemList
     @State private var categories: [String] = []
-    //    let shoppingItemDict = Dictionary(grouping: shoppingItemList.filter({ $0.category.name != nil })) { $0.category.name }
-    //    var shoppingItemDict = [String: [ShoppingItem]]()
-    //    for shoppingItem in shoppingItemList {
-    //        if let categoryName = shoppingItem.category?.name {
-    //            if shoppingItemDict[categoryName] == nil {
-    //                shoppingItemDict[categoryName] = [shoppingItem]
-    //            } else {
-    //                shoppingItemDict[categoryName]?.append(shoppingItem)
-    //            }
-    //        }
-    //    }
-    //    @State private var categories: [String] = []
     
     var body: some View {
-        ScrollView {
-            //            VStack {
-            //            ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
-            //                ShoppingItemComponent(shoppingItem: shoppingItem)
-            //            }
-//            shoppingItemRepository.shoppingItemList.isEmpty ? nil :
+        ScrollView (showsIndicators: false){
             ZStack {
                 shoppingItemRepository.shoppingItemList.isEmpty ? nil :
-                Color.white
-                    .cornerRadius(10)
-                    .shadow(color: .gray.opacity(0.7), radius: 2, x: 10, y: 10)
                 VStack {
                     ForEach (shoppingItemRepository.shoppingItemCategoryList, id: \.hashValue) { shoppingItemCategory in
-                        Text(shoppingItemCategory)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal)
-                            .padding(.top)
-                        ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
-                            shoppingItem.category.name == shoppingItemCategory
-                            ? ShoppingItemComponent(shoppingItem: shoppingItem).padding(.horizontal)
-                            : nil
-                        }.padding(.vertical)
+                        ZStack {
+                            Color.white
+                                .cornerRadius(10)
+                                .shadow(color: .gray.opacity(0.7), radius: 2, x: 5, y: 5)
+                            VStack {
+                                Text(shoppingItemCategory)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.horizontal)
+                                    .padding(.top)
+                                ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
+                                    shoppingItem.category.name == shoppingItemCategory
+                                    ? ShoppingItemComponent(shoppingItem: shoppingItem).padding(.horizontal)
+                                    : nil
+                                }.padding(.vertical)
+                            }
+                        }
                     }
                 }
             }
-//            .shadow(color: .gray.opacity(0.7), radius: 5, x: 10, y: 10)
+            //            .shadow(color: .gray.opacity(0.7), radius: 5, x: 10, y: 10)
             .padding()
             .task {
                 do {

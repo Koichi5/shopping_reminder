@@ -7,14 +7,9 @@
 
 import SwiftUI
 
-//struct CategoryFieldModel {
-//    var text: String
-//    var color: Color
-//}
-
 struct CategoryFieldRow: View {
     @Binding var category: Category
-    @State private var isEditing: Bool = false
+    @State private var isNameEditing: Bool = false
     @State private var selectedColor = Color.gray
     @State private var isColorEditing: Bool = false
     @State private var currentTask: Task<(), Never>?
@@ -24,7 +19,6 @@ struct CategoryFieldRow: View {
     private func updateCategoryName(categoryId: String, categoryName: String) async throws {
         try await CategoryRepository().updateCategoryName(categoryId: categoryId, categoryName: categoryName)
     }
-    var onCommit: () -> Void
     
     var body: some View {
         HStack {
@@ -36,7 +30,7 @@ struct CategoryFieldRow: View {
                     isColorEditing = true
                 }
                 .sheet(isPresented: $isColorEditing) {
-                    VStack {
+                    VStack() {
                         Text("\(category.name)カテゴリの色変更")
                         Picker("\(category.name)カテゴリの色変更", selection: $selectedColor) {
                             ForEach(colorList, id: \.self) { item in
@@ -49,35 +43,43 @@ struct CategoryFieldRow: View {
                             }
                         }
                         .pickerStyle(WheelPickerStyle())
-                        ButtonHelper(buttonText: "変更", buttonAction: {
-                            currentTask?.cancel()
-                            currentTask = Task {
-                                do {
-                                    try await updateCategoryColor(categoryId: category.id ?? "", categoryColorNum: category.color.colorNum)
-                                    print("category id: \(category.id)")
-                                } catch {
-                                    print(error)
+                        ButtonHelper(
+                            buttonText: "変更",
+                            buttonAction: {
+                                isColorEditing = false
+                                currentTask?.cancel()
+                                currentTask = Task {
+                                    do {
+                                        try await updateCategoryColor(categoryId: category.id ?? "", categoryColorNum: category.color.colorNum)
+                                        print("category id: \(category.id)")
+                                    } catch {
+                                        print(error)
+                                    }
                                 }
-                            }
-                        }, foregroundColor: Color.white, backgroundColor: selectedColor, buttonTextIsBold: nil, buttonWidth: nil, buttonHeight: nil, buttonTextFontSize: nil)
+                            },
+                            foregroundColor: Color.white,
+                            backgroundColor: selectedColor,
+                            buttonTextIsBold: nil,
+                            buttonWidth: nil,
+                            buttonHeight: nil,
+                            buttonTextFontSize: nil)
                         .onDisappear {
                             currentTask?.cancel()
                         }
                     }
-                }
+                }.presentationDetents([.medium])
             TextField.init(
                 "",
                 text: self.$category.name,
                 onEditingChanged: {_ in
-                    isEditing = true
+                    isNameEditing = true
                 },
                 onCommit: {
-                    self.onCommit()
-                    isEditing = false
+                    isNameEditing = false
                 }
             )
             Spacer()
-            isEditing
+            isNameEditing
             ? Button(action: {
                 currentTask?.cancel()
                 currentTask = Task {
@@ -88,7 +90,7 @@ struct CategoryFieldRow: View {
                         print(error)
                     }
                 }
-                isEditing = false
+                isNameEditing = false
             }) {
                 Text("変更")
             }

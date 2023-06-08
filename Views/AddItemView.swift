@@ -33,7 +33,6 @@ struct AddItemView: View {
     
     var body: some View {
         VStack {
-            Spacer()
             HStack {
                 Spacer()
                 Button(action: {
@@ -68,7 +67,8 @@ struct AddItemView: View {
                         .frame(height: isUrlSettingOn ? 40 : 0)
                     : nil
                 }
-            }.listStyle(.plain)
+            }
+            .listStyle(.plain)
             HStack(alignment: .center) {
                 TextField("アイテム名", text: $itemName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -121,6 +121,7 @@ struct AddItemView: View {
                     Text("追加")
                 }
             }.padding(.horizontal)
+//            Spacer()
         }.onAppear {
             screen = UIScreen.main.bounds.size
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){

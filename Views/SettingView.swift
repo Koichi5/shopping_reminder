@@ -22,10 +22,7 @@ struct SettingView: View {
                         sectionHeader(title: "カテゴリ", isExpanded: $isCategorySettringOn)
                         isCategorySettringOn
                         ? ForEach(self.categoryList.indices, id: \.self) { index in
-                            CategoryFieldRow.init(category: self.$categoryList[index]) {
-                                debugPrint("onCommit")
-                                debugPrint(self.categoryList)
-                            }
+                            CategoryFieldRow.init(category: self.$categoryList[index]) 
                         }
 //                        .onDelete(perform: { indexSet in
 //                            self.categoryList.remove(atOffsets: indexSet)
@@ -63,15 +60,15 @@ struct SettingView: View {
                 }
             }
             .navigationBarTitle("Settings")
-            .navigationBarTitleDisplayMode(showingMenu ? .inline : .automatic)
-            .toolbar {
-                ToolbarItem (placement: .cancellationAction) {
-                    Button (action: {self.showingMenu.toggle()}) {
-                        Image(systemName: showingMenu ? "xmark" : "line.horizontal.3")
-                            .foregroundColor(Color.foreground)
-                    }
-                }
-            }
+//            .navigationBarTitleDisplayMode(showingMenu ? .inline : .automatic)
+//            .toolbar {
+//                ToolbarItem (placement: .cancellationAction) {
+//                    Button (action: {self.showingMenu.toggle()}) {
+//                        Image(systemName: showingMenu ? "xmark" : "line.horizontal.3")
+//                            .foregroundColor(Color.foreground)
+//                    }
+//                }
+//            }
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .offset(x: showingMenu ? 200.0 : 0.0, y: 0)

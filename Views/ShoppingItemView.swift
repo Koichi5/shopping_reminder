@@ -25,8 +25,7 @@ struct ShoppingItemView: View {
                             VStack {
                                 Text(shoppingItemCategory)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.horizontal)
-                                    .padding(.top)
+                                    .padding()
                                 ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
                                     shoppingItem.category.name == shoppingItemCategory
                                     ? ShoppingItemComponent(shoppingItem: shoppingItem).padding(.horizontal)
@@ -36,19 +35,17 @@ struct ShoppingItemView: View {
                         }
                     }
                 }
-            }
-            //            .shadow(color: .gray.opacity(0.7), radius: 5, x: 10, y: 10)
-            .padding()
-            .task {
-                do {
-                    try await shoppingItemRepository.addUserSnapshotListener()
-                    let shoppingItemDict = Dictionary(grouping: shoppingItemList.filter({ $0.category.name != nil })) { $0.category.name }
-                    print("shoppingItemDict in shopping item view: \(shoppingItemDict)")
-                    updateCategories()
-                } catch {
-                    print(error)
+            }.padding(.trailing, 5)
+                .task {
+                    do {
+                        try await shoppingItemRepository.addUserSnapshotListener()
+                        let shoppingItemDict = Dictionary(grouping: shoppingItemList.filter({ $0.category.name != nil })) { $0.category.name }
+                        print("shoppingItemDict in shopping item view: \(shoppingItemDict)")
+                        updateCategories()
+                    } catch {
+                        print(error)
+                    }
                 }
-            }
         }
     }
     private func updateCategories() {

@@ -37,8 +37,8 @@ struct SideMenuContentView: View {
         case "Chat":
             return AnyView(ChatView())
             
-        case "Settings":
-            return AnyView(SettingView())
+//        case "Settings":
+//            return AnyView(SettingView())
             
         default:
             return AnyView(HomeView())

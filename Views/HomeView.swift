@@ -38,6 +38,10 @@ struct HomeView: View {
                     }
                 }
                 ToolbarItem(placement: .destructiveAction) {
+//                    NavigationLink(destination: SettingView()) {
+//                        Image(systemName: "gearshape")
+//                            .foregroundColor(Color.foreground)
+//                    }
                     Button(action: {
                         isShowSetting.toggle()
                     }) {

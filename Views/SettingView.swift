@@ -9,37 +9,29 @@ import SwiftUI
 
 struct SettingView: View {
     @State private var showingMenu = false
-    @State private var isCategorySettringOn = false
+    @State private var isCategorySettingOn = false
     @State private var categoryList: [Category] = []
     @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
-//    @State private var categoryFieldData: [CategoryFieldModel] = []
+    @ObservedObject var vibrationHepler = VibrationHelper()
+    @ObservedObject var darkModeHelper = DarkModeHelper()
     var body: some View {
         NavigationStack {
             ZStack {
                 Color.background.edgesIgnoringSafeArea(.all)
                 List {
                     Section("カテゴリ") {
-                        sectionHeader(title: "カテゴリ", isExpanded: $isCategorySettringOn)
-                        isCategorySettringOn
+                        sectionHeader(title: "カテゴリ", isExpanded: $isCategorySettingOn)
+                        isCategorySettingOn
                         ? ForEach(self.categoryList.indices, id: \.self) { index in
-                            CategoryFieldRow.init(category: self.$categoryList[index]) 
+                            CategoryFieldRow.init(category: self.$categoryList[index])
                         }
-//                        .onDelete(perform: { indexSet in
-//                            self.categoryList.remove(atOffsets: indexSet)
-//                        })
-//                        .onMove(perform: {indices, newOffset in
-//                            self.categoryFieldData.move(fromOffsets: indices, toOffset: newOffset)
-//                        })
-//                            ForEach(categoryItemList) { categoryItem in
-//                                Text(categoryItem.category.name)
-////                                TextField("\(categoryItem.category.name)", text: T##Binding<String>)
-//                            }
-                        
                         : nil
                     }.listStyle(.automatic)
                     Section("システム") {
-                        Text("バイブレーション")
-                        Text("ダークモード")
+                        Toggle("バイブレーション", isOn: $vibrationHepler.isAllowedVibration)
+//                            .environmentObject(VibrationHelper())
+                        Toggle("ダークモード", isOn: $darkModeHelper.isDarkMode)
+//                            .environmentObject(DarkModeHelper())
                     }
                     HStack {
                         DialogHelper(
@@ -60,15 +52,11 @@ struct SettingView: View {
                 }
             }
             .navigationBarTitle("Settings")
-//            .navigationBarTitleDisplayMode(showingMenu ? .inline : .automatic)
-//            .toolbar {
-//                ToolbarItem (placement: .cancellationAction) {
-//                    Button (action: {self.showingMenu.toggle()}) {
-//                        Image(systemName: showingMenu ? "xmark" : "line.horizontal.3")
-//                            .foregroundColor(Color.foreground)
-//                    }
-//                }
-//            }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    BackButtonView()
+                }
+            }
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .offset(x: showingMenu ? 200.0 : 0.0, y: 0)
@@ -76,9 +64,6 @@ struct SettingView: View {
         .task {
             do {
                 categoryList = try await CategoryRepository().fetchCategories()
-//                for category in categoryList {
-//                    categoryFieldData.append(CategoryFieldModel(text: category.name, color: category.color.colorData))
-//                }
             } catch {
                 print(error)
             }
@@ -97,19 +82,24 @@ extension SettingView {
                     Image(systemName: isExpanded.wrappedValue ? "chevron.up" : "chevron.down")
                         .foregroundColor(Color.gray)
                 }
-//                if !isExpanded.wrappedValue {
-//                    Divider()
-//                } else {
-//                    Divider()
-//                        .frame(width: 0, height: 0)
-//                }
             }
         }
     }
 }
 
-struct SettingView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingView()
+struct BackButtonView: View {
+    @Environment(\.dismiss) var dismiss
+    var body: some View {
+        Button(action: {
+            dismiss()
+        }, label: {
+            Image(systemName: "chevron.backward")
+        })
     }
 }
+
+//struct SettingView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SettingView()
+//    }
+//}

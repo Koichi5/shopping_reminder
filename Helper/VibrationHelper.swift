@@ -6,85 +6,86 @@
 //
 
 import Foundation
-import UIKit
 import AudioToolbox
+import UIKit
+import SwiftUI
 
 class VibrationHelper: ObservableObject {
-    @Published var isAllowedVibration: Bool = true
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     func successVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
     }
     func errorVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         }
     }
     func warningVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             UINotificationFeedbackGenerator().notificationOccurred(.warning)
         }
     }
     func lightVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
         }
     }
     func mediumVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         }
     }
     func heavyVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
         }
     }
     func feedbackVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             UISelectionFeedbackGenerator().selectionChanged()
         }
     }
     func longVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) {}
         }
     }
     func firstSoundVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(1102)) {}
         }
     }
     func secondSoundVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(1519)) {}
         }
     }
     func thirdSoundVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(1520)) {}
         }
     }
     func fourthSoundVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(1521)) {}
         }
     }
     func threeTimesVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             for _ in 0...2 {
                 AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) {}
@@ -93,7 +94,7 @@ class VibrationHelper: ObservableObject {
         }
     }
     func noLimitVibration() {
-        if (isAllowedVibration) {
+        if (userDefaultsHelper.isVibrationAllowed) {
             print("Vibration Fired")
             func makeVibrationNoLimit() {
                 AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) {

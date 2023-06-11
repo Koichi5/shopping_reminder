@@ -33,38 +33,40 @@ struct AddItemView: View {
     
     var body: some View {
         VStack {
-            HStack {
-                Spacer()
-                Button(action: {
-                    isShowSheet = false
-                }) {
-                    Image(systemName: "xmark")
-                        .foregroundColor(Color.foreground)
-                }.padding()
-            }
+            ZStack {
+                Text("アイテムの追加")
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        isShowSheet = false
+                    }) {
+                        Image(systemName: "xmark")
+                            .foregroundColor(Color.foreground)
+                    }.padding()
+                }
+            }.padding(.vertical)
             CategoryItemList(categoryItemList: $categoryItemList, selectedCategory: $selectedCategory)
             List {
                 Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
-                    isAlermSettingOn ?
-                    ItemDigitPicker(
+                    isAlermSettingOn
+                    ? ItemDigitPicker(
                         selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
                     )
                     .frame(height: 100)
                     .listRowBackground(Color.clear)
                     : nil
-                    isAlermSettingOn ?
-                    Toggle("繰り返し", isOn: $isAlermRepeatOn)
+                    isAlermSettingOn
+                    ? Toggle("繰り返し", isOn: $isAlermRepeatOn)
                         .listRowBackground(Color.clear)
-                        .padding(.horizontal) : nil
+                        .padding(.horizontal)
+                    : nil
                 }
                 Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
-                    isUrlSettingOn ?
-                    
+                    isUrlSettingOn
+                    ?
                     TextField("URL", text: $itemUrl)
                         .listRowBackground(Color.clear)
                         .padding(.horizontal)
-                        .padding(.bottom)
-                        .frame(height: isUrlSettingOn ? 40 : 0)
                     : nil
                 }
             }

@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct SettingView: View {
-    @State private var showingMenu = false
+//    @State private var showingMenu = false
     @State private var isCategorySettingOn = false
     @State private var categoryList: [Category] = []
     @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
-    @ObservedObject var vibrationHepler = VibrationHelper()
-    @ObservedObject var darkModeHelper = DarkModeHelper()
+//    @ObservedObject var vibrationHepler = VibrationHelper()
+//    @ObservedObject var darkModeHelper = DarkModeHelper()
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     var body: some View {
         NavigationStack {
             ZStack {
@@ -28,27 +29,27 @@ struct SettingView: View {
                         : nil
                     }.listStyle(.automatic)
                     Section("システム") {
-                        Toggle("バイブレーション", isOn: $vibrationHepler.isAllowedVibration)
-//                            .environmentObject(VibrationHelper())
-                        Toggle("ダークモード", isOn: $darkModeHelper.isDarkMode)
-//                            .environmentObject(DarkModeHelper())
+                        Toggle("バイブレーション", isOn: $userDefaultsHelper.isVibrationAllowed)
+                        Toggle("ダークモード", isOn: $userDefaultsHelper.isDarkModeOn)
                     }
-                    HStack {
-                        DialogHelper(
-                            systemName: nil,
-                            buttonText: "ログアウト",
-                            titleText: "ログアウトしますか？",
-                            messageText: "",
-                            primaryButtonText: "いいえ",
-                            secondaryButtonText: "ログアウト",
-                            primaryButtonAction: nil,
-                            secondaryButtonAction: {
-                                AuthViewModel().signOut()
-                            }
-                        )
-                        Spacer()
+                    Section("その他") {
+                        HStack (alignment: .center) {
+                            DialogHelper(
+                                systemName: nil,
+                                buttonText: "ログアウト",
+                                titleText: "ログアウトしますか？",
+                                messageText: "",
+                                primaryButtonText: "いいえ",
+                                secondaryButtonText: "ログアウト",
+                                primaryButtonAction: nil,
+                                secondaryButtonAction: {
+                                    AuthViewModel().signOut()
+                                }
+                            )
+                            Spacer()
+                        }
+                        .contentShape(Rectangle())
                     }
-                    .contentShape(Rectangle())
                 }
             }
             .navigationBarTitle("Settings")
@@ -58,9 +59,6 @@ struct SettingView: View {
                 }
             }
         }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
-        .offset(x: showingMenu ? 200.0 : 0.0, y: 0)
-        .animation(.easeOut)
         .task {
             do {
                 categoryList = try await CategoryRepository().fetchCategories()

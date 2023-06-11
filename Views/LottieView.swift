@@ -10,33 +10,30 @@ import Lottie
 import UIKit
 
 struct LottieView: UIViewRepresentable {
-    private let lottieView = LottieAnimationView()
-    private let baseView = UIView()
-    
-    init(fileName: String) {
-        lottieView.animation = LottieAnimation.named(fileName)
-        lottieView.contentMode = .scaleAspectFit
-        lottieView.loopMode = .loop
-        baseView.addSubview(lottieView)
-        lottieView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            baseView.topAnchor.constraint(equalTo: lottieView.topAnchor),
-            baseView.leadingAnchor.constraint(equalTo: lottieView.leadingAnchor),
-            baseView.trailingAnchor.constraint(equalTo: lottieView.trailingAnchor),
-            baseView.bottomAnchor.constraint(equalTo: lottieView.bottomAnchor)
-        ])
-        lottieView.updateConstraints()
-    }
+    let fileName: String
     
     func makeUIView(context: Context) -> UIView {
-        baseView
+        let view = LottieAnimationView(name: fileName)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        let parentView = UIView()
+        parentView.addSubview(view)
+        parentView.addConstraints([
+            view.widthAnchor.constraint(equalTo: parentView.widthAnchor),
+            view.heightAnchor.constraint(equalTo: parentView.heightAnchor)
+        ])
+        return parentView
     }
     
-    func updateUIView(_ uiView: UIView, context: Context) {}
+    func updateUIView(_ uiView: UIView, context: Context) {
+        guard let view = uiView.subviews.compactMap({ $0 as? LottieAnimationView }).first else { return }
+        view.loopMode = .loop
+        view.play()
+    }
 }
 
-//struct LottieView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        LottieView()
-//    }
-//}
+struct LottieView_Previews: PreviewProvider {
+    static var previews: some View {
+        LottieView(fileName: "shopping_item_view_lottie.json")
+    }
+}

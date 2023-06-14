@@ -21,6 +21,12 @@ class ShoppingItemRepository: ObservableObject {
         }
     }
     
+    @Published var shoppingItemNameList = [String]() {
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
+    
     func addUserSnapshotListener() async throws -> Void {
         print("add user snapshot listener fired !")
         let currentUser = AuthModel().getCurrentUser()
@@ -29,7 +35,7 @@ class ShoppingItemRepository: ObservableObject {
         } else {
             let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
             let itemsRef = userRef.collection("items")
-            itemsRef.addSnapshotListener { (documentSnapshot, error) in
+            let listener = itemsRef.addSnapshotListener(includeMetadataChanges: true) { (documentSnapshot, error) in
                 // ドキュメントスナップショットの取得に失敗した場合はエラー内容を表示
                 guard let documentSnapshot = documentSnapshot else {
                     print("Error fetching document: \(error!)")
@@ -44,9 +50,6 @@ class ShoppingItemRepository: ObservableObject {
                             self.shoppingItemList = try documentSnapshot.documents.compactMap {
                                 try $0.data(as: ShoppingItem.self)
                             }
-                            //                            self.shoppingItemCategoryList = try documentSnapshot.documents.compactMap {
-                            //                                try $0.data(as: )
-                            //                            }
                             print("shoppingItemList: \(self.shoppingItemList)")
                             for shoppingItem in self.shoppingItemList {
                                 if(!self.shoppingItemCategoryList.contains(shoppingItem.category.name)) {
@@ -73,6 +76,33 @@ class ShoppingItemRepository: ObservableObject {
                     }
                     if (diff.type == .removed){
                         print("ドキュメントが削除された場合")
+                        do {
+                            self.shoppingItemList = try documentSnapshot.documents.compactMap {
+                                try $0.data(as: ShoppingItem.self)
+                            }
+                            self.shoppingItemCategoryList = []
+                            for shoppingItem in self.shoppingItemList {
+                                if(!self.shoppingItemCategoryList.contains(shoppingItem.category.name)) {
+                                    self.shoppingItemCategoryList.append(shoppingItem.category.name)
+                                }
+                            }
+                            
+//                            self.shoppingItemList = try documentSnapshot.documents.compactMap {
+//                                try $0.data(as: ShoppingItem.self)
+//                            }
+//                            print("shoppingItemList: \(self.shoppingItemList)")
+//                            for shoppingItem in self.shoppingItemList {
+//                                for shoppingItemCategory in self.shoppingItemCategoryList {
+//                                    self.shoppingItemCategoryList.
+//                                }
+//                                self.shoppingItemCategoryList.removeAll(shoppingItem.category.name != )
+//                                if(!self.shoppingItemCategoryList.contains(shoppingItem.category.name)) {
+//                                    self.shoppingItemCategoryList.append(shoppingItem.category.name)
+//                                }
+//                            }
+                        } catch {
+                            print(error)
+                        }
                     }
                 }
                 print("リスナーをアタッチして、コールバックを受け取った。")
@@ -106,6 +136,31 @@ class ShoppingItemRepository: ObservableObject {
         return docId
     }
     
+//    func fetchShoppingItemList() async throws -> [ShoppingItem] {
+//        var fetchedShoppingItemList = [ShoppingItem]()
+//        print("add user snapshot listener fired !")
+//        let currentUser = AuthModel().getCurrentUser()
+//        if currentUser == nil {
+//            print("current user is nil")
+//        } else {
+//            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+//            let itemsRef = userRef.collection("items")
+//            let itemList = try await itemsRef.getDocuments() {(querySnapshot, error) in
+//                if let error = error {
+//                    print(error)
+//                } else {
+//                    fetchedShoppingItemList = try querySnapshot.documents.compactMap {
+//                        try $0.data(as: ShoppingItem.self)
+//                    }
+////                    for document in querySnapshot!.documents {
+////                        fetchedShoppingItemList.append()
+////                    }
+//                }
+//            }
+//
+//        }
+//    }
+    
     func updateShoppingItem(shoppingItem: ShoppingItem, shoppingItemId: String) async throws -> Void {
         let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
@@ -119,6 +174,7 @@ class ShoppingItemRepository: ObservableObject {
                     "name": shoppingItem.name,
                     //                    "category": shoppingItem.category,
                     "added_at": shoppingItem.addedAt,
+                    "priority": shoppingItem.priority,
                     "is_url_setting_on": shoppingItem.isUrlSettingOn,
                     "custom_url": shoppingItem.customURL,
                     "is_alerm_setting_on": shoppingItem.isAlermSettingOn,
@@ -160,6 +216,7 @@ class ShoppingItemRepository: ObservableObject {
             let itemRef = userRef.collection("items").document(shoppingItem.id ?? "")
             do {
                 try await itemRef.delete()
+                
             } catch {
                 print(error)
             }

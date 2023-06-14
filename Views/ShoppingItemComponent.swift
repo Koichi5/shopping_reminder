@@ -79,6 +79,7 @@ struct ShoppingItemComponent_Previews: PreviewProvider {
         ShoppingItemComponent(shoppingItem: ShoppingItem(
             name: "name",
             category: Category(name: "category", color: CategoryColor.blue),
+            priority: 1,
             addedAt: Date(),
             isUrlSettingOn: false,
             customURL: "",

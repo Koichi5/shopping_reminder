@@ -10,6 +10,11 @@ import SwiftUI
 struct CategoryItemList: View {
     @Binding var categoryItemList: [CategoryItem]
     @Binding var selectedCategory: Category
+//    let initialCategory: Category
+////
+//    init(selectedCategory: Binding<Category>) {
+//        self._selectedCategory = selectedCategory
+//    }
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
@@ -33,6 +38,18 @@ struct CategoryItemList: View {
                             }
                             VibrationHelper().feedbackVibration()
                         }
+                }
+                .onAppear {
+//                    if(initialCategory != nil) {
+//                        categoryItemList.indices.forEach { index in
+//                            categoryItemList[index].isSelected = categoryItemList[index].id.uuidString == initialCategory!.id
+//                            if (categoryItemList[index].isSelected) {
+//                                selectedCategory = initialCategory!
+//                                print("selected: \(selectedCategory)")
+//                            }
+//                        }
+//
+//                    }
                 }
             }
             .padding(.vertical, 10)

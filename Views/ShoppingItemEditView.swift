@@ -22,6 +22,7 @@ struct ShoppingItemEditView: View {
     @State private var isAlermSettingOn = false
     @State private var isUrlSettingOn = false
     @State private var isAlermRepeatOn = false
+    @State private var isShowingDeleteAlert = false
     @State private var shoppingItemDocId = ""
     let shoppingItem: ShoppingItem
     var body: some View {
@@ -37,6 +38,7 @@ struct ShoppingItemEditView: View {
                 CategoryItemList(categoryItemList: $categoryItemList, selectedCategory: $selectedCategory)
                     .onAppear {
                         selectedCategory = shoppingItem.category
+                        print("current selectedCategory: \(selectedCategory)")
                     }
                 List {
                     Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
@@ -74,19 +76,19 @@ struct ShoppingItemEditView: View {
                     }
                 }.listStyle(.plain)
                 
-//                shoppingItem.customURL != ""
-//                ?
-//                HStack {
-//                    UrlButton(
-//                        systemName: "cart",
-//                        buttonText: "\(shoppingItem.customURL ?? "URL")",
-//                        sourceUrl: shoppingItem.customURL!
-//                    )}
-//                : nil
-//                shoppingItem.alermCycleString != ""
-//                ? Text(shoppingItem.alermCycleString ?? "")
-//                : nil
-//                Spacer()
+                //                shoppingItem.customURL != ""
+                //                ?
+                //                HStack {
+                //                    UrlButton(
+                //                        systemName: "cart",
+                //                        buttonText: "\(shoppingItem.customURL ?? "URL")",
+                //                        sourceUrl: shoppingItem.customURL!
+                //                    )}
+                //                : nil
+                //                shoppingItem.alermCycleString != ""
+                //                ? Text(shoppingItem.alermCycleString ?? "")
+                //                : nil
+                //                Spacer()
                 ButtonHelper(
                     buttonText: "変更",
                     buttonAction: {
@@ -145,27 +147,29 @@ struct ShoppingItemEditView: View {
             .toolbar {
                 ToolbarItemGroup (placement: .confirmationAction) {
                     Spacer()
-                    DialogHelper(
-                        systemName: "trash",
-                        buttonText: nil,
-                        titleText: "このアイテムを削除しますか？",
-                        messageText: nil,
-                        primaryButtonText: "キャンセル",
-                        secondaryButtonText: "削除",
-                        primaryButtonAction: nil,
-                        secondaryButtonAction: {
-                            print("secondary button action fired")
-                            NotificationManager().deleteNotification(shoppingItemIndentifier: [shoppingItem.id ?? ""])
-                            Task {
-                                do {
-                                    try await ShoppingItemRepository().deleteShoppingItem(shoppingItem: shoppingItem)
-                                } catch {
-                                    print(error)
-                                }
-                            }
-                            NotificationManager().fetchAllRegisteredNotifications()
+                    Button(action: { isShowingDeleteAlert = true}) {
+                        Image(systemName: "trash").foregroundColor(Color.foreground)
+                    }
+                    .alert("このアイテムを削除しますか？", isPresented: $isShowingDeleteAlert) {
+                        Button("キャンセル") {
+                            isShowingDeleteAlert = false
                         }
-                    )
+//                        NavigationLink(destination: HomeView()) {
+                            Button("削除") {
+                                print("secondary button action fired")
+                                NotificationManager().deleteNotification(shoppingItemIndentifier: [shoppingItem.id ?? ""])
+                                Task {
+                                    do {
+                                        try await ShoppingItemRepository().deleteShoppingItem(shoppingItem: shoppingItem)
+                                        
+                                    } catch {
+                                        print(error)
+                                    }
+                                }
+                                NotificationManager().fetchAllRegisteredNotifications()
+                            }
+//                        }
+                    }
                     //                    Button(action: {
                     //                        isShowSheet = true
                     //                    }) {
@@ -174,9 +178,9 @@ struct ShoppingItemEditView: View {
                 }
             }
         }
-//        .sheet(isPresented: $isShowSheet) {
-//            ShoppingItemEditModal(isShowSheet: $isShowSheet, shoppingItem: shoppingItem)
-//        }
+        //        .sheet(isPresented: $isShowSheet) {
+        //            ShoppingItemEditModal(isShowSheet: $isShowSheet, shoppingItem: shoppingItem)
+        //        }
         .task {
             do {
                 categoryList = try await CategoryRepository().fetchCategories()

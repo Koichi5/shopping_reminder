@@ -45,7 +45,9 @@ struct AddItemView: View {
                     }.padding()
                 }
             }.padding(.vertical)
-            CategoryItemList(categoryItemList: $categoryItemList, selectedCategory: $selectedCategory)
+            CategoryItemList(categoryItemList: $categoryItemList, selectedCategory: $selectedCategory
+//                             initialCategory: nil
+            )
             List {
                 Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
                     isAlermSettingOn

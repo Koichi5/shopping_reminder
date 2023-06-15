@@ -37,7 +37,7 @@ enum CategoryColor: Int, Codable, CaseIterable {
     case orange
     case yellow
     case green
-    case tealBlue
+    case teal
     case blue
     case purple
     case pink
@@ -54,8 +54,8 @@ enum CategoryColor: Int, Codable, CaseIterable {
             return "Yellow"
         case .green:
             return "Green"
-        case .tealBlue:
-            return "Teal Blue"
+        case .teal:
+            return "Teal"
         case .blue:
             return "Blue"
         case .purple:
@@ -79,7 +79,7 @@ enum CategoryColor: Int, Codable, CaseIterable {
             return 3
         case .green:
             return 4
-        case .tealBlue:
+        case .teal:
             return 5
         case .blue:
             return 6
@@ -104,7 +104,7 @@ enum CategoryColor: Int, Codable, CaseIterable {
             return Color.yellow
         case .green:
             return Color.green
-        case .tealBlue:
+        case .teal:
             return Color.teal
         case .blue:
             return Color.blue

@@ -6,26 +6,31 @@
 //
 
 import Foundation
+import SwiftUI
 import FirebaseFirestore
 
 class ShoppingItemRepository: ObservableObject {
+    //    @ObservedObject private var categoryRepository = CategoryRepository()
     static var db = Firestore.firestore()
-    @Published var shoppingItemList = [ShoppingItem](){
-        didSet {
-            self.objectWillChange.send()
-        }
-    }
-    @Published var shoppingItemCategoryList = [String](){
-        didSet{
-            self.objectWillChange.send()
-        }
-    }
+    @Published var shoppingItemList: [ShoppingItem] = []
+    //    {
+    //        didSet {
+    //            self.objectWillChange.send()
+    //        }
+    //    }
+    @Published var shoppingItemCategoryList: [String] = []
+    //    {
+    //        didSet{
+    //            self.objectWillChange.send()
+    //        }
+    //    }
     
-    @Published var shoppingItemNameList = [String]() {
-        didSet {
-            self.objectWillChange.send()
-        }
-    }
+    @Published var shoppingItemNameList: [String] = []
+    //    {
+    //        didSet {
+    //            self.objectWillChange.send()
+    //        }
+    //    }
     
     func addUserSnapshotListener() async throws -> Void {
         print("add user snapshot listener fired !")
@@ -51,12 +56,11 @@ class ShoppingItemRepository: ObservableObject {
                                 try $0.data(as: ShoppingItem.self)
                             }
                             print("shoppingItemList: \(self.shoppingItemList)")
-                            for shoppingItem in self.shoppingItemList {
-                                if(!self.shoppingItemCategoryList.contains(shoppingItem.category.name)) {
-                                    self.shoppingItemCategoryList.append(shoppingItem.category.name)
-                                }
-                            }
-//                            self.shoppingItemCategoryList.append(self.shoppingItemList[0].category.name)
+                            //                            for shoppingItem in self.shoppingItemList {
+                            //                                if(!self.categoryRepository.categoryNameList.contains(shoppingItem.category.name)) {
+                            //                                    self.categoryRepository.categoryNameList.append(shoppingItem.category.name)
+                            //                                }
+                            //                            }
                         } catch {
                             print(error)
                         }
@@ -73,6 +77,25 @@ class ShoppingItemRepository: ObservableObject {
                             print(data)
                         }
                         print("ドキュメントが変更された場合")
+                        
+                        do {
+                            self.shoppingItemList = try documentSnapshot.documents.compactMap {
+                                try $0.data(as: ShoppingItem.self)
+                            }
+                            print("shoppingItemList: \(self.shoppingItemList)")
+                            for shoppingItem in self.shoppingItemList {
+                                if (!self.shoppingItemCategoryList.contains(shoppingItem.category.name)) {
+                                    self.shoppingItemCategoryList.append(shoppingItem.category.name)
+                                }
+                            }
+                            //                            for shoppingItem in self.shoppingItemList {
+                            //                                if(!self.categoryRepository.categoryNameList.contains(shoppingItem.category.name)) {
+                            //                                    self.categoryRepository.categoryNameList.append(shoppingItem.category.name)
+                            //                                }
+                            //                            }
+                        } catch {
+                            print(error)
+                        }
                     }
                     if (diff.type == .removed){
                         print("ドキュメントが削除された場合")
@@ -81,25 +104,12 @@ class ShoppingItemRepository: ObservableObject {
                                 try $0.data(as: ShoppingItem.self)
                             }
                             self.shoppingItemCategoryList = []
-                            for shoppingItem in self.shoppingItemList {
-                                if(!self.shoppingItemCategoryList.contains(shoppingItem.category.name)) {
-                                    self.shoppingItemCategoryList.append(shoppingItem.category.name)
-                                }
-                            }
-                            
-//                            self.shoppingItemList = try documentSnapshot.documents.compactMap {
-//                                try $0.data(as: ShoppingItem.self)
-//                            }
-//                            print("shoppingItemList: \(self.shoppingItemList)")
-//                            for shoppingItem in self.shoppingItemList {
-//                                for shoppingItemCategory in self.shoppingItemCategoryList {
-//                                    self.shoppingItemCategoryList.
-//                                }
-//                                self.shoppingItemCategoryList.removeAll(shoppingItem.category.name != )
-//                                if(!self.shoppingItemCategoryList.contains(shoppingItem.category.name)) {
-//                                    self.shoppingItemCategoryList.append(shoppingItem.category.name)
-//                                }
-//                            }
+                            //                            for shoppingItem in self.shoppingItemList {
+                            //                                if(!self.categoryRepository.categoryNameList.contains(shoppingItem.category.name)) {
+                            //                                    self.categoryRepository.categoryNameList.append(shoppingItem.category.name)
+                            //                                }
+                            //                            }
+                            print("self.shoppingItemCategoryList: \(self.shoppingItemCategoryList)")
                         } catch {
                             print(error)
                         }
@@ -111,7 +121,7 @@ class ShoppingItemRepository: ObservableObject {
     }
     
     func addShoppingItemWithDocumentId(shoppingItem: ShoppingItem) async throws -> String {
-//        var newDocReference = ""
+        //        var newDocReference = ""
         var docId = ""
         let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
@@ -136,30 +146,28 @@ class ShoppingItemRepository: ObservableObject {
         return docId
     }
     
-//    func fetchShoppingItemList() async throws -> [ShoppingItem] {
-//        var fetchedShoppingItemList = [ShoppingItem]()
-//        print("add user snapshot listener fired !")
-//        let currentUser = AuthModel().getCurrentUser()
-//        if currentUser == nil {
-//            print("current user is nil")
-//        } else {
-//            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
-//            let itemsRef = userRef.collection("items")
-//            let itemList = try await itemsRef.getDocuments() {(querySnapshot, error) in
-//                if let error = error {
-//                    print(error)
-//                } else {
-//                    fetchedShoppingItemList = try querySnapshot.documents.compactMap {
-//                        try $0.data(as: ShoppingItem.self)
-//                    }
-////                    for document in querySnapshot!.documents {
-////                        fetchedShoppingItemList.append()
-////                    }
-//                }
-//            }
-//
-//        }
-//    }
+    func fetchShoppingItemList() async throws -> [ShoppingItem] {
+        var result: [ShoppingItem] = []
+        print("add user snapshot listener fired !")
+        let currentUser = AuthModel().getCurrentUser()
+        if currentUser == nil {
+            print("current user is nil")
+        } else {
+            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+            let itemsRef = userRef.collection("items")
+            do {
+                let querySnapshot = try await itemsRef.getDocuments()
+                let documents = querySnapshot.documents
+                for document in documents {
+                    result.append(try document.data(as: ShoppingItem.self))
+                }
+                return result
+            } catch {
+                print("-- error occured during fetching shopping item: \(error)")
+            }
+        }
+        return result
+    }
     
     func updateShoppingItem(shoppingItem: ShoppingItem, shoppingItemId: String) async throws -> Void {
         let currentUser = AuthModel().getCurrentUser()
@@ -172,9 +180,13 @@ class ShoppingItemRepository: ObservableObject {
                 try await itemRef.updateData([
                     //                    "id": shoppingItem.id,
                     "name": shoppingItem.name,
-                    //                    "category": shoppingItem.category,
-                    "added_at": shoppingItem.addedAt,
-                    "priority": shoppingItem.priority,
+                    "category": [
+                        "color": shoppingItem.category.color.colorNum,
+                        "items": [],
+                        "name": shoppingItem.category.name
+                    ],
+                    //                    "added_at": shoppingItem.addedAt,
+                    //                    "priority": shoppingItem.priority,
                     "is_url_setting_on": shoppingItem.isUrlSettingOn,
                     "custom_url": shoppingItem.customURL,
                     "is_alerm_setting_on": shoppingItem.isAlermSettingOn,
@@ -182,7 +194,6 @@ class ShoppingItemRepository: ObservableObject {
                     "alerm_cycle_seconds": shoppingItem.alermCycleSeconds,
                     "alerm_cycle_string": shoppingItem.alermCycleString,
                 ])
-                //                try await itemRef.setData(from: shoppingItem)
             } catch {
                 print(error)
             }

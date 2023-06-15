@@ -6,35 +6,120 @@
 //
 
 import Foundation
+import SwiftUI
 import Firebase
 import FirebaseFirestoreSwift
 
-class CategoryRepository {
+class CategoryRepository: ObservableObject {
+    @ObservedObject private var shoppingItemRepository = ShoppingItemRepository()
     static var db = Firestore.firestore()
     var categories: [Category] = []
     
-//    func addCategory(category: Category) async throws -> Void {
-////        var docId = ""
-//        let currentUser = AuthModel().getCurrentUser()
-//        if currentUser == nil {
-//            print("current user is nil")
-//        } else {
-//            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
-//            let categoriesRef = userRef.collection("categories")
-////            docId = categoriesRef.document().documentID
-//            do {
-//                let newDocReference = try categoriesRef.addDocument(from: category)
-//                print("Category stored with new document reference: \(newDocReference)")
-////                try categoriesRef.document(docId).setData(from: category)
-////                try await categoriesRef.document(docId).updateData([
-////                    "id": docId
-////                ])
-//            }
-//            catch {
-//              print(error)
-//            }
-//        }
-//    }
+    @Published var categoryList = [Category](){
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
+    
+    @Published var categoryNameList = [String]() {
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
+    //    func addCategory(category: Category) async throws -> Void {
+    ////        var docId = ""
+    //        let currentUser = AuthModel().getCurrentUser()
+    //        if currentUser == nil {
+    //            print("current user is nil")
+    //        } else {
+    //            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+    //            let categoriesRef = userRef.collection("categories")
+    ////            docId = categoriesRef.document().documentID
+    //            do {
+    //                let newDocReference = try categoriesRef.addDocument(from: category)
+    //                print("Category stored with new document reference: \(newDocReference)")
+    ////                try categoriesRef.document(docId).setData(from: category)
+    ////                try await categoriesRef.document(docId).updateData([
+    ////                    "id": docId
+    ////                ])
+    //            }
+    //            catch {
+    //              print(error)
+    //            }
+    //        }
+    //    }
+    
+    func addCategoryListener() async throws -> Void {
+        print("-- add CATEGORY listener fired --")
+        let currentUser = AuthModel().getCurrentUser()
+        if currentUser == nil {
+            print("current user is nil")
+        } else {
+            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+            let categoriesRef = userRef.collection("categories")
+            let listener = categoriesRef.addSnapshotListener(includeMetadataChanges: true) { (documentSnapshot, error) in
+                // ドキュメントスナップショットの取得に失敗した場合はエラー内容を表示
+                guard let documentSnapshot = documentSnapshot else {
+                    print("Error fetching document: \(error!)")
+                    return
+                }
+                // 対象ドキュメントの変更内容
+                documentSnapshot.documentChanges.forEach{ diff in
+                    if (diff.type == .added){
+                        print("ドキュメントが追加された場合")
+                        print("documentSnapshot.documents: \(documentSnapshot.documents)")
+                        do {
+                            self.categoryList = try documentSnapshot.documents.compactMap {
+                                try $0.data(as: Category.self)
+                            }
+                            self.categoryNameList = try documentSnapshot.documents.compactMap {
+                                try $0.data(as: Category.self).name
+                            }
+                        } catch {
+                            print(error)
+                        }
+                    }
+                    if (diff.type == .modified){
+                        categoriesRef.getDocuments { (snap, error) in
+                            if let error = error {
+                                fatalError("\(error)")
+                            }
+                            guard let data = snap?.documents else {
+                                print("データがなかった？")
+                                return
+                            }
+                            print(data)
+                        }
+                        print("ドキュメントが変更された場合")
+                        do {
+                            self.categoryList = try documentSnapshot.documents.compactMap {
+                                try $0.data(as: Category.self)
+                            }
+                            self.categoryNameList = try documentSnapshot.documents.compactMap {
+                                try $0.data(as: Category.self).name
+                            }
+                        } catch {
+                            print(error)
+                        }
+                    }
+                    if (diff.type == .removed){
+                        print("ドキュメントが削除された場合")
+                        do {
+                            self.categoryList = try documentSnapshot.documents.compactMap {
+                                try $0.data(as: Category.self)
+                            }
+                            self.categoryNameList = try documentSnapshot.documents.compactMap {
+                                try $0.data(as: Category.self).name
+                            }
+                        } catch {
+                            print(error)
+                        }
+                    }
+                }
+                print("リスナーをアタッチして、コールバックを受け取った。")
+            }
+        }
+    }
     
     func addCategory(category: Category) async throws -> Void {
         var docId = ""
@@ -46,15 +131,15 @@ class CategoryRepository {
             let categoriesRef = userRef.collection("categories")
             docId = categoriesRef.document().documentID
             do {
-//                let newDocReference = try categoriesRef.addDocument(from: category)
-//                print("Category stored with new document reference: \(newDocReference)")
+                //                let newDocReference = try categoriesRef.addDocument(from: category)
+                //                print("Category stored with new document reference: \(newDocReference)")
                 try categoriesRef.document(docId).setData(from: category)
                 try await categoriesRef.document(docId).updateData([
                     "id": docId
                 ])
             }
             catch {
-              print(error)
+                print(error)
             }
         }
     }
@@ -106,9 +191,9 @@ class CategoryRepository {
                 let documents = querySnapshot.documents
                 for document in documents {
                     result.append(try document.data(as: Category.self))
-//                    let jsonData = try JSONSerialization.data(withJSONObject: document.data(), options: [])
-//                    let decodedData = try JSONDecoder().decode(Category.self, from: jsonData)
-//                    result.append(decodedData)
+                    //                    let jsonData = try JSONSerialization.data(withJSONObject: document.data(), options: [])
+                    //                    let decodedData = try JSONDecoder().decode(Category.self, from: jsonData)
+                    //                    result.append(decodedData)
                 }
                 return result
             } catch {
@@ -118,19 +203,19 @@ class CategoryRepository {
         return result
     }
     
-//    func deleteCategory(category: Category) async throws -> Void {
-//        let currentUser = AuthModel().getCurrentUser()
-//        if currentUser == nil {
-//            print("current user is nil")
-//        } else {
-//            print("delete shopping item fired")
-//            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
-//            let categoriesRef = userRef.collection("categories").document(category.id ?? "")
-//            do {
-//                try await categoriesRef.delete()
-//            } catch {
-//                print(error)
-//            }
-//        }
-//    }
+    //    func deleteCategory(category: Category) async throws -> Void {
+    //        let currentUser = AuthModel().getCurrentUser()
+    //        if currentUser == nil {
+    //            print("current user is nil")
+    //        } else {
+    //            print("delete shopping item fired")
+    //            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+    //            let categoriesRef = userRef.collection("categories").document(category.id ?? "")
+    //            do {
+    //                try await categoriesRef.delete()
+    //            } catch {
+    //                print(error)
+    //            }
+    //        }
+    //    }
 }

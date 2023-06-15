@@ -19,7 +19,7 @@ struct ShoppingItem: Identifiable, Codable {
         formatter.dateFormat = "yyyy年M月d日 H時m分"
         return formatter.string(from: addedAt)
     }
-    var priority: Int
+//    var priority: Int
     var isUrlSettingOn: Bool
     var customURL: String?
     var isAlermSettingOn: Bool
@@ -39,7 +39,7 @@ struct ShoppingItem: Identifiable, Codable {
         case name
 //        case categoryName = "category_name"
         case category
-        case priority
+//        case priority
         case addedAt = "added_at"
         case isUrlSettingOn = "is_url_setting_on"
         case customURL = "custom_url"
@@ -53,7 +53,7 @@ struct ShoppingItem: Identifiable, Codable {
     init(name: String,
 //         category: String,
          category: Category,
-         priority: Int,
+//         priority: Int,
          addedAt: Date,
 //         expirationDate: Date? = nil,
          isUrlSettingOn: Bool,
@@ -69,7 +69,7 @@ struct ShoppingItem: Identifiable, Codable {
 //        self.id = id
         self.name = name
         self.category = category
-        self.priority = priority
+//        self.priority = priority
         self.addedAt = addedAt
 //        self.expirationDate = expirationDate
         self.isUrlSettingOn = isUrlSettingOn

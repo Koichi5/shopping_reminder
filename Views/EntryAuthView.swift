@@ -32,6 +32,7 @@ struct EntryAuthView: View {
                 }).padding()
                 GoogleSignInButton()
             }
+            .padding()
             .sheet(isPresented: $isRegisterSuccess) {
                 IntroView()
             }

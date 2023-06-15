@@ -53,7 +53,7 @@ struct CategoryItemList: View {
                 }
             }
             .padding(.vertical, 10)
-            .padding(.leading)
+            .padding(.horizontal)
         }
     }
 }

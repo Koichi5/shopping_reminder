@@ -9,14 +9,16 @@ import SwiftUI
 
 struct ShoppingItemView: View {
     @ObservedObject private var shoppingItemRepository = ShoppingItemRepository()
+//    @ObservedObject private var categoryRepository = CategoryRepository()
     //    @State private var shoppingItemList = ShoppingItemRepository().shoppingItemList
     @State private var categories: [String] = []
-//    @State private var searchText: String = ""
+    //    @State private var searchText: String = ""
     
     var body: some View {
         ScrollView (showsIndicators: false){
             if (
                 shoppingItemRepository.shoppingItemCategoryList.isEmpty
+//                categoryRepository.categoryList.isEmpty
             ) {
                 VStack(alignment: .center) {
                     Spacer()
@@ -30,29 +32,40 @@ struct ShoppingItemView: View {
                     alignment: .center
                 )
             } else {
-                ForEach (shoppingItemRepository.shoppingItemCategoryList, id: \.hashValue) { shoppingItemCategory in
+                ForEach (
+                    shoppingItemRepository.shoppingItemCategoryList
+//                    categoryRepository.categoryNameList
+                    , id: \.hashValue) { categoryName in
                     ZStack {
                         Color.white
                             .cornerRadius(10)
                             .shadow(color: .gray.opacity(0.7), radius: 2, x: 5, y: 5)
                         VStack {
-                            Text(shoppingItemCategory)
+                            Text(categoryName)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding()
                             ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
-                                shoppingItem.category.name == shoppingItemCategory
+                                shoppingItem.category.name == categoryName
                                 ? ShoppingItemComponent(shoppingItem: shoppingItem).padding(.horizontal)
                                 : nil
-                            }.padding(.vertical)
+                            }.padding(.bottom)
                         }
                     }
                 }.padding(.trailing, 5)
             }
         }
-//        .searchable(text: $searchText)
+//        .refreshable {
+//            Task {
+//                try await shoppingItemRepository.addUserSnapshotListener()
+////                try await categoryRepository.addCategoryListener()
+////                try await shoppingItemRepository.fetchShoppingItemList()
+//            }
+//        }
+        //        .searchable(text: $searchText)
         .task {
             do {
                 try await shoppingItemRepository.addUserSnapshotListener()
+//                try await categoryRepository.addCategoryListener()
                 updateCategories()
             } catch {
                 print(error)
@@ -68,8 +81,8 @@ struct ShoppingItemView: View {
         self.categories = Array(categories)
     }
     
-//    private var shoppingItemListFiltered: [ShoppingItem] {
-//        let searchResult = shoppingItemRepository.shoppingItemList.filter { $0.name.contains(searchText)}
-//        return searchText.isEmpty ? shoppingItemRepository.shoppingItemList : searchResult
-//    }
+    //    private var shoppingItemListFiltered: [ShoppingItem] {
+    //        let searchResult = shoppingItemRepository.shoppingItemList.filter { $0.name.contains(searchText)}
+    //        return searchText.isEmpty ? shoppingItemRepository.shoppingItemList : searchResult
+    //    }
 }

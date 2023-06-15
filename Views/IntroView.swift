@@ -50,13 +50,6 @@ struct IntroView: View {
             .fullScreenCover(isPresented: $isFullScreenPresented) {
                 SideMenuContentView()
             }
-            .task {
-                do {
-                    try await ShoppingItemRepository().addUserSnapshotListener()
-                } catch {
-                    print(error)
-                }
-            }
         }
     }
 }

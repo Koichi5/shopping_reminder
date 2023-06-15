@@ -9,7 +9,7 @@ import SwiftUI
 import Foundation
 
 struct ShoppingItemEditView: View {
-    @State private var isShowSheet: Bool = false
+    @Binding var isShowSheet: Bool
     @State private var shoppingItemId: String = ""
     @State private var shoppingItemName = ""
     @State private var itemUrl = ""
@@ -214,23 +214,23 @@ extension ShoppingItemEditView {
     }
 }
 
-struct ShoppingItemEditView_Previews: PreviewProvider {
-    @State private var isAlermSettingOn: Bool = true
-    static var previews: some View {
-        ShoppingItemEditView(
-            shoppingItem: ShoppingItem(
-                name: "キッチンペーパー",
-                category: Category(
-                    name: "clothes",
-                    color: CategoryColor.red
-                ),
-                addedAt: Date(),
-                isUrlSettingOn: false,
-                customURL: "https://swappli.com/switcheditmode/",
-                isAlermSettingOn: true,
-                isAlermRepeatOn: false,
-                alermCycleSeconds: 100,
-                alermCycleString: "10日"
-            ))
-    }
-}
+//struct ShoppingItemEditView_Previews: PreviewProvider {
+//    @State private var isAlermSettingOn: Bool = true
+//    static var previews: some View {
+//        ShoppingItemEditView(
+//            shoppingItem: ShoppingItem(
+//                name: "キッチンペーパー",
+//                category: Category(
+//                    name: "clothes",
+//                    color: CategoryColor.red
+//                ),
+//                addedAt: Date(),
+//                isUrlSettingOn: false,
+//                customURL: "https://swappli.com/switcheditmode/",
+//                isAlermSettingOn: true,
+//                isAlermRepeatOn: false,
+//                alermCycleSeconds: 100,
+//                alermCycleString: "10日"
+//            ))
+//    }
+//}

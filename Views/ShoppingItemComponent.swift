@@ -10,7 +10,7 @@ import SwiftUI
 struct ShoppingItemComponent: View {
     let shoppingItem: ShoppingItem
     @State private var isDeleted = false
-    @State var isEditPresented = false
+    @State private var isEditPresented = false
     @State var isUrlLinkPresented = false
     var body: some View {
         NavigationStack {
@@ -52,14 +52,12 @@ struct ShoppingItemComponent: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(shoppingItem.category.color.colorData, lineWidth: 1.5)
             )
-//            .background(shoppingItem.category.color.colorData)
-//            .cornerRadius(10)
             .navigationDestination(isPresented: $isEditPresented) {
-                ShoppingItemEditView(shoppingItem: shoppingItem)
+                ShoppingItemEditView(isShowSheet: $isEditPresented, shoppingItem: shoppingItem)
             }
-            .onAppear {
-                print("shopping item id in shopping item component is : \(shoppingItem.id)")
-            }
+//            .onAppear {
+//                print("shopping item id in shopping item component is : \(shoppingItem.id)")
+//            }
 //            .onTapGesture {
 //                isEditPresented.toggle()
 //                print("shoppingItem id on component: \(shoppingItem.id)")
@@ -79,7 +77,6 @@ struct ShoppingItemComponent_Previews: PreviewProvider {
         ShoppingItemComponent(shoppingItem: ShoppingItem(
             name: "name",
             category: Category(name: "category", color: CategoryColor.blue),
-            priority: 1,
             addedAt: Date(),
             isUrlSettingOn: false,
             customURL: "",

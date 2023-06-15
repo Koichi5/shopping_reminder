@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SettingView: View {
-//    @State private var showingMenu = false
     @State private var isCategorySettingOn = false
     @State private var categoryList: [Category] = []
     @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
@@ -31,6 +30,12 @@ struct SettingView: View {
                     Section("システム") {
                         Toggle("バイブレーション", isOn: $userDefaultsHelper.isVibrationAllowed)
                         Toggle("ダークモード", isOn: $userDefaultsHelper.isDarkModeOn)
+                        Text("通知設定")
+                            .onTapGesture {
+                                UIApplication.shared.open(
+                                    URL(string: UIApplication.openSettingsURLString)!
+                                )
+                            }
                     }
                     Section("その他") {
                         HStack (alignment: .center) {

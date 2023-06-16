@@ -17,6 +17,7 @@ struct AddItemView: View {
     //    @Binding var shoppingItemDict: [String: [ShoppingItem]]
     @State private var itemName = ""
     @State private var itemUrl = ""
+    @State private var itemDetail = ""
     @State private var categoryList: [Category] = []
     @State private var categoryItemList: [CategoryItem] = []
     @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
@@ -25,6 +26,7 @@ struct AddItemView: View {
     @State private var timeIntervalSinceNow = 0
     @State private var isAlermSettingOn = false
     @State private var isUrlSettingOn = false
+    @State private var isDetailSettingOn = false
     @State private var isAlermRepeatOn = false
     @State private var shoppingItemDocId = ""
     @State var screen: CGSize!
@@ -49,6 +51,14 @@ struct AddItemView: View {
 //                             initialCategory: nil
             )
             List {
+                Section(header: sectionHeader(title: "詳細", isExpanded: $isDetailSettingOn)) {
+                    isDetailSettingOn
+                    ?
+                    TextField("詳細", text: $itemDetail)
+                        .listRowBackground(Color.clear)
+                        .padding(.horizontal)
+                    : nil
+                }
                 Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
                     isAlermSettingOn
                     ? ItemDigitPicker(
@@ -94,8 +104,10 @@ struct AddItemView: View {
                                 customURL: itemUrl,
                                 isAlermSettingOn: isAlermSettingOn,
                                 isAlermRepeatOn: isAlermRepeatOn,
+                                isDetailSettingOn: isDetailSettingOn,
                                 alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue) \(selectedUnitsValue)" : nil
+                                alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
+                                detail: itemDetail
                             )
                             )
                             if (isAlermSettingOn) {
@@ -108,8 +120,10 @@ struct AddItemView: View {
                                         customURL: itemUrl,
                                         isAlermSettingOn: isAlermSettingOn,
                                         isAlermRepeatOn: isAlermRepeatOn,
+                                        isDetailSettingOn: isDetailSettingOn,
                                         alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                        alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue) \(selectedUnitsValue)" : nil
+                                        alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
+                                        detail: itemDetail
                                     ),
                                     shoppingItemDocId: shoppingItemDocId
                                 )

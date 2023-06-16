@@ -13,6 +13,8 @@ struct ShoppingItemEditView: View {
     @State private var shoppingItemId: String = ""
     @State private var shoppingItemName = ""
     @State private var itemUrl = ""
+    @State private var itemDetail = ""
+    @State private var isDetailSettingOn = false
     @State private var categoryList: [Category] = []
     @State private var categoryItemList: [CategoryItem] = []
     @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
@@ -41,6 +43,14 @@ struct ShoppingItemEditView: View {
                         print("current selectedCategory: \(selectedCategory)")
                     }
                 List {
+                    Section(header: sectionHeader(title: "詳細", isExpanded: $isDetailSettingOn)) {
+                        isDetailSettingOn
+                        ?
+                        TextField("詳細", text: $itemDetail)
+                            .listRowBackground(Color.clear)
+                            .padding(.horizontal)
+                        : nil
+                    }
                     Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
                         isAlermSettingOn ?
                         ItemDigitPicker(
@@ -108,8 +118,10 @@ struct ShoppingItemEditView: View {
                                     customURL: itemUrl,
                                     isAlermSettingOn: isAlermSettingOn,
                                     isAlermRepeatOn: isAlermRepeatOn,
+                                    isDetailSettingOn: isDetailSettingOn,
                                     alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                    alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil
+                                    alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
+                                    detail: itemDetail
                                 ),
                                                                                       shoppingItemId: shoppingItem.id ?? "")
                                 if (isAlermSettingOn) {
@@ -122,8 +134,10 @@ struct ShoppingItemEditView: View {
                                             customURL: itemUrl,
                                             isAlermSettingOn: isAlermSettingOn,
                                             isAlermRepeatOn: isAlermRepeatOn,
+                                            isDetailSettingOn: isDetailSettingOn,
                                             alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                            alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil
+                                            alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
+                                            detail: itemDetail
                                         ),
                                         shoppingItemDocId: shoppingItemDocId
                                     )

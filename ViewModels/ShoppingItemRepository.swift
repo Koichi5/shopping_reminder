@@ -193,6 +193,8 @@ class ShoppingItemRepository: ObservableObject {
                     "is_alerm_repeat_on": shoppingItem.isAlermRepeatOn,
                     "alerm_cycle_seconds": shoppingItem.alermCycleSeconds,
                     "alerm_cycle_string": shoppingItem.alermCycleString,
+                    "detail": shoppingItem.detail,
+                    "is_detail_setting_on": shoppingItem.isDetailSettingOn
                 ])
             } catch {
                 print(error)

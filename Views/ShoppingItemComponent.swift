@@ -82,9 +82,11 @@ struct ShoppingItemComponent_Previews: PreviewProvider {
             customURL: "",
             isAlermSettingOn: true,
             isAlermRepeatOn: false,
+            isDetailSettingOn: false,
 //            expirationDate: Date(),
             alermCycleSeconds: 100,
-            alermCycleString: ""
+            alermCycleString: "",
+            detail: ""
 //            id: nil
         ))
     }

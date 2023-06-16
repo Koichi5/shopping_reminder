@@ -23,9 +23,11 @@ struct ShoppingItem: Identifiable, Codable {
     var isUrlSettingOn: Bool
     var customURL: String?
     var isAlermSettingOn: Bool
+    var isDetailSettingOn: Bool
     var isAlermRepeatOn: Bool?
     var alermCycleSeconds: Int?
     var alermCycleString: String?
+    var detail: String?
 //    var expirationDate: Date?
 //    var expirationDateString: String {
 //        let formatter = DateFormatter()
@@ -39,9 +41,11 @@ struct ShoppingItem: Identifiable, Codable {
         case name
 //        case categoryName = "category_name"
         case category
+        case detail
 //        case priority
         case addedAt = "added_at"
         case isUrlSettingOn = "is_url_setting_on"
+        case isDetailSettingOn = "is_detail_setting_on"
         case customURL = "custom_url"
         case isAlermSettingOn = "is_alerm_setting_on"
         case isAlermRepeatOn = "is_alerm_repeat_on"
@@ -60,8 +64,10 @@ struct ShoppingItem: Identifiable, Codable {
          customURL: String?,
          isAlermSettingOn: Bool,
          isAlermRepeatOn: Bool?,
+         isDetailSettingOn: Bool,
          alermCycleSeconds: Int?,
-         alermCycleString: String?
+         alermCycleString: String?,
+         detail: String?
 //         customURL: String? = nil,
 //         id: UUID = UUID()
 //         id: String? = UUID().uuidString
@@ -77,19 +83,8 @@ struct ShoppingItem: Identifiable, Codable {
         self.alermCycleSeconds = alermCycleSeconds
         self.alermCycleString = alermCycleString
         self.isAlermRepeatOn = isAlermRepeatOn
+        self.isDetailSettingOn = isDetailSettingOn
         self.customURL = customURL
+        self.detail = detail
     }
-    
-//    func moveItem(_ item: ShoppingItem, fromCategory sourceCategory: Category, toCategory destinationCategory: Category) {
-//        // 1. 移動元のカテゴリーからアイテムを削除する。
-//        sourceCategory.items.removeAll(where: { $0.id == item.id })
-//
-//        // 2. 移動先のカテゴリーにアイテムを追加する。
-//        destinationCategory.items.append(item)
-//
-//        // 3. Firebase のデータベース上で、アイテムの `categoryId` を移動先のカテゴリーの ID に更新する。
-//        let db = Firestore.firestore()
-//        let itemRef = db.collection("shoppingItems").document(item.id.uuidString)
-//        itemRef.updateData(["categoryId": destinationCategory.id.uuidString])
-//    }
 }

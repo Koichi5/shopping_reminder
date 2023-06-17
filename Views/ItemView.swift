@@ -1,5 +1,5 @@
 //
-//  ShoppingItemView.swift
+//  ItemView.swift
 //  shopping_reminder
 //
 //  Created by Koichi Kishimoto on 2023/05/06.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ShoppingItemView: View {
+struct ItemView: View {
     @ObservedObject private var shoppingItemRepository = ShoppingItemRepository()
 //    @ObservedObject private var categoryRepository = CategoryRepository()
     //    @State private var shoppingItemList = ShoppingItemRepository().shoppingItemList
@@ -46,7 +46,7 @@ struct ShoppingItemView: View {
                                 .padding()
                             ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
                                 shoppingItem.category.name == categoryName
-                                ? ShoppingItemComponent(shoppingItem: shoppingItem).padding(.horizontal)
+                                ? ItemComponent(shoppingItem: shoppingItem).padding(.horizontal)
                                 : nil
                             }.padding(.bottom)
                         }

@@ -1,5 +1,5 @@
 //
-//  ShoppingItemEditView.swift
+//  EditItemView.swift
 //  shopping_reminder
 //
 //  Created by Koichi Kishimoto on 2023/05/13.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Foundation
 
-struct ShoppingItemEditView: View {
+struct EditItemView: View {
     @Binding var isShowSheet: Bool
     @State private var shoppingItemId: String = ""
     @State private var shoppingItemName = ""
@@ -50,6 +50,10 @@ struct ShoppingItemEditView: View {
                             .listRowBackground(Color.clear)
                             .padding(.horizontal)
                         : nil
+                    }
+                    .onAppear {
+                        isDetailSettingOn = shoppingItem.isDetailSettingOn
+                        itemDetail = shoppingItem.detail ?? ""
                     }
                     Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
                         isAlermSettingOn ?
@@ -208,7 +212,7 @@ struct ShoppingItemEditView: View {
     }
 }
 
-extension ShoppingItemEditView {
+extension EditItemView {
     private func sectionHeader(title: String, isExpanded: Binding<Bool>) -> some View {
         Button(action: {isExpanded.wrappedValue.toggle()}) {
             VStack {
@@ -228,10 +232,10 @@ extension ShoppingItemEditView {
     }
 }
 
-//struct ShoppingItemEditView_Previews: PreviewProvider {
+//struct EditItemView_Previews: PreviewProvider {
 //    @State private var isAlermSettingOn: Bool = true
 //    static var previews: some View {
-//        ShoppingItemEditView(
+//        EditItemView(
 //            shoppingItem: ShoppingItem(
 //                name: "キッチンペーパー",
 //                category: Category(

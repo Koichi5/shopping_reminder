@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ShoppingItemComponent: View {
+struct ItemComponent: View {
     let shoppingItem: ShoppingItem
     @State private var isDeleted = false
     @State private var isEditPresented = false
@@ -53,7 +53,7 @@ struct ShoppingItemComponent: View {
                     .stroke(shoppingItem.category.color.colorData, lineWidth: 1.5)
             )
             .navigationDestination(isPresented: $isEditPresented) {
-                ShoppingItemEditView(isShowSheet: $isEditPresented, shoppingItem: shoppingItem)
+                EditItemView(isShowSheet: $isEditPresented, shoppingItem: shoppingItem)
             }
 //            .onAppear {
 //                print("shopping item id in shopping item component is : \(shoppingItem.id)")
@@ -72,9 +72,9 @@ struct ShoppingItemComponent: View {
     }
 }
 
-struct ShoppingItemComponent_Previews: PreviewProvider {
+struct ItemComponent_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingItemComponent(shoppingItem: ShoppingItem(
+        ItemComponent(shoppingItem: ShoppingItem(
             name: "name",
             category: Category(name: "category", color: CategoryColor.blue),
             addedAt: Date(),

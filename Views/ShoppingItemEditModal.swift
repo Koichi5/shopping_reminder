@@ -1,5 +1,5 @@
 //
-//  ShoppingItemEditView.swift
+//  EditItemView.swift
 //  shopping_reminder
 //
 //  Created by Koichi Kishimoto on 2023/05/08.
@@ -198,9 +198,9 @@
 //    }
 //}
 
-//struct ShoppingItemEditView_Previews: PreviewProvider {
+//struct EditItemView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        ShoppingItemEditView(shoppingItem: ShoppingItem(
+//        EditItemView(shoppingItem: ShoppingItem(
 //            name: "name",
 //            category: Category(name: "category", color: CategoryColor.blue),
 //            addedAt: Date(),

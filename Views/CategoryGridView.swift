@@ -15,7 +15,7 @@ struct CategoryGridView: View {
         NavigationView {
             List {
                 ForEach(shoppingItems) { shoppingItem in
-                    NavigationLink(destination: ShoppingItemComponent(shoppingItem: shoppingItem)) {
+                    NavigationLink(destination: ItemComponent(shoppingItem: shoppingItem)) {
                         Text(shoppingItem.name)
                     }
                 }

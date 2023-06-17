@@ -25,7 +25,7 @@ struct HomeView: View {
 //                Color.background
 //                    .edgesIgnoringSafeArea(.all)
                 VStack(alignment: .leading) {
-                    ShoppingItemView()
+                    ItemView()
                 }.padding(.horizontal) .frame(maxWidth: .infinity)
 //            }
             .navigationBarTitle("Home")

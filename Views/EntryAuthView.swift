@@ -13,30 +13,67 @@ struct EntryAuthView: View {
     @State var email: String = ""
     @State var password: String = ""
     @State var isRegisterSuccess: Bool = false
+    @State var isAlertShown: Bool = false
     @ObservedObject var authViewModel:AuthViewModel = AuthViewModel()
     var body: some View {
         NavigationView(content: {
             VStack {
-                Text("name")
-                TextField("name", text: $name).padding(.bottom).textFieldStyle(.roundedBorder)
-                Text("email")
-                TextField("email", text: $email).padding(.bottom).textFieldStyle(.roundedBorder)
-                Text("password")
-                SecureField("password", text: $password).padding(.bottom).textFieldStyle(.roundedBorder)
+                TextField("name", text: $name)
+                    .padding(.vertical)
+                    .padding(.leading)
+                    .overlay(
+                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                            .stroke(Color.foreground, lineWidth: 1.0)
+                    )
+                    .padding(.bottom)
+                TextField("email", text: $email)
+                    .padding(.vertical)
+                    .padding(.leading)
+                    .overlay(
+                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                            .stroke(Color.foreground, lineWidth: 1.0)
+                    )
+                    .padding(.bottom)
+                //                    .textFieldStyle(.roundedBorder)
+                //                Text("password")
+                SecureField("password", text: $password)
+                    .padding(.vertical)
+                    .padding(.leading)
+                    .overlay(
+                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                            .stroke(Color.foreground, lineWidth: 1.0)
+                    )
+                    .padding(.bottom)
+                //                    .textFieldStyle(.roundedBorder)
                 Button(action: {
-                    AuthViewModel().createUserWithEmailAndPassword(email: email, password: password)
-                    isRegisterSuccess = true
+                    Auth.auth().createUser(withEmail: email, password: password) { result, error in
+                        if (result?.user) != nil {
+                            FirebaseUserRepository().addFirebaseUser(user: result!.user)
+                            isRegisterSuccess = true
+                        } else {
+                            isAlertShown = true
+                        }
+                    }
                     Task{
                         try await ShoppingItemRepository().addUserSnapshotListener()
                     }
                 }, label: {
                     Text("新規登録")
-                }).padding()
+                })
+                .padding(.bottom)
+                NavigationLink(destination: LoginAuthView().navigationBarBackButtonHidden(true)) {
+                    Text("アカウントをお持ちの方はこちら")
+                }
+                .padding(.bottom)
                 GoogleSignInButton()
+                    .padding(.bottom)
             }
             .padding()
-            .sheet(isPresented: $isRegisterSuccess) {
+            .fullScreenCover(isPresented: $isRegisterSuccess) {
                 IntroView()
+            }
+            .alert(isPresented: $isAlertShown) {
+                Alert(title: Text("登録に失敗しました。再度お試しください"))
             }
             .navigationTitle(Text("新規登録"))
         }

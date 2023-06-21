@@ -43,7 +43,6 @@ final class NotificationManager {
     func sendIntervalNotification(
         shoppingItem: ShoppingItem,
         shoppingItemDocId: String
-//                                  shoppingItemId: String?
     ) {
         print("Send interval notification fired")
         let content = UNMutableNotificationContent()

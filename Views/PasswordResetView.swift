@@ -11,14 +11,24 @@ import FirebaseAuth
 struct PasswordResetView: View {
     @State var email: String = ""
     var body: some View {
-        VStack {
-            TextField("mail address", text: $email).padding().textFieldStyle(.roundedBorder)
-            Button(action: {
-                AuthViewModel().sendPasswordResetEmail(email: email)
-            }) {
-                Text("メール送信")
+        NavigationView {
+            VStack {
+                TextField("mail address", text: $email)
+                    .padding(.vertical)
+                    .padding(.leading)
+                    .overlay(
+                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                            .stroke(Color.foreground, lineWidth: 1.0)
+                    )
+                    .padding(.bottom)
+                Button(action: {
+                    AuthViewModel().sendPasswordResetEmail(email: email)
+                }) {
+                    Text("メール送信")
+                }
             }
-        }
+            .padding()
+        }.navigationTitle(Text("パスワード再設定"))
     }
 }
 

@@ -11,6 +11,7 @@ struct SettingView: View {
     @State private var isCategorySettingOn = false
     @State private var categoryList: [Category] = []
     @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray, style: CategoryStyle(color: CategoryColor.gray))
+    let notificaitonManager = NotificationManager()
 //    @ObservedObject var vibrationHepler = VibrationHelper()
 //    @ObservedObject var darkModeHelper = DarkModeHelper()
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
@@ -36,6 +37,22 @@ struct SettingView: View {
                                     URL(string: UIApplication.openSettingsURLString)!
                                 )
                             }
+                        HStack (alignment: .center) {
+                            DialogHelper(
+                                systemName: nil,
+                                buttonText: "全アラーム削除",
+                                titleText: "すべてのアラームを削除しますか？",
+                                messageText: "この処理は取り消すことができません。",
+                                primaryButtonText: "いいえ",
+                                secondaryButtonText: "削除",
+                                primaryButtonAction: nil,
+                                secondaryButtonAction: {
+                                    notificaitonManager.deleteAllNotifications()
+                                }
+                            )
+                            Spacer()
+                        }
+                        .contentShape(Rectangle())
                     }
                     Section("その他") {
                         HStack (alignment: .center) {

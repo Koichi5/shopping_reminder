@@ -180,11 +180,11 @@ class ShoppingItemRepository: ObservableObject {
                 try await itemRef.updateData([
                     //                    "id": shoppingItem.id,
                     "name": shoppingItem.name,
-                    "category": [
-                        "color": shoppingItem.category.color.colorNum,
-                        "items": [],
-                        "name": shoppingItem.category.name
-                    ],
+//                    "category": [
+//                        "color": shoppingItem.category.color.colorNum,
+//                        "items": [],
+//                        "name": shoppingItem.category.name
+//                    ],
                     //                    "added_at": shoppingItem.addedAt,
                     //                    "priority": shoppingItem.priority,
                     "is_url_setting_on": shoppingItem.isUrlSettingOn,
@@ -193,7 +193,7 @@ class ShoppingItemRepository: ObservableObject {
                     "is_alerm_repeat_on": shoppingItem.isAlermRepeatOn,
                     "alerm_cycle_seconds": shoppingItem.alermCycleSeconds,
                     "alerm_cycle_string": shoppingItem.alermCycleString,
-                    "detail": shoppingItem.detail,
+                    "memo": shoppingItem.memo,
                     "is_detail_setting_on": shoppingItem.isDetailSettingOn
                 ])
             } catch {

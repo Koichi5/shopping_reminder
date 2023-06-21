@@ -17,6 +17,7 @@ import Foundation
 extension Color {
     static let background = Color("Background")
     static let foreground = Color("Foreground")
+    static let itemCard = Color("ItemCard")
 }
 
 var colorList: [Color] = [

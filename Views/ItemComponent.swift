@@ -12,6 +12,7 @@ struct ItemComponent: View {
     @State private var isDeleted = false
     @State private var isEditPresented = false
     @State var isUrlLinkPresented = false
+    @State var isShowItemDetail = false
     var body: some View {
         NavigationStack {
             HStack {
@@ -48,12 +49,21 @@ struct ItemComponent: View {
                 }
             }
             .padding()
+            .background(Color.itemCard)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(shoppingItem.category.color.colorData, lineWidth: 1.5)
             )
             .navigationDestination(isPresented: $isEditPresented) {
                 EditItemView(isShowSheet: $isEditPresented, shoppingItem: shoppingItem)
+            }
+            .onLongPressGesture {
+//                self.isShowItemDetail.toggle()
+            }
+            .contextMenu {
+                Group {
+                    shoppingItem.memo == nil || shoppingItem.memo == "" ? Text("メモは記録されていません") : Text(shoppingItem.memo!)
+                }
             }
 //            .onAppear {
 //                print("shopping item id in shopping item component is : \(shoppingItem.id)")
@@ -76,7 +86,7 @@ struct ItemComponent_Previews: PreviewProvider {
     static var previews: some View {
         ItemComponent(shoppingItem: ShoppingItem(
             name: "name",
-            category: Category(name: "category", color: CategoryColor.blue),
+            category: Category(name: "category", color: CategoryColor.blue, style: CategoryStyle(color: CategoryColor.blue)),
             addedAt: Date(),
             isUrlSettingOn: false,
             customURL: "",
@@ -86,7 +96,7 @@ struct ItemComponent_Previews: PreviewProvider {
 //            expirationDate: Date(),
             alermCycleSeconds: 100,
             alermCycleString: "",
-            detail: ""
+            memo: ""
 //            id: nil
         ))
     }

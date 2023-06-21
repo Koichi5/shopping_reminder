@@ -27,7 +27,7 @@ struct ShoppingItem: Identifiable, Codable {
     var isAlermRepeatOn: Bool?
     var alermCycleSeconds: Int?
     var alermCycleString: String?
-    var detail: String?
+    var memo: String?
 //    var expirationDate: Date?
 //    var expirationDateString: String {
 //        let formatter = DateFormatter()
@@ -41,7 +41,7 @@ struct ShoppingItem: Identifiable, Codable {
         case name
 //        case categoryName = "category_name"
         case category
-        case detail
+        case memo
 //        case priority
         case addedAt = "added_at"
         case isUrlSettingOn = "is_url_setting_on"
@@ -67,7 +67,7 @@ struct ShoppingItem: Identifiable, Codable {
          isDetailSettingOn: Bool,
          alermCycleSeconds: Int?,
          alermCycleString: String?,
-         detail: String?
+         memo: String?
 //         customURL: String? = nil,
 //         id: UUID = UUID()
 //         id: String? = UUID().uuidString
@@ -85,6 +85,6 @@ struct ShoppingItem: Identifiable, Codable {
         self.isAlermRepeatOn = isAlermRepeatOn
         self.isDetailSettingOn = isDetailSettingOn
         self.customURL = customURL
-        self.detail = detail
+        self.memo = memo
     }
 }

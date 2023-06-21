@@ -15,21 +15,24 @@ struct Category: Identifiable, Codable {
     var name: String
     var color: CategoryColor
     var items: [ShoppingItem]
+    var style: CategoryStyle?
     
     private enum CodingKeys: String, CodingKey {
         case id
         case name
         case color
         case items
+        case style
     }
     
     init(
         name: String, color: CategoryColor,
-         items: [ShoppingItem] = []) {
-        self.name = name
-        self.color = color
-        self.items = items
-    }
+        items: [ShoppingItem] = [], style: CategoryStyle) {
+            self.name = name
+            self.color = color
+            self.items = items
+            self.style = style
+        }
 }
 
 enum CategoryColor: Int, Codable, CaseIterable {

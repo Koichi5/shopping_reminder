@@ -13,11 +13,11 @@ struct EditItemView: View {
     @State private var shoppingItemId: String = ""
     @State private var shoppingItemName = ""
     @State private var itemUrl = ""
-    @State private var itemDetail = ""
+    @State private var itemMemo = ""
     @State private var isDetailSettingOn = false
     @State private var categoryList: [Category] = []
     @State private var categoryItemList: [CategoryItem] = []
-    @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
+    @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray, style: CategoryStyle(color: CategoryColor.gray))
     @State private var selectedDigitsValue = "1"
     @State private var selectedUnitsValue = "時間ごと"
     @State private var timeIntervalSinceNow = 0
@@ -37,23 +37,23 @@ struct EditItemView: View {
                     .font(.largeTitle.bold())
                     .padding(.horizontal)
                 Spacer()
-                CategoryItemList(categoryItemList: $categoryItemList, selectedCategory: $selectedCategory)
-                    .onAppear {
-                        selectedCategory = shoppingItem.category
-                        print("current selectedCategory: \(selectedCategory)")
-                    }
+//                CategoryItemList(categoryItemList: $categoryItemList, selectedCategory: $selectedCategory)
+//                    .onAppear {
+//                        selectedCategory = shoppingItem.category
+//                        print("current selectedCategory: \(selectedCategory)")
+//                    }
                 List {
-                    Section(header: sectionHeader(title: "詳細", isExpanded: $isDetailSettingOn)) {
+                    Section(header: sectionHeader(title: "メモ", isExpanded: $isDetailSettingOn)) {
                         isDetailSettingOn
                         ?
-                        TextField("詳細", text: $itemDetail)
+                        TextField("メモ", text: $itemMemo)
                             .listRowBackground(Color.clear)
                             .padding(.horizontal)
                         : nil
                     }
                     .onAppear {
                         isDetailSettingOn = shoppingItem.isDetailSettingOn
-                        itemDetail = shoppingItem.detail ?? ""
+                        itemMemo = shoppingItem.memo ?? ""
                     }
                     Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
                         isAlermSettingOn ?
@@ -125,7 +125,7 @@ struct EditItemView: View {
                                     isDetailSettingOn: isDetailSettingOn,
                                     alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
                                     alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
-                                    detail: itemDetail
+                                    memo: itemMemo
                                 ),
                                                                                       shoppingItemId: shoppingItem.id ?? "")
                                 if (isAlermSettingOn) {
@@ -141,7 +141,7 @@ struct EditItemView: View {
                                             isDetailSettingOn: isDetailSettingOn,
                                             alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
                                             alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
-                                            detail: itemDetail
+                                            memo: itemMemo
                                         ),
                                         shoppingItemDocId: shoppingItemDocId
                                     )

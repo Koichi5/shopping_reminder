@@ -56,7 +56,7 @@ class CategoryRepository: ObservableObject {
             print("current user is nil")
         } else {
             let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
-            let categoriesRef = userRef.collection("categories")
+            let categoriesRef = userRef.collection("categories").order(by: "color")
             let listener = categoriesRef.addSnapshotListener(includeMetadataChanges: true) { (documentSnapshot, error) in
                 // ドキュメントスナップショットの取得に失敗した場合はエラー内容を表示
                 guard let documentSnapshot = documentSnapshot else {

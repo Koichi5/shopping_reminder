@@ -21,27 +21,12 @@ struct HomeView: View {
     @State private var existCategoryList: [Category] = []
     var body: some View {
         NavigationStack {
-//            ZStack {
-//                Color.background
-//                    .edgesIgnoringSafeArea(.all)
                 VStack(alignment: .leading) {
                     ItemView()
                 }.padding(.horizontal) .frame(maxWidth: .infinity)
-//            }
             .navigationBarTitle("Home")
-//            .navigationBarTitleDisplayMode(showingMenu ? .inline : .automatic)
             .toolbar {
-//                ToolbarItem (placement: .cancellationAction) {
-//                    Button (action: {self.showingMenu.toggle()}) {
-//                        Image(systemName: showingMenu ? "xmark" : "line.horizontal.3")
-//                            .foregroundColor(Color.foreground)
-//                    }
-//                }
                 ToolbarItem(placement: .destructiveAction) {
-//                    NavigationLink(destination: SettingView()) {
-//                        Image(systemName: "gearshape")
-//                            .foregroundColor(Color.foreground)
-//                    }
                     Button(action: {
                         isShowSetting.toggle()
                     }) {
@@ -58,15 +43,14 @@ struct HomeView: View {
                     }
                 }
             }
-        }.sheet(isPresented: $isShowSheet) {
+        }
+        .sheet(isPresented: $isShowSheet) {
             AddItemView(isShowSheet: $isShowSheet)
         }
         .fullScreenCover(isPresented: $isShowSetting) {
             SettingView()
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
-//        .offset(x: showingMenu ? 200.0 : 0.0, y: 0)
-//        .animation(.easeOut)
     }
 }
 

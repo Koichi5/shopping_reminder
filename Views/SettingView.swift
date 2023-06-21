@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingView: View {
     @State private var isCategorySettingOn = false
     @State private var categoryList: [Category] = []
-    @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
+    @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray, style: CategoryStyle(color: CategoryColor.gray))
 //    @ObservedObject var vibrationHepler = VibrationHelper()
 //    @ObservedObject var darkModeHelper = DarkModeHelper()
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()

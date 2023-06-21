@@ -17,10 +17,10 @@ struct AddItemView: View {
     //    @Binding var shoppingItemDict: [String: [ShoppingItem]]
     @State private var itemName = ""
     @State private var itemUrl = ""
-    @State private var itemDetail = ""
+    @State private var itemMemo = ""
     @State private var categoryList: [Category] = []
     @State private var categoryItemList: [CategoryItem] = []
-    @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray)
+    @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray, style: CategoryStyle(color: CategoryColor.gray))
     @State private var selectedDigitsValue = "1"
     @State private var selectedUnitsValue = "時間ごと"
     @State private var timeIntervalSinceNow = 0
@@ -51,10 +51,10 @@ struct AddItemView: View {
 //                             initialCategory: nil
             )
             List {
-                Section(header: sectionHeader(title: "詳細", isExpanded: $isDetailSettingOn)) {
+                Section(header: sectionHeader(title: "メモ", isExpanded: $isDetailSettingOn)) {
                     isDetailSettingOn
                     ?
-                    TextField("詳細", text: $itemDetail)
+                    TextField("メモ", text: $itemMemo)
                         .listRowBackground(Color.clear)
                         .padding(.horizontal)
                     : nil
@@ -107,7 +107,7 @@ struct AddItemView: View {
                                 isDetailSettingOn: isDetailSettingOn,
                                 alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
                                 alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
-                                detail: itemDetail
+                                memo: itemMemo
                             )
                             )
                             if (isAlermSettingOn) {
@@ -123,7 +123,7 @@ struct AddItemView: View {
                                         isDetailSettingOn: isDetailSettingOn,
                                         alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
                                         alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
-                                        detail: itemDetail
+                                        memo: itemMemo
                                     ),
                                     shoppingItemDocId: shoppingItemDocId
                                 )

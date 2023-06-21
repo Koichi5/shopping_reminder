@@ -24,13 +24,13 @@ class FirebaseUserRepository {
                     email: currentUser!.email ?? "",
                     items: [],
                     categories: [
-                        Category(name: "Groceries", color: CategoryColor.green),
-                        Category(name: "Clothing", color: CategoryColor.blue),
-                        Category(name: "Electronics", color: CategoryColor.orange),
-                        Category(name: "Furnitures", color: CategoryColor.gray),
-                        Category(name: "Foods", color: CategoryColor.pink),
-                        Category(name: "Bikes", color: CategoryColor.purple),
-                        Category(name: "Cars", color: CategoryColor.yellow),
+                        Category(name: "Groceries", color: CategoryColor.green, style: CategoryStyle(color: CategoryColor.green)),
+                        Category(name: "Clothing", color: CategoryColor.blue, style: CategoryStyle(color: CategoryColor.blue)),
+                        Category(name: "Electronics", color: CategoryColor.orange, style: CategoryStyle(color: CategoryColor.orange)),
+                        Category(name: "Furnitures", color: CategoryColor.gray, style: CategoryStyle(color: CategoryColor.gray)),
+                        Category(name: "Foods", color: CategoryColor.pink, style: CategoryStyle(color: CategoryColor.pink)),
+                        Category(name: "Bikes", color: CategoryColor.purple, style: CategoryStyle(color: CategoryColor.purple)),
+                        Category(name: "Cars", color: CategoryColor.yellow, style: CategoryStyle(color: CategoryColor.yellow)),
                     ]
                 )
 //                let encoder = JSONEncoder()

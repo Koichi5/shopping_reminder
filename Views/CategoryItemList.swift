@@ -10,6 +10,7 @@ import SwiftUI
 struct CategoryItemList: View {
     @Binding var categoryItemList: [CategoryItem]
     @Binding var selectedCategory: Category
+//    @Binding var isSomeCategorySelected: Bool
 //    let initialCategory: Category
 ////
 //    init(selectedCategory: Binding<Category>) {
@@ -33,6 +34,7 @@ struct CategoryItemList: View {
                                 categoryItemList[index].isSelected = categoryItemList[index].id == categoryItem.id
                                 if (categoryItemList[index].isSelected) {
                                     selectedCategory = categoryItem.category
+//                                    isSomeCategorySelected = true
                                     print("selected: \(selectedCategory)")
                                 }
                             }

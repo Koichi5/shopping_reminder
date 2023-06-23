@@ -46,7 +46,7 @@ struct EditItemView: View {
                     Section(header: sectionHeader(title: "メモ", isExpanded: $isDetailSettingOn)) {
                         isDetailSettingOn
                         ?
-                        TextField("メモ", text: $itemMemo)
+                        TextField("メモ", text: $itemMemo, axis: .vertical)
                             .listRowBackground(Color.clear)
                             .padding(.horizontal)
                         : nil
@@ -159,12 +159,20 @@ struct EditItemView: View {
                     buttonWidth: nil,
                     buttonHeight: nil,
                     buttonTextFontSize: nil
-                ).padding(.horizontal)
+                )
+                .padding(.horizontal)
+                .padding(.bottom)
             }
             //            .navigationTitle("\(shoppingItem.name)")
             .toolbar {
                 ToolbarItemGroup (placement: .confirmationAction) {
                     Spacer()
+                    ShareLink(
+                        item: "\(shoppingItem.name)を買い忘れないようにしよう！"
+                    ) {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundColor(Color.foreground)
+                    }
                     Button(action: { isShowingDeleteAlert = true}) {
                         Image(systemName: "trash").foregroundColor(Color.foreground)
                     }

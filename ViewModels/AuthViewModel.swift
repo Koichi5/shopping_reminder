@@ -23,6 +23,17 @@ class AuthViewModel: ObservableObject {
     
     @Published var state: SignInState = .signedOut
     
+    func createUserWithEmailAndPassword(email: String, password: String) -> Void {
+        auth.createUser(withEmail: email, password: password) { result, error in
+            if (result?.user != nil) {
+                FirebaseUserRepository().addFirebaseUser(user: result!.user)
+                self.isRegisterSuccess = true
+            } else {
+                print("Create user faild")
+            }
+        }
+    }
+    
     private func authenticateUser(for user: GIDGoogleUser?, with error: Error?) {
       // 1
       if let error = error {
@@ -143,17 +154,6 @@ class AuthViewModel: ObservableObject {
       } catch {
         print(error.localizedDescription)
       }
-    }
-    
-    func createUserWithEmailAndPassword(email: String, password: String) -> Void {
-        auth.createUser(withEmail: email, password: password) { result, error in
-            if (result?.user != nil) {
-                FirebaseUserRepository().addFirebaseUser(user: result!.user)
-                self.isRegisterSuccess = true
-            } else {
-                print("Create user faild")
-            }
-        }
     }
     
     //    create user with email and password

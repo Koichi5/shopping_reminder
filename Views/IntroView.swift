@@ -18,7 +18,10 @@ struct IntroView: View {
     var body: some View {
         ConcentricOnboardingView(pageContents: MockData.pages.map { (IntroPageView(page: $0), $0.color) })
             .duration(1.0)
-            .nextIcon(self.didGoToLastPage ? "xmark" :  "chevron.forward")
+            .nextIcon(
+                self.didGoToLastPage
+                ? "xmark"
+                :  "chevron.forward")
             .animationDidEnd {
                 print("Animation Did End")
             }

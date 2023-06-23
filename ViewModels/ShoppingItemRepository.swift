@@ -12,6 +12,7 @@ import FirebaseFirestore
 class ShoppingItemRepository: ObservableObject {
     //    @ObservedObject private var categoryRepository = CategoryRepository()
     static var db = Firestore.firestore()
+    var listenerRegistration: ListenerRegistration?
     @Published var shoppingItemList: [ShoppingItem] = []
     //    {
     //        didSet {
@@ -40,7 +41,7 @@ class ShoppingItemRepository: ObservableObject {
         } else {
             let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
             let itemsRef = userRef.collection("items")
-            let listener = itemsRef.addSnapshotListener(includeMetadataChanges: true) { (documentSnapshot, error) in
+            let currentListenerRegistration = itemsRef.addSnapshotListener(includeMetadataChanges: true) { (documentSnapshot, error) in
                 // ドキュメントスナップショットの取得に失敗した場合はエラー内容を表示
                 guard let documentSnapshot = documentSnapshot else {
                     print("Error fetching document: \(error!)")
@@ -117,8 +118,17 @@ class ShoppingItemRepository: ObservableObject {
                 }
                 print("リスナーをアタッチして、コールバックを受け取った。")
             }
+//            self.listenerRegistration = currentListenerRegistration
         }
     }
+    
+//    func removeCurrentSnapshotListener() {
+//        if let listenerRegistration = self.listenerRegistration {
+//            listenerRegistration.remove()
+//            self.listenerRegistration = nil
+//            print("-- current snapshot listener removed --")
+//        }
+//    }
     
     func addShoppingItemWithDocumentId(shoppingItem: ShoppingItem) async throws -> String {
         //        var newDocReference = ""

@@ -51,8 +51,19 @@ struct ItemView: View {
                     .background(Color.background)
             }
         }
+        .refreshable {
+            Task {
+                do {
+//                    shoppingItemRepository.removeCurrentSnapshotListener()
+                    try await shoppingItemRepository.addUserSnapshotListener()
+                } catch {
+                    print(error)
+                }
+            }
+        }
         .task {
             do {
+//                shoppingItemRepository.removeCurrentSnapshotListener()
                 try await shoppingItemRepository.addUserSnapshotListener()
                 //                try await categoryRepository.addCategoryListener()
                 updateCategories()

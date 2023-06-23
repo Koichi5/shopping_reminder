@@ -13,8 +13,6 @@ struct AddItemView: View {
     }
     @FocusState private var focusedField: Field?
     @Binding var isShowSheet: Bool
-    //    @Binding var existCategoryList: [Category]
-    //    @Binding var shoppingItemDict: [String: [ShoppingItem]]
     @State private var itemName = ""
     @State private var itemUrl = ""
     @State private var itemMemo = ""
@@ -31,6 +29,9 @@ struct AddItemView: View {
     @State private var shoppingItemDocId = ""
     @State var screen: CGSize!
     @State private var isSidebarOpen = false
+//    @State private var isSomeCategorySelected = true
+    @State private var isNameNilAlertPresented = false
+
     //    @ObservedObject var keyboardHelper = KeyboardHelper()
     
     var body: some View {
@@ -47,14 +48,16 @@ struct AddItemView: View {
                     }.padding()
                 }
             }.padding(.vertical)
-            CategoryItemList(categoryItemList: $categoryItemList, selectedCategory: $selectedCategory
-//                             initialCategory: nil
+            CategoryItemList(
+                categoryItemList: $categoryItemList,
+                selectedCategory: $selectedCategory
+//                isSomeCategorySelected: $isSomeCategorySelected
             )
             List {
                 Section(header: sectionHeader(title: "メモ", isExpanded: $isDetailSettingOn)) {
                     isDetailSettingOn
                     ?
-                    TextField("メモ", text: $itemMemo)
+                    TextField("メモ", text: $itemMemo, axis: .vertical)
                         .listRowBackground(Color.clear)
                         .padding(.horizontal)
                     : nil
@@ -90,57 +93,64 @@ struct AddItemView: View {
                 //                    .padding(.bottom)
                     .focused($focusedField, equals: .itemName)
                 Button(action: {
-                    VibrationHelper().feedbackVibration()
-                    let intSelectedDigitsValue = Int(selectedDigitsValue)
-                    timeIntervalSinceNow = TimeHelper().calcSecondsFromString(selectedUnitsValue: selectedUnitsValue, intSelectedDigitsValue: intSelectedDigitsValue ?? 0)
-                    Task {
-                        do {
-                            shoppingItemDocId =
-                            try await ShoppingItemRepository().addShoppingItemWithDocumentId(shoppingItem: ShoppingItem(
-                                name: itemName,
-                                category: selectedCategory,
-                                addedAt: Date(),
-                                isUrlSettingOn: isUrlSettingOn,
-                                customURL: itemUrl,
-                                isAlermSettingOn: isAlermSettingOn,
-                                isAlermRepeatOn: isAlermRepeatOn,
-                                isDetailSettingOn: isDetailSettingOn,
-                                alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
-                                memo: itemMemo
-                            )
-                            )
-                            if (isAlermSettingOn) {
-                                NotificationManager().sendIntervalNotification(
-                                    shoppingItem: ShoppingItem(
-                                        name: itemName,
-                                        category: selectedCategory,
-                                        addedAt: Date(),
-                                        isUrlSettingOn: isUrlSettingOn,
-                                        customURL: itemUrl,
-                                        isAlermSettingOn: isAlermSettingOn,
-                                        isAlermRepeatOn: isAlermRepeatOn,
-                                        isDetailSettingOn: isDetailSettingOn,
-                                        alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                        alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
-                                        memo: itemMemo
-                                    ),
-                                    shoppingItemDocId: shoppingItemDocId
+                    if (itemName != "") {
+                        VibrationHelper().feedbackVibration()
+                        let intSelectedDigitsValue = Int(selectedDigitsValue)
+                        timeIntervalSinceNow = TimeHelper().calcSecondsFromString(selectedUnitsValue: selectedUnitsValue, intSelectedDigitsValue: intSelectedDigitsValue ?? 0)
+                        Task {
+                            do {
+                                shoppingItemDocId =
+                                try await ShoppingItemRepository().addShoppingItemWithDocumentId(shoppingItem: ShoppingItem(
+                                    name: itemName,
+                                    category: selectedCategory,
+                                    addedAt: Date(),
+                                    isUrlSettingOn: isUrlSettingOn,
+                                    customURL: itemUrl,
+                                    isAlermSettingOn: isAlermSettingOn,
+                                    isAlermRepeatOn: isAlermRepeatOn,
+                                    isDetailSettingOn: isDetailSettingOn,
+                                    alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
+                                    alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
+                                    memo: itemMemo
                                 )
+                                )
+                                if (isAlermSettingOn) {
+                                    NotificationManager().sendIntervalNotification(
+                                        shoppingItem: ShoppingItem(
+                                            name: itemName,
+                                            category: selectedCategory,
+                                            addedAt: Date(),
+                                            isUrlSettingOn: isUrlSettingOn,
+                                            customURL: itemUrl,
+                                            isAlermSettingOn: isAlermSettingOn,
+                                            isAlermRepeatOn: isAlermRepeatOn,
+                                            isDetailSettingOn: isDetailSettingOn,
+                                            alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
+                                            alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
+                                            memo: itemMemo
+                                        ),
+                                        shoppingItemDocId: shoppingItemDocId
+                                    )
+                                }
+                                NotificationManager().fetchAllRegisteredNotifications()
+                                
+                            } catch {
+                                print("error occured while adding shopping item: \(error)")
                             }
-                            NotificationManager().fetchAllRegisteredNotifications()
-                            
-                        } catch {
-                            print("error occured while adding shopping item: \(error)")
                         }
+                        isShowSheet = false
+                    } else {
+                        VibrationHelper().errorVibration()
+                        isNameNilAlertPresented = true
                     }
-                    isShowSheet = false
                 }) {
                     Text("追加")
                 }
-            }.padding(.horizontal)
-//            Spacer()
-        }.onAppear {
+            }
+            .padding(.horizontal)
+            .padding(.bottom)
+        }
+        .onAppear {
             screen = UIScreen.main.bounds.size
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
                 focusedField = .itemName
@@ -155,6 +165,9 @@ struct AddItemView: View {
                     print(error)
                 }
             }
+        }
+        .alert (isPresented: $isNameNilAlertPresented) {
+            Alert(title: Text("アイテムの名前が指定されていません"))
         }
     }
 }

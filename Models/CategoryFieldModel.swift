@@ -68,7 +68,8 @@ struct CategoryFieldRow: View {
                         }
                     }
                 }.presentationDetents([.medium])
-            TextField.init(
+            //                Form {
+            TextField(
                 "",
                 text: self.$category.name,
                 onEditingChanged: {_ in
@@ -78,6 +79,10 @@ struct CategoryFieldRow: View {
                     isNameEditing = false
                 }
             )
+            //                }
+            //                .onChange(of: self.category.name) { newValue in
+            //                    isNameEditing = true
+            //                }
             Spacer()
             isNameEditing
             ? Button(action: {

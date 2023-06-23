@@ -10,10 +10,15 @@ import SwiftUI
 struct SettingView: View {
     @State private var isCategorySettingOn = false
     @State private var categoryList: [Category] = []
-    @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray, style: CategoryStyle(color: CategoryColor.gray))
+    @State private var selectedCategory: Category = Category(
+        name: "その他",
+        color: CategoryColor.gray,
+        style: CategoryStyle(color: CategoryColor.gray)
+    )
     let notificaitonManager = NotificationManager()
-//    @ObservedObject var vibrationHepler = VibrationHelper()
-//    @ObservedObject var darkModeHelper = DarkModeHelper()
+    let shareHelper = ShareHelper()
+    //    @ObservedObject var vibrationHepler = VibrationHelper()
+    //    @ObservedObject var darkModeHelper = DarkModeHelper()
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     var body: some View {
         NavigationStack {
@@ -23,9 +28,13 @@ struct SettingView: View {
                     Section("カテゴリ") {
                         sectionHeader(title: "カテゴリ", isExpanded: $isCategorySettingOn)
                         isCategorySettingOn
-                        ? ForEach(self.categoryList.indices, id: \.self) { index in
-                            CategoryFieldRow.init(category: self.$categoryList[index])
-                        }
+                        ? 
+                            ForEach(self.categoryList.indices, id: \.self) { index in
+                                CategoryFieldRow.init(
+                                    category: self.$categoryList[index]
+                                )
+                            }
+                        
                         : nil
                     }.listStyle(.automatic)
                     Section("システム") {
@@ -37,39 +46,43 @@ struct SettingView: View {
                                     URL(string: UIApplication.openSettingsURLString)!
                                 )
                             }
-                        HStack (alignment: .center) {
-                            DialogHelper(
-                                systemName: nil,
-                                buttonText: "全アラーム削除",
-                                titleText: "すべてのアラームを削除しますか？",
-                                messageText: "この処理は取り消すことができません。",
-                                primaryButtonText: "いいえ",
-                                secondaryButtonText: "削除",
-                                primaryButtonAction: nil,
-                                secondaryButtonAction: {
-                                    notificaitonManager.deleteAllNotifications()
-                                }
-                            )
-                            Spacer()
-                        }
+                        //                        HStack (alignment: .center) {
+                        DialogHelper(
+                            systemName: nil,
+                            buttonText: "全アラーム削除",
+                            titleText: "すべてのアラームを削除しますか？",
+                            messageText: "この処理は取り消すことができません。",
+                            primaryButtonText: "いいえ",
+                            secondaryButtonText: "削除",
+                            primaryButtonAction: nil,
+                            secondaryButtonAction: {
+                                notificaitonManager.deleteAllNotifications()
+                            }
+                        )
+                        .padding(.bottom, 7)
                         .contentShape(Rectangle())
                     }
                     Section("その他") {
-                        HStack (alignment: .center) {
-                            DialogHelper(
-                                systemName: nil,
-                                buttonText: "ログアウト",
-                                titleText: "ログアウトしますか？",
-                                messageText: "",
-                                primaryButtonText: "いいえ",
-                                secondaryButtonText: "ログアウト",
-                                primaryButtonAction: nil,
-                                secondaryButtonAction: {
-                                    AuthViewModel().signOut()
-                                }
-                            )
-                            Spacer()
+                        ShareLink(
+                            item: URL(string: "https://developer.apple.com/documentation/SwiftUI/ShareLink")!,
+                            message: Text("Shopping Reminder を使ってみよう！")
+                        ) {
+                            Text("アプリを共有する")
+                                .foregroundColor(Color.foreground)
                         }
+                        DialogHelper(
+                            systemName: nil,
+                            buttonText: "ログアウト",
+                            titleText: "ログアウトしますか？",
+                            messageText: "",
+                            primaryButtonText: "いいえ",
+                            secondaryButtonText: "ログアウト",
+                            primaryButtonAction: nil,
+                            secondaryButtonAction: {
+                                AuthViewModel().signOut()
+                            }
+                        )
+                        .padding(.bottom, 7)
                         .contentShape(Rectangle())
                     }
                 }
@@ -118,8 +131,8 @@ struct BackButtonView: View {
     }
 }
 
-//struct SettingView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SettingView()
-//    }
-//}
+struct SettingView_Previews: PreviewProvider {
+    static var previews: some View {
+        SettingView()
+    }
+}

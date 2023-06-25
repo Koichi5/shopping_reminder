@@ -93,9 +93,13 @@ struct EntryAuthView: View {
                 }
                 .padding(.bottom)
                 .frame(maxWidth: .infinity, minHeight: 48)
-                GoogleSignInButton()
+                Divider()
                     .padding(.bottom)
+                GoogleSignInButton()
                     .frame(maxWidth: .infinity, minHeight: 48)
+                AppleSignInButton()
+                    .padding(.bottom)
+                    .frame(maxWidth: .infinity, minHeight: 48, maxHeight: 65)
             }
             .padding()
             .fullScreenCover(isPresented: $isRegisterSuccess) {

@@ -28,13 +28,12 @@ struct SettingView: View {
                     Section("カテゴリ") {
                         sectionHeader(title: "カテゴリ", isExpanded: $isCategorySettingOn)
                         isCategorySettingOn
-                        ? 
-                            ForEach(self.categoryList.indices, id: \.self) { index in
-                                CategoryFieldRow.init(
-                                    category: self.$categoryList[index]
-                                )
-                            }
-                        
+                        ?
+                        ForEach(self.categoryList.indices, id: \.self) { index in
+                            CategoryFieldRow.init(
+                                category: self.$categoryList[index]
+                            )
+                        }
                         : nil
                     }.listStyle(.automatic)
                     Section("システム") {

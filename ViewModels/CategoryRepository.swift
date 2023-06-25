@@ -26,28 +26,6 @@ class CategoryRepository: ObservableObject {
             self.objectWillChange.send()
         }
     }
-    //    func addCategory(category: Category) async throws -> Void {
-    ////        var docId = ""
-    //        let currentUser = AuthModel().getCurrentUser()
-    //        if currentUser == nil {
-    //            print("current user is nil")
-    //        } else {
-    //            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
-    //            let categoriesRef = userRef.collection("categories")
-    ////            docId = categoriesRef.document().documentID
-    //            do {
-    //                let newDocReference = try categoriesRef.addDocument(from: category)
-    //                print("Category stored with new document reference: \(newDocReference)")
-    ////                try categoriesRef.document(docId).setData(from: category)
-    ////                try await categoriesRef.document(docId).updateData([
-    ////                    "id": docId
-    ////                ])
-    //            }
-    //            catch {
-    //              print(error)
-    //            }
-    //        }
-    //    }
     
     func addCategoryListener() async throws -> Void {
         print("-- add CATEGORY listener fired --")

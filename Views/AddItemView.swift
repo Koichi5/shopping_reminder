@@ -182,7 +182,7 @@ struct AddItemView: View {
         .alert (isPresented: $isCategoryNilAlertPresented) {
             Alert(title: Text("アイテムのカテゴリが指定されていません"))
         }
-        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

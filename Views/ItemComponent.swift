@@ -15,6 +15,7 @@ struct ItemComponent: View {
     @State var isUrlLinkPresented = false
     @State var isShowItemDetail = false
     var body: some View {
+//        Navigation View にすると Card のビューがおかしくなるので注意
         NavigationStack {
             HStack {
                 Circle()
@@ -26,15 +27,15 @@ struct ItemComponent: View {
                 shoppingItem.customURL == "" ? nil :
                 Menu {
                     Button(action: {
-                            print("is url link presented")
-                            if let url = URL(string: shoppingItem.customURL ?? "") {
-                                if(shoppingItem.customURL == "") {
-                                    print("custom url is nil")
-                                }
-                                UIApplication.shared.open(url, options: [.universalLinksOnly: false], completionHandler: { completed in
-                                    print(completed)
-                                })
+                        print("is url link presented")
+                        if let url = URL(string: shoppingItem.customURL ?? "") {
+                            if(shoppingItem.customURL == "") {
+                                print("custom url is nil")
                             }
+                            UIApplication.shared.open(url, options: [.universalLinksOnly: false], completionHandler: { completed in
+                                print(completed)
+                            })
+                        }
                     }) {
                         Text("URLを開く")
                     }
@@ -50,7 +51,8 @@ struct ItemComponent: View {
                 }
             }
             .padding()
-            .background(Color.itemCard)
+            //            .background(Color.itemCard)
+            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(shoppingItem.category.color.colorData, lineWidth: 1.5)
@@ -59,28 +61,27 @@ struct ItemComponent: View {
                 EditItemView(isShowSheet: $isEditPresented, shoppingItem: shoppingItem)
             }
             .onLongPressGesture {
-//                self.isShowItemDetail.toggle()
+                //                self.isShowItemDetail.toggle()
             }
             .contextMenu {
                 Group {
                     shoppingItem.memo == nil || shoppingItem.memo == "" ? Text("メモは記録されていません") : Text(shoppingItem.memo!)
                 }
             }
-//            .onAppear {
-//                print("shopping item id in shopping item component is : \(shoppingItem.id)")
-//            }
-//            .onTapGesture {
-//                isEditPresented.toggle()
-//                print("shoppingItem id on component: \(shoppingItem.id)")
-//            }
-//            .onLongPressGesture (
-//                minimumDuration: 0.5, maximumDistance: 10
-//            ) {
-//                print("long press")
-//                isEditPresented.toggle()
-//            }
+            //            .onAppear {
+            //                print("shopping item id in shopping item component is : \(shoppingItem.id)")
+            //            }
+            //            .onTapGesture {
+            //                isEditPresented.toggle()
+            //                print("shoppingItem id on component: \(shoppingItem.id)")
+            //            }
+            //            .onLongPressGesture (
+            //                minimumDuration: 0.5, maximumDistance: 10
+            //            ) {
+            //                print("long press")
+            //                isEditPresented.toggle()
+            //            }
         }
-        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 
@@ -95,11 +96,11 @@ struct ItemComponent_Previews: PreviewProvider {
             isAlermSettingOn: true,
             isAlermRepeatOn: false,
             isDetailSettingOn: false,
-//            expirationDate: Date(),
+            //            expirationDate: Date(),
             alermCycleSeconds: 100,
             alermCycleString: "",
             memo: ""
-//            id: nil
+            //            id: nil
         ))
     }
 }

@@ -41,7 +41,7 @@ struct IntroView: View {
 //                }
 //            }
             .fullScreenCover(isPresented: $didIntroductionEnded) {
-                SideMenuContentView()
+                HomeView()
             }
             .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         //        return ConcentricOnboardingView(pageContents: [pages, colors])

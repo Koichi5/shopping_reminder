@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct PasswordResetView: View {
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @State var email: String = ""
     var body: some View {
         NavigationView {
@@ -28,7 +29,9 @@ struct PasswordResetView: View {
                 }
             }
             .padding()
-        }.navigationTitle(Text("パスワード再設定"))
+        }
+        .navigationTitle(Text("パスワード再設定"))
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

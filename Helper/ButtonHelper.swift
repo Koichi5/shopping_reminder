@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ButtonHelper: View {
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     let buttonText: String
     let buttonAction: () -> Void
     let foregroundColor: Color
@@ -29,6 +30,7 @@ struct ButtonHelper: View {
                 .background(backgroundColor.cornerRadius(10))
                 .padding(.horizontal, 32)
         }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
     
 //    func elevatedButton(buttonText: String, buttonAction: () -> Void) -> some View {

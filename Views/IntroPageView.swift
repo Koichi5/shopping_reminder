@@ -11,6 +11,7 @@ import SwiftUI
 
 struct IntroPageView: View {
     
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     let page: PageData
     let imageWidth: CGFloat = 150
     let textWidth: CGFloat = 350
@@ -44,6 +45,7 @@ struct IntroPageView: View {
                     .multilineTextAlignment(.center)
             }
         }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

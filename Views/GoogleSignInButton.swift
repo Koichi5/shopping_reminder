@@ -11,6 +11,7 @@ import FirebaseCore
 import GoogleSignIn
 
 struct GoogleSignInButton: View {
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     var body: some View {
         Button(action: {
             Task {
@@ -36,6 +37,8 @@ struct GoogleSignInButton: View {
             )
             .padding(.bottom)
         }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+
     }
 }
 

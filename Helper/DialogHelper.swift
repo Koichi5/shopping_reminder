@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct DialogHelper: View {
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @State private var isShowingAlert = false
     let systemName: String?
     let buttonText: String?
@@ -33,6 +34,7 @@ struct DialogHelper: View {
         } message: {
             Text(messageText ?? "")
         }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

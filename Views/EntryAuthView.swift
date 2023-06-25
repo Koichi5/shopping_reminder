@@ -12,6 +12,7 @@ struct EntryAuthView: View {
     @State var isRegisterSuccess: Bool = false
     @State var isAlertShown: Bool = false
 //    @State var isLoading: Bool = false
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @ObservedObject var authViewModel: AuthViewModel = AuthViewModel()
     @ObservedObject var validationViewModel: ValidationViewModel = .init()
     var body: some View {
@@ -71,6 +72,7 @@ struct EntryAuthView: View {
                         }
                     }
                     Task{
+                        ShoppingItemRepository().removeCurrentSnapshotListener()
                         try await ShoppingItemRepository().addUserSnapshotListener()
                     }
                 }) {
@@ -105,10 +107,15 @@ struct EntryAuthView: View {
             .fullScreenCover(isPresented: $isRegisterSuccess) {
                 IntroView()
             }
+            .fullScreenCover(isPresented: $authViewModel.isRegisterSuccess) {
+                IntroView()
+            }
             .alert(isPresented: $isAlertShown) {
                 Alert(title: Text("登録に失敗しました。再度お試しください"))
             }
             .navigationTitle(Text("新規登録"))
+            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+
         }
         )
     }

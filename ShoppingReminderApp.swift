@@ -28,11 +28,15 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 
 @main
 struct ShoppingReminderApp: App {
-    @StateObject var vibrationHelper = VibrationHelper()
+//    @AppStorage("isDarkModeOn") private var isDarkModeOn = false
+//    @AppStorage("isVibrationOn") private var isVibrationOn = true
+//    @StateObject var vibrationHelper = VibrationHelper()
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {
             EntryAuthView()
+                .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         }
     }
 }

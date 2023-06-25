@@ -17,6 +17,8 @@ struct SettingView: View {
     )
     let notificaitonManager = NotificationManager()
     let shareHelper = ShareHelper()
+//    @AppStorage("isDarkMode") private var isDarkMode = false
+//    @AppStorage("isVibrationOn") private var isVibrationOn = true
     //    @ObservedObject var vibrationHepler = VibrationHelper()
     //    @ObservedObject var darkModeHelper = DarkModeHelper()
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
@@ -100,6 +102,7 @@ struct SettingView: View {
                 print(error)
             }
         }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

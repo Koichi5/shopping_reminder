@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct LoginAuthView: View {
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @State var email: String = ""
     @State var password: String = ""
     var body: some View {
@@ -60,6 +61,7 @@ struct LoginAuthView: View {
             }.padding()
             .navigationTitle("ログイン")
         }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

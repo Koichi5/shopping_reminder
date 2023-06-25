@@ -13,6 +13,7 @@ struct HomeView: View {
     enum Field: Hashable {
         case itemName
     }
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @FocusState private var focusedField: Field?
     @State private var itemName = ""
     @State private var showingMenu: Bool = false
@@ -51,6 +52,7 @@ struct HomeView: View {
             SettingView()
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CategoryItem: View, Identifiable {
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     let id = UUID()
     var isSelected = false
     let category: Category
@@ -21,7 +22,9 @@ struct CategoryItem: View, Identifiable {
             .overlay(
                 RoundedRectangle(cornerRadius: 20)
                     .stroke(category.color.colorData, lineWidth: 1.5)
-            ).onTapGesture {}
+            )
+            .onTapGesture {}
+            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

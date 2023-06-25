@@ -12,13 +12,14 @@ struct AddItemView: View {
         case itemName
     }
     @FocusState private var focusedField: Field?
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @Binding var isShowSheet: Bool
     @State private var itemName = ""
     @State private var itemUrl = ""
     @State private var itemMemo = ""
     @State private var categoryList: [Category] = []
     @State private var categoryItemList: [CategoryItem] = []
-    @State private var selectedCategory: Category = Category(name: "その他", color: CategoryColor.gray, style: CategoryStyle(color: CategoryColor.gray))
+    @State private var selectedCategory: Category? = nil
     @State private var selectedDigitsValue = "1"
     @State private var selectedUnitsValue = "時間ごと"
     @State private var timeIntervalSinceNow = 0
@@ -31,6 +32,7 @@ struct AddItemView: View {
     @State private var isSidebarOpen = false
 //    @State private var isSomeCategorySelected = true
     @State private var isNameNilAlertPresented = false
+    @State private var isCategoryNilAlertPresented = false
 
     //    @ObservedObject var keyboardHelper = KeyboardHelper()
     
@@ -60,6 +62,7 @@ struct AddItemView: View {
                     TextField("メモ", text: $itemMemo, axis: .vertical)
                         .listRowBackground(Color.clear)
                         .padding(.horizontal)
+                        .padding(.bottom, 30)
                     : nil
                 }
                 Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
@@ -93,57 +96,64 @@ struct AddItemView: View {
                 //                    .padding(.bottom)
                     .focused($focusedField, equals: .itemName)
                 Button(action: {
+                    print("-- current selected category: \(selectedCategory)")
                     if (itemName != "") {
-                        VibrationHelper().feedbackVibration()
-                        let intSelectedDigitsValue = Int(selectedDigitsValue)
-                        timeIntervalSinceNow = TimeHelper().calcSecondsFromString(selectedUnitsValue: selectedUnitsValue, intSelectedDigitsValue: intSelectedDigitsValue ?? 0)
-                        Task {
-                            do {
-                                shoppingItemDocId =
-                                try await ShoppingItemRepository().addShoppingItemWithDocumentId(shoppingItem: ShoppingItem(
-                                    name: itemName,
-                                    category: selectedCategory,
-                                    addedAt: Date(),
-                                    isUrlSettingOn: isUrlSettingOn,
-                                    customURL: itemUrl,
-                                    isAlermSettingOn: isAlermSettingOn,
-                                    isAlermRepeatOn: isAlermRepeatOn,
-                                    isDetailSettingOn: isDetailSettingOn,
-                                    alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                    alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
-                                    memo: itemMemo
-                                )
-                                )
-                                if (isAlermSettingOn) {
-                                    NotificationManager().sendIntervalNotification(
-                                        shoppingItem: ShoppingItem(
-                                            name: itemName,
-                                            category: selectedCategory,
-                                            addedAt: Date(),
-                                            isUrlSettingOn: isUrlSettingOn,
-                                            customURL: itemUrl,
-                                            isAlermSettingOn: isAlermSettingOn,
-                                            isAlermRepeatOn: isAlermRepeatOn,
-                                            isDetailSettingOn: isDetailSettingOn,
-                                            alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                            alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
-                                            memo: itemMemo
-                                        ),
-                                        shoppingItemDocId: shoppingItemDocId
+                        if (selectedCategory != nil) {
+                            VibrationHelper().feedbackVibration()
+                            let intSelectedDigitsValue = Int(selectedDigitsValue)
+                            timeIntervalSinceNow = TimeHelper().calcSecondsFromString(selectedUnitsValue: selectedUnitsValue, intSelectedDigitsValue: intSelectedDigitsValue ?? 0)
+                            Task {
+                                do {
+                                    shoppingItemDocId =
+                                    try await ShoppingItemRepository().addShoppingItemWithDocumentId(shoppingItem: ShoppingItem(
+                                        name: itemName,
+                                        category: selectedCategory!,
+                                        addedAt: Date(),
+                                        isUrlSettingOn: isUrlSettingOn,
+                                        customURL: itemUrl,
+                                        isAlermSettingOn: isAlermSettingOn,
+                                        isAlermRepeatOn: isAlermRepeatOn,
+                                        isDetailSettingOn: isDetailSettingOn,
+                                        alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
+                                        alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
+                                        memo: itemMemo
                                     )
+                                    )
+                                    if (isAlermSettingOn) {
+                                        NotificationManager().sendIntervalNotification(
+                                            shoppingItem: ShoppingItem(
+                                                name: itemName,
+                                                category: selectedCategory!,
+                                                addedAt: Date(),
+                                                isUrlSettingOn: isUrlSettingOn,
+                                                customURL: itemUrl,
+                                                isAlermSettingOn: isAlermSettingOn,
+                                                isAlermRepeatOn: isAlermRepeatOn,
+                                                isDetailSettingOn: isDetailSettingOn,
+                                                alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
+                                                alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
+                                                memo: itemMemo
+                                            ),
+                                            shoppingItemDocId: shoppingItemDocId
+                                        )
+                                    }
+                                    NotificationManager().fetchAllRegisteredNotifications()
+                                    
+                                } catch {
+                                    print("error occured while adding shopping item: \(error)")
                                 }
-                                NotificationManager().fetchAllRegisteredNotifications()
-                                
-                            } catch {
-                                print("error occured while adding shopping item: \(error)")
                             }
+                            isShowSheet = false
+                        } else {
+                            VibrationHelper().errorVibration()
+                            isCategoryNilAlertPresented = true
                         }
-                        isShowSheet = false
                     } else {
                         VibrationHelper().errorVibration()
                         isNameNilAlertPresented = true
                     }
-                }) {
+                }
+                    ) {
                     Text("追加")
                 }
             }
@@ -169,6 +179,10 @@ struct AddItemView: View {
         .alert (isPresented: $isNameNilAlertPresented) {
             Alert(title: Text("アイテムの名前が指定されていません"))
         }
+        .alert (isPresented: $isCategoryNilAlertPresented) {
+            Alert(title: Text("アイテムのカテゴリが指定されていません"))
+        }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

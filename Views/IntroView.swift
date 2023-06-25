@@ -9,6 +9,7 @@ import SwiftUI
 import ConcentricOnboarding
 
 struct IntroView: View {
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @State var isFullScreenPresented: Bool = false
     @State var didGoToLastPage: Bool = false
     @State private var currentIntroPageIndex: Int = 1
@@ -42,6 +43,7 @@ struct IntroView: View {
             .fullScreenCover(isPresented: $didIntroductionEnded) {
                 SideMenuContentView()
             }
+            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         //        return ConcentricOnboardingView(pageContents: [pages, colors])
         //        NavigationStack {
         //            VStack {

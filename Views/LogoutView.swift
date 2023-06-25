@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct LogoutView: View {
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @State private var showingMenu = false
         var body: some View {
             ZStack {
-
                 Color.green.edgesIgnoringSafeArea(
                     .all)
                 VStack(alignment: .leading) {
@@ -32,6 +32,7 @@ struct LogoutView: View {
             }
             .offset(x: showingMenu ? 200.0 : 0.0, y: 0)
             .animation(.easeOut)
+            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         }
 }
 

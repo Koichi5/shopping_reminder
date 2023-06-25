@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ItemComponent: View {
     let shoppingItem: ShoppingItem
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @State private var isDeleted = false
     @State private var isEditPresented = false
     @State var isUrlLinkPresented = false
@@ -79,6 +80,7 @@ struct ItemComponent: View {
 //                isEditPresented.toggle()
 //            }
         }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

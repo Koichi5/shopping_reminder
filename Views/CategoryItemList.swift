@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct CategoryItemList: View {
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @Binding var categoryItemList: [CategoryItem]
-    @Binding var selectedCategory: Category
+    @Binding var selectedCategory: Category?
 //    @Binding var isSomeCategorySelected: Bool
 //    let initialCategory: Category
 ////
@@ -57,6 +58,7 @@ struct CategoryItemList: View {
             .padding(.vertical, 10)
             .padding(.horizontal)
         }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

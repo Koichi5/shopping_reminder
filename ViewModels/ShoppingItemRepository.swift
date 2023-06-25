@@ -57,6 +57,11 @@ class ShoppingItemRepository: ObservableObject {
                                 try $0.data(as: ShoppingItem.self)
                             }
                             print("shoppingItemList: \(self.shoppingItemList)")
+                            for shoppingItem in self.shoppingItemList {
+                                if (!self.shoppingItemCategoryList.contains(shoppingItem.category.name)) {
+                                    self.shoppingItemCategoryList.append(shoppingItem.category.name)
+                                }
+                            }
                             //                            for shoppingItem in self.shoppingItemList {
                             //                                if(!self.categoryRepository.categoryNameList.contains(shoppingItem.category.name)) {
                             //                                    self.categoryRepository.categoryNameList.append(shoppingItem.category.name)
@@ -105,12 +110,12 @@ class ShoppingItemRepository: ObservableObject {
                                 try $0.data(as: ShoppingItem.self)
                             }
                             self.shoppingItemCategoryList = []
-                            //                            for shoppingItem in self.shoppingItemList {
-                            //                                if(!self.categoryRepository.categoryNameList.contains(shoppingItem.category.name)) {
-                            //                                    self.categoryRepository.categoryNameList.append(shoppingItem.category.name)
-                            //                                }
-                            //                            }
-                            print("self.shoppingItemCategoryList: \(self.shoppingItemCategoryList)")
+                            print("shoppingItemList: \(self.shoppingItemList)")
+                            for shoppingItem in self.shoppingItemList {
+                                if (!self.shoppingItemCategoryList.contains(shoppingItem.category.name)) {
+                                    self.shoppingItemCategoryList.append(shoppingItem.category.name)
+                                }
+                            }
                         } catch {
                             print(error)
                         }
@@ -118,17 +123,17 @@ class ShoppingItemRepository: ObservableObject {
                 }
                 print("リスナーをアタッチして、コールバックを受け取った。")
             }
-//            self.listenerRegistration = currentListenerRegistration
+            self.listenerRegistration = currentListenerRegistration
         }
     }
     
-//    func removeCurrentSnapshotListener() {
-//        if let listenerRegistration = self.listenerRegistration {
-//            listenerRegistration.remove()
-//            self.listenerRegistration = nil
-//            print("-- current snapshot listener removed --")
-//        }
-//    }
+    func removeCurrentSnapshotListener() {
+        if let listenerRegistration = self.listenerRegistration {
+            listenerRegistration.remove()
+            self.listenerRegistration = nil
+            print("-- current snapshot listener removed --")
+        }
+    }
     
     func addShoppingItemWithDocumentId(shoppingItem: ShoppingItem) async throws -> String {
         //        var newDocReference = ""

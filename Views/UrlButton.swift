@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct UrlButton: View {
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     let systemName: String
     let buttonText: String
     let sourceUrl: String
@@ -26,7 +27,9 @@ struct UrlButton: View {
                     .lineLimit(1)
                     .foregroundColor(Color.black)
             }
-        }.padding()
+        }
+        .padding()
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

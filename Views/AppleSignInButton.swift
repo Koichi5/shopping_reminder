@@ -11,6 +11,7 @@ import AuthenticationServices
 struct AppleSignInButton: View {
     @State var isShowAlert: Bool = false
     @State var alertMessage: String = ""
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @Environment(\.colorScheme) var colorScheme
 
     var isDarkMode: Bool {
@@ -44,6 +45,7 @@ struct AppleSignInButton: View {
                 dismissButton: .default(Text("OK"))
             )
         }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

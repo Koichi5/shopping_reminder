@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ItemView: View {
     @ObservedObject private var shoppingItemRepository = ShoppingItemRepository()
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @State private var categories: [String] = []
     
     var body: some View {
@@ -16,17 +17,15 @@ struct ItemView: View {
             if (
                 shoppingItemRepository.shoppingItemCategoryList.isEmpty
             ) {
-                VStack(alignment: .center) {
-                    Spacer()
-                    Text("アイテムを追加しよう")
-                    LottieView(fileName: "shopping_item_view_lottie.json")
-                        .frame(width: 250, height: 250)
-                    Spacer()
-                }
-                .frame(
-                    maxHeight: .infinity,
-                    alignment: .center
-                )
+//                GeometryReader { geometry in
+//                    let frame = geometry.frame(in: .local)
+                    VStack {
+                        Text("アイテムを追加しよう")
+                        LottieView(fileName: "shopping_item_view_lottie.json")
+                            .frame(width: 250, height: 250)
+                    }
+                    .padding(.top, 150)
+//                }
             } else {
                 ForEach (
                     shoppingItemRepository.shoppingItemCategoryList
@@ -54,7 +53,7 @@ struct ItemView: View {
         .refreshable {
             Task {
                 do {
-//                    shoppingItemRepository.removeCurrentSnapshotListener()
+                    shoppingItemRepository.removeCurrentSnapshotListener()
                     try await shoppingItemRepository.addUserSnapshotListener()
                 } catch {
                     print(error)
@@ -63,7 +62,7 @@ struct ItemView: View {
         }
         .task {
             do {
-//                shoppingItemRepository.removeCurrentSnapshotListener()
+                shoppingItemRepository.removeCurrentSnapshotListener()
                 try await shoppingItemRepository.addUserSnapshotListener()
                 //                try await categoryRepository.addCategoryListener()
                 updateCategories()
@@ -71,6 +70,7 @@ struct ItemView: View {
                 print(error)
             }
         }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
     
     private func updateCategories() {

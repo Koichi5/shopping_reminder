@@ -88,21 +88,6 @@ class AuthViewModel: ObservableObject {
       }
       let config = GIDConfiguration(clientID: clientID)
       GIDSignIn.sharedInstance.configuration = config
-//
-//        GIDSignIn.sharedInstance.signIn(withPresenting: self) { [unowned self] result, error in
-//            guard error == nil else {
-//        }
-//
-//            guard let user = result?.user,
-//                  let idToken = user.idToken?.tokenString
-//            else {}
-//
-//            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
-//
-//            Auth.auth().signIn(with: credential) { result, error in}
-            
-            
-        
         guard let windowScene = await UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = await windowScene.windows.first,
               let rootViewController = await window.rootViewController else {
@@ -120,7 +105,6 @@ class AuthViewModel: ObservableObject {
               return false
           }
           let accessToken = user.accessToken
-
           let credential = GoogleAuthProvider.credential(
             withIDToken: idToken.tokenString,
             accessToken: accessToken.tokenString

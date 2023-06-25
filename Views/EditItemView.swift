@@ -9,6 +9,7 @@ import SwiftUI
 import Foundation
 
 struct EditItemView: View {
+    @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @Binding var isShowSheet: Bool
     @State private var shoppingItemId: String = ""
     @State private var shoppingItemName = ""
@@ -49,6 +50,7 @@ struct EditItemView: View {
                         TextField("メモ", text: $itemMemo, axis: .vertical)
                             .listRowBackground(Color.clear)
                             .padding(.horizontal)
+                            .padding(.bottom, 30)
                         : nil
                     }
                     .onAppear {
@@ -217,6 +219,8 @@ struct EditItemView: View {
                 print(error)
             }
         }
+        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+
     }
 }
 

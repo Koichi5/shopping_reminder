@@ -52,7 +52,7 @@ struct ItemComponent: View {
             }
             .padding()
             //            .background(Color.itemCard)
-            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(shoppingItem.category.color.colorData, lineWidth: 1.5)

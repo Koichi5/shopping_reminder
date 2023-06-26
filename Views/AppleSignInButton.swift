@@ -45,7 +45,7 @@ struct AppleSignInButton: View {
                 dismissButton: .default(Text("OK"))
             )
         }
-        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

@@ -24,7 +24,7 @@ struct CategoryItem: View, Identifiable {
                     .stroke(category.color.colorData, lineWidth: 1.5)
             )
             .onTapGesture {}
-            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

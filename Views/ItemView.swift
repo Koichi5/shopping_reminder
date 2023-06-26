@@ -22,6 +22,8 @@ struct ItemView: View {
     //                    let frame = geometry.frame(in: .local)
                         VStack {
                             Text("アイテムを追加しよう")
+                                .font(.roundedBoldFont())
+                                .foregroundColor(Color.foreground)
                             LottieView(fileName: "shopping_item_view_lottie.json")
                                 .frame(width: 250, height: 250)
                         }
@@ -72,7 +74,8 @@ struct ItemView: View {
                 }
             }
         }
-        .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//        .background(Color.background)
+//        .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
 //        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
     

@@ -13,7 +13,8 @@ struct IntroPageView: View {
     
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     let page: PageData
-    let imageWidth: CGFloat = 150
+    let imageWidth: CGFloat = 250
+    let imageHeight: CGFloat = 250
     let textWidth: CGFloat = 350
     
     var body: some View {
@@ -26,12 +27,14 @@ struct IntroPageView: View {
                 .foregroundColor(page.textColor)
                 .frame(width: textWidth)
                 .multilineTextAlignment(.center)
-            Image(page.imageName)
-                .resizable()
-                .aspectRatio(aspect, contentMode: .fill)
-                .frame(width: imageWidth, height: imageWidth)
-                .cornerRadius(40)
-                .clipped()
+            LottieView(fileName: page.imageName)
+                .frame(width: imageWidth, height: imageHeight)
+//            Image(page.imageName)
+//                .resizable()
+//                .aspectRatio(aspect, contentMode: .fill)
+//                .frame(width: imageWidth, height: imageWidth)
+//                .cornerRadius(40)
+//                .clipped()
             VStack(alignment: .center, spacing: 5) {
                 Text(page.header)
                     .font(.system(size: 25, weight: .bold, design: .rounded))
@@ -45,7 +48,7 @@ struct IntroPageView: View {
                     .multilineTextAlignment(.center)
             }
         }
-        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

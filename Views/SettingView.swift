@@ -39,9 +39,13 @@ struct SettingView: View {
                         : nil
                     }.listStyle(.automatic)
                     Section("システム") {
-                        Toggle("バイブレーション", isOn: $userDefaultsHelper.isVibrationAllowed)
-                        Toggle("ダークモード", isOn: $userDefaultsHelper.isDarkModeOn)
+                        Toggle(isOn: $userDefaultsHelper.isVibrationAllowed) {
+                            Text("バイブレーション")
+                                .font(.roundedFont())
+                        }
+//                        Toggle("ダークモード", isOn: $userDefaultsHelper.isDarkModeOn)
                         Text("通知設定")
+                            .font(.roundedFont())
                             .onTapGesture {
                                 UIApplication.shared.open(
                                     URL(string: UIApplication.openSettingsURLString)!
@@ -69,6 +73,7 @@ struct SettingView: View {
                             message: Text("Shopping Reminder を使ってみよう！")
                         ) {
                             Text("アプリを共有する")
+                                .font(.roundedFont())
                                 .foregroundColor(Color.foreground)
                         }
                         DialogHelper(
@@ -102,7 +107,7 @@ struct SettingView: View {
                 print(error)
             }
         }
-        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 
@@ -112,6 +117,7 @@ extension SettingView {
             VStack {
                 HStack {
                     Text(title)
+                        .font(.roundedFont())
                         .foregroundColor(Color.foreground)
                     Spacer()
                     Image(systemName: isExpanded.wrappedValue ? "chevron.up" : "chevron.down")

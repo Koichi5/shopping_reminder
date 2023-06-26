@@ -14,6 +14,15 @@ import Foundation
 //    static let navigationBarTitle = UIColor(named: "NavigationBarTitle")!
 //}
 
+extension Font {
+    static func roundedFont() -> Font {
+        return Font.system(size: 18, design: .rounded)
+    }
+    static func roundedBoldFont() -> Font {
+        return Font.system(size: 18, weight: .bold, design: .rounded)
+    }
+}
+
 extension Color {
     static let background = Color("Background")
     static let foreground = Color("Foreground")

@@ -34,7 +34,7 @@ struct DialogHelper: View {
         } message: {
             Text(messageText ?? "")
         }
-        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

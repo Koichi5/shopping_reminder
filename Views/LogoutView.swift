@@ -32,7 +32,7 @@ struct LogoutView: View {
             }
             .offset(x: showingMenu ? 200.0 : 0.0, y: 0)
             .animation(.easeOut)
-            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         }
 }
 

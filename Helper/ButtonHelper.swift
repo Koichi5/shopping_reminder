@@ -30,7 +30,7 @@ struct ButtonHelper: View {
                 .background(backgroundColor.cornerRadius(10))
                 .padding(.horizontal, 32)
         }
-        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
     
 //    func elevatedButton(buttonText: String, buttonAction: () -> Void) -> some View {

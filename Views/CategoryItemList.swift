@@ -58,7 +58,7 @@ struct CategoryItemList: View {
             .padding(.vertical, 10)
             .padding(.horizontal)
         }
-        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

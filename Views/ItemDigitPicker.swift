@@ -33,7 +33,7 @@ struct ItemDigitPicker: View {
 //                    .frame(width: 100)
             }
         }
-        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

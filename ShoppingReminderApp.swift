@@ -37,7 +37,7 @@ struct ShoppingReminderApp: App {
         WindowGroup {
             EntryAuthView()
 //            HomeView()
-                .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//                .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         }
     }
 }

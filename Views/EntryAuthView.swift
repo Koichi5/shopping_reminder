@@ -114,7 +114,7 @@ struct EntryAuthView: View {
                 Alert(title: Text("登録に失敗しました。再度お試しください"))
             }
             .navigationTitle(Text("新規登録"))
-            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
 
         }
         )

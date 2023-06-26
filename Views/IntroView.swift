@@ -43,7 +43,7 @@ struct IntroView: View {
             .fullScreenCover(isPresented: $didIntroductionEnded) {
                 HomeView()
             }
-            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         //        return ConcentricOnboardingView(pageContents: [pages, colors])
         //        NavigationStack {
         //            VStack {

@@ -13,11 +13,11 @@ class UserDefaultsHelper: ObservableObject {
             UserDefaults.standard.set(isVibrationAllowed, forKey: "isVibrationAllowed")
         }
     }
-    @Published var isDarkModeOn: Bool {
-        didSet {
-            UserDefaults.standard.set(isDarkModeOn, forKey: "isDarkModeOn")
-        }
-    }
+//    @Published var isDarkModeOn: Bool {
+//        didSet {
+//            UserDefaults.standard.set(isDarkModeOn, forKey: "isDarkModeOn")
+//        }
+//    }
     
 //    init(isVibrationAllowed: Bool, isDarkModeOn: Bool) {
 //        self.isVibrationAllowed = isVibrationAllowed
@@ -25,7 +25,7 @@ class UserDefaultsHelper: ObservableObject {
 //    }
     init() {
         isVibrationAllowed = UserDefaults.standard.bool(forKey: "isVibrationAllowed") ?? true
-        isDarkModeOn = UserDefaults.standard.bool(forKey: "isDarkModeOn") ?? false
-        print("current isDarkModeOn is: \(isDarkModeOn)")
+//        isDarkModeOn = UserDefaults.standard.bool(forKey: "isDarkModeOn") ?? false
+//        print("current isDarkModeOn is: \(isDarkModeOn)")
     }
 }

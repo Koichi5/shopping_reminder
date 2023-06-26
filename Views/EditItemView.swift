@@ -205,7 +205,10 @@ struct EditItemView: View {
                     //                    }
                 }
             }
+//            .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         }
+//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//        .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         //        .sheet(isPresented: $isShowSheet) {
         //            ShoppingItemEditModal(isShowSheet: $isShowSheet, shoppingItem: shoppingItem)
         //        }
@@ -219,7 +222,7 @@ struct EditItemView: View {
                 print(error)
             }
         }
-        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
 
     }
 }

@@ -15,7 +15,7 @@ struct HomeView: View {
     }
     @ObservedObject private var shoppingItemRepository = ShoppingItemRepository()
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
-    @State private var currentDarkModeOn: Bool = false
+//    @State private var currentDarkModeOn: Bool = false
     @State private var categories: [String] = []
     @FocusState private var focusedField: Field?
     @State private var itemName = ""
@@ -27,13 +27,10 @@ struct HomeView: View {
         NavigationStack {
                 VStack(alignment: .leading) {
                     ItemView()
-                        .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+//                        .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
                 }
-                .colorScheme(currentDarkModeOn ? .dark : .light)
-
 //                .padding(.horizontal) .frame(maxWidth: .infinity)
                 .navigationBarTitle("Home")
-                .toolbarColorScheme(currentDarkModeOn ? .dark : .light, for: .navigationBar)
 //        NavigationView {
 ////            VStack(alignment: .leading) {
 //            ScrollView (showsIndicators: false){
@@ -113,6 +110,7 @@ struct HomeView: View {
                     }) {
                         Image(systemName: "gearshape")
                             .foregroundColor(Color.foreground)
+//                            .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
                     }
                 }
                 ToolbarItemGroup(placement: .bottomBar) {
@@ -120,12 +118,13 @@ struct HomeView: View {
                     Button(action: {
                         isShowSheet.toggle()
                     }) {
-                        Image(systemName: "plus").foregroundColor(Color.foreground)
+                        Image(systemName:"plus")
+                            .foregroundColor(Color.foreground)
+//                            .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
                     }
                 }
             }
         }
-        .colorScheme(currentDarkModeOn ? .dark : .light)
         .sheet(isPresented: $isShowSheet) {
             AddItemView(isShowSheet: $isShowSheet)
         }
@@ -133,9 +132,9 @@ struct HomeView: View {
             SettingView()
         }
         .onAppear {
-            currentDarkModeOn = userDefaultsHelper.isDarkModeOn
-            print("currentDarkModeOn on home page: \(currentDarkModeOn)")
-            print("userDefaultsHelper.isDarkModeOn on home page: \(userDefaultsHelper.isDarkModeOn)")
+//            currentDarkModeOn = userDefaultsHelper.isDarkModeOn
+//            print("currentDarkModeOn on home page: \(currentDarkModeOn)")
+//            print("userDefaultsHelper.isDarkModeOn on home page: \(userDefaultsHelper.isDarkModeOn)")
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
 //                    ToolbarItem(placement: .destructiveAction) {

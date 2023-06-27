@@ -97,6 +97,7 @@ struct EntryAuthView: View {
                 .padding(.bottom)
                 .frame(maxWidth: .infinity, minHeight: 48)
                 Divider()
+                    .background(Color.foreground)
                     .padding(.bottom)
                 GoogleSignInButton()
                     .frame(maxWidth: .infinity, minHeight: 48)

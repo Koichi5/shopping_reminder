@@ -61,6 +61,7 @@ struct LoginAuthView: View {
                         .background(!self.validationViewModel.canLogInSend ? Color.gray.cornerRadius(10) : Color.blue.cornerRadius(10))
                 }
                 .disabled(!self.validationViewModel.canLogInSend)
+                .padding(.bottom)
                 NavigationLink(destination: PasswordResetView()) {
                     Text("パスワードをお忘れの方")
                         .font(.roundedBoldFont())

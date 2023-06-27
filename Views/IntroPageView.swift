@@ -23,7 +23,7 @@ struct IntroPageView: View {
         
         return VStack(alignment: .center, spacing: 50) {
             Text(page.title)
-                .font(.system(size: 40, weight: .bold, design: .rounded))
+                .font(.system(size: 35, weight: .bold, design: .rounded))
                 .foregroundColor(page.textColor)
                 .frame(width: textWidth)
                 .multilineTextAlignment(.center)

@@ -21,8 +21,10 @@ struct DialogHelper: View {
     
     var body: some View {
         Button(action: { self.isShowingAlert = true}) {
-            Image(systemName: systemName ?? "").foregroundColor(Color.foreground)
-            Text(buttonText ?? "").foregroundColor(Color.foreground)
+            Image(systemName: systemName ?? "")
+                .foregroundColor(Color.foreground)
+            Text(buttonText ?? "")
+                .foregroundColor(Color.foreground)
         }
         .alert(titleText, isPresented: $isShowingAlert) {
             Button(primaryButtonText) {

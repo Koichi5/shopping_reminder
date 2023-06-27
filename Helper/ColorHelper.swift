@@ -9,11 +9,6 @@ import UIKit
 import SwiftUI
 import Foundation
 
-//extension UIColor {
-//    static let navigationBarTint = UIColor(named: "NavigationBarTint")!
-//    static let navigationBarTitle = UIColor(named: "NavigationBarTitle")!
-//}
-
 extension Font {
     static func roundedFont() -> Font {
         return Font.system(size: 18, design: .rounded)
@@ -27,6 +22,18 @@ extension Color {
     static let background = Color("Background")
     static let foreground = Color("Foreground")
     static let itemCard = Color("ItemCard")
+    static let error = Color("Error")
+//    static let errorContainer = Color("ErrorContainer")
+//    static let primary = Color("Primary")
+//    static let primaryContainer = Color("PrimaryContainer")
+//    static let secondary = Color("Secondary")
+//    static let secondaryContainer = Color("SecondaryContainer")
+//    static let tertiary = Color("Tertiary")
+//    static let tertiaryContainer = Color("TertiaryContainer")
+//    static let onErrorContainer = Color("OnErrorContainer")
+//    static let onPrimaryContainer = Color("OnPrimaryContainer")
+//    static let onSecondaryContainer = Color("OnSecondaryContainer")
+//    static let onTertiaryContainer = Color("OnTertiaryContainer")
 }
 
 var colorList: [Color] = [

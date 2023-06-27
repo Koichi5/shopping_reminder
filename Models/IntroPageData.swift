@@ -18,24 +18,24 @@ struct PageData {
     let textColor: Color
 }
 
-struct MockData {
+struct IntroPageData {
     static let pages: [PageData] = [
         PageData(
-            title: "Eating grapes 101",
+            title: "買い忘れそうなアイテムを追加しよう",
             header: "Step 1",
             content: "Break off a branch holding a few grapes and lay it on your plate.",
             imageName: "screen 1",
             color: Color(hex: "F38181"),
             textColor: Color(hex: "FFFFFF")),
         PageData(
-            title: "Eating grapes 101",
+            title: "通知を待とう",
             header: "Step 2",
             content: "Put a grape in your mouth whole.",
             imageName: "screen 2",
             color: Color(hex: "FCE38A"),
             textColor: Color(hex: "4A4A4A")),
         PageData(
-            title: "Eating grapes 101",
+            title: "リンクで買い物を便利に",
             header: "Step 3",
             content: "Deposit the seeds into your thumb and first two fingers.",
             imageName: "screen 3",

@@ -39,6 +39,7 @@ struct ItemView: View {
                                     .shadow(color: .gray.opacity(0.7), radius: 2, x: 5, y: 5)
                                 VStack {
                                     Text(categoryName)
+                                        .font(.roundedBoldFont())
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .padding()
                                     ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in

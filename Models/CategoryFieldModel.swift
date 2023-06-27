@@ -98,6 +98,7 @@ struct CategoryFieldRow: View {
                 isNameEditing = false
             }) {
                 Text("変更")
+                
             }
             : nil
         }

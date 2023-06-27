@@ -14,6 +14,7 @@ struct CategoryItem: View, Identifiable {
     let category: Category
     var body: some View {
         Text(category.name)
+            .font(.roundedFont())
             .padding(.vertical, 5)
             .padding(.horizontal, 10)
             .foregroundColor(isSelected ? .white : category.color.colorData)

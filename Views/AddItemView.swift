@@ -40,6 +40,7 @@ struct AddItemView: View {
         VStack {
             ZStack {
                 Text("アイテムの追加")
+                    .font(.roundedFont())
                 HStack {
                     Spacer()
                     Button(action: {
@@ -74,7 +75,10 @@ struct AddItemView: View {
                     .listRowBackground(Color.clear)
                     : nil
                     isAlermSettingOn
-                    ? Toggle("繰り返し", isOn: $isAlermRepeatOn)
+                    ? Toggle(isOn: $isAlermRepeatOn) {
+                        Text("繰り返し")
+                            .font(.roundedFont())
+                    }
                         .listRowBackground(Color.clear)
                         .padding(.horizontal)
                     : nil
@@ -152,14 +156,21 @@ struct AddItemView: View {
                         VibrationHelper().errorVibration()
                         isNameNilAlertPresented = true
                     }
-                }
-                    ) {
+                }) {
                     Text("追加")
+                        .padding()
+                        .font(.roundedFont())
+                        .foregroundColor(Color.white)
+                        .background(itemName == ""
+                                    ? Color.gray.cornerRadius(10)
+                                    : Color.blue.cornerRadius(10)
+                        )
                 }
             }
             .padding(.horizontal)
             .padding(.bottom)
         }
+        .background(Color.background)
         .onAppear {
             screen = UIScreen.main.bounds.size
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){

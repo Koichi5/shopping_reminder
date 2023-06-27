@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftUI
 import FirebaseCore
 import GoogleSignIn
+import FirebaseAuth
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication,
@@ -35,7 +36,7 @@ struct ShoppingReminderApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {
-            EntryAuthView()
+                EntryAuthView()
 //            HomeView()
 //                .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         }

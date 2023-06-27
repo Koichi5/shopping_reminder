@@ -42,10 +42,12 @@ struct SettingView: View {
                         Toggle(isOn: $userDefaultsHelper.isVibrationAllowed) {
                             Text("バイブレーション")
                                 .font(.roundedFont())
+                                .foregroundColor(Color.foreground)
                         }
 //                        Toggle("ダークモード", isOn: $userDefaultsHelper.isDarkModeOn)
                         Text("通知設定")
                             .font(.roundedFont())
+                            .foregroundColor(Color.foreground)
                             .onTapGesture {
                                 UIApplication.shared.open(
                                     URL(string: UIApplication.openSettingsURLString)!

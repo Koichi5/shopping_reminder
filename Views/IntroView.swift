@@ -17,7 +17,7 @@ struct IntroView: View {
     //    let pages: [AnyView] = []
     //    let colors: [Color] = []
     var body: some View {
-        ConcentricOnboardingView(pageContents: MockData.pages.map { (IntroPageView(page: $0), $0.color) })
+        ConcentricOnboardingView(pageContents: IntroPageData.pages.map { (IntroPageView(page: $0), $0.color) })
             .duration(1.0)
             .nextIcon(
                 self.didGoToLastPage
@@ -31,7 +31,7 @@ struct IntroView: View {
             }
             .didChangeCurrentPage { _ in
                 currentIntroPageIndex += 1
-                if (MockData.pages.count < currentIntroPageIndex) {
+                if (IntroPageData.pages.count < currentIntroPageIndex) {
                     didIntroductionEnded = true
                 }
             }

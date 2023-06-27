@@ -23,6 +23,7 @@ struct ItemComponent: View {
                     .frame(width: 10, height: 10)
                     .padding(.horizontal)
                 Text("\(shoppingItem.name)")
+                    .font(.roundedFont())
                 Spacer()
                 shoppingItem.customURL == "" ? nil :
                 Menu {

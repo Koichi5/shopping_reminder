@@ -19,20 +19,20 @@ struct EntryAuthView: View {
         NavigationView(content: {
             VStack (alignment: .leading){
 //                Group {
-                    TextField.init("email", text: self.$validationViewModel.email)
+                    TextField.init("email", text: self.$validationViewModel.signUpEmail)
                         .padding(.vertical)
                         .padding(.leading)
                         .overlay(
                             RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
                                 .stroke(Color.foreground, lineWidth: 1.0)
                         )
-                        .padding(.bottom, !self.validationViewModel.invalidMailMessage.isEmpty ? 0 : 10)
-                    if !self.validationViewModel.invalidMailMessage.isEmpty {
-                        Text(self.validationViewModel.invalidMailMessage)
-                            .foregroundColor(.red)
+                        .padding(.bottom, !self.validationViewModel.invalidSignUpMailMessage.isEmpty ? 0 : 10)
+                    if !self.validationViewModel.invalidSignUpMailMessage.isEmpty {
+                        Text(self.validationViewModel.invalidSignUpMailMessage)
+                            .foregroundColor(.error)
                             .font(.caption)
                 }
-                    SecureField.init("password", text: self.$validationViewModel.password)
+                SecureField.init("password", text: self.$validationViewModel.signUpPassword)
                         .textContentType(.newPassword)
                         .padding(.vertical)
                         .padding(.leading)
@@ -42,7 +42,7 @@ struct EntryAuthView: View {
                         )
                         .padding(.bottom)
                     
-                    SecureField.init("retype - password", text: self.$validationViewModel.retypePassword)
+                    SecureField.init("retype - password", text: self.$validationViewModel.signUpRetypePassword)
                         .textContentType(.newPassword)
                         .padding(.vertical)
                         .padding(.leading)
@@ -54,13 +54,13 @@ struct EntryAuthView: View {
                     
                     if !self.validationViewModel.invalidPasswordMessage.isEmpty {
                         Text(self.validationViewModel.invalidPasswordMessage)
-                            .foregroundColor(.red)
+                            .foregroundColor(.error)
                             .font(.caption)
                     }
                 Button(action: {
                     Auth.auth().createUser(
-                        withEmail: self.validationViewModel.email,
-                        password: self.validationViewModel.password) { result, error in
+                        withEmail: self.validationViewModel.signUpEmail,
+                        password: self.validationViewModel.signUpPassword) { result, error in
 //                        isLoading = true
                         if (result?.user) != nil {
                             FirebaseUserRepository().addFirebaseUser(user: result!.user)
@@ -85,13 +85,14 @@ struct EntryAuthView: View {
                             .fontWeight(.bold)
                             .foregroundColor(Color.white)
                             .frame(maxWidth: .infinity, minHeight: 48)
-                            .background(!self.validationViewModel.canSend ? Color.gray.cornerRadius(10) : Color.blue.cornerRadius(10))
+                            .background(!self.validationViewModel.canSignUpSend ? Color.gray.cornerRadius(10) : Color.blue.cornerRadius(10))
 //                    }
                 }
-                .disabled(!self.validationViewModel.canSend)
+                .disabled(!self.validationViewModel.canSignUpSend)
                 .padding(.bottom)
                 NavigationLink(destination: LoginAuthView().navigationBarBackButtonHidden(true)) {
                     Text("アカウントをお持ちの方はこちら")
+                        .font(.roundedBoldFont())
                 }
                 .padding(.bottom)
                 .frame(maxWidth: .infinity, minHeight: 48)

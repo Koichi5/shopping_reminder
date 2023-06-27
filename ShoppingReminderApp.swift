@@ -36,7 +36,11 @@ struct ShoppingReminderApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {
+            if Auth.auth().currentUser != nil {
+                HomeView()
+            } else {
                 EntryAuthView()
+            }
 //            HomeView()
 //                .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         }

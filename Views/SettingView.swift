@@ -25,7 +25,7 @@ struct SettingView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.background.edgesIgnoringSafeArea(.all)
+//                Color.background.edgesIgnoringSafeArea(.all)
                 List {
                     Section("カテゴリ") {
                         sectionHeader(title: "カテゴリ", isExpanded: $isCategorySettingOn)
@@ -137,6 +137,7 @@ struct BackButtonView: View {
             dismiss()
         }, label: {
             Image(systemName: "chevron.backward")
+                .foregroundColor(Color.foreground)
         })
     }
 }

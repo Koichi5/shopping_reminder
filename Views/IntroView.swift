@@ -14,10 +14,12 @@ struct IntroView: View {
     @State var didGoToLastPage: Bool = false
     @State private var currentIntroPageIndex: Int = 1
     @State private var didIntroductionEnded: Bool = false
-    //    let pages: [AnyView] = []
-    //    let colors: [Color] = []
+    let pageContents = IntroPageData.pages.map {(IntroPageView(page: $0), $0.color)}
+//    let introPages: [IntroPageView] = IntroPageData.pages.map { IntroPageView(page: $0) }
+//    let pageColors: [Color] = IntroPageData.pages.map { $0.color }
+
     var body: some View {
-        ConcentricOnboardingView(pageContents: IntroPageData.pages.map { (IntroPageView(page: $0), $0.color) })
+        ConcentricOnboardingView(pageContents: pageContents)
             .duration(1.0)
             .nextIcon(
                 self.didGoToLastPage

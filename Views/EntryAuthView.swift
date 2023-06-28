@@ -9,17 +9,32 @@ import SwiftUI
 import FirebaseAuth
 
 struct EntryAuthView: View {
+    enum Field: Hashable {
+        case email
+        case password
+        case retypePassword
+    }
+    @FocusState private var focusedField: Field?
     @State var isRegisterSuccess: Bool = false
+//    @State var isGoogleSignInSuccess: Bool = false
     @State var isAlertShown: Bool = false
+    @State var isTextfieldEditting : Bool = false
 //    @State var isLoading: Bool = false
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
-    @ObservedObject var authViewModel: AuthViewModel = AuthViewModel()
+    @ObservedObject var authViewModel = AuthViewModel()
     @ObservedObject var validationViewModel: ValidationViewModel = .init()
     var body: some View {
         NavigationView(content: {
             VStack (alignment: .leading){
 //                Group {
-                    TextField.init("email", text: self.$validationViewModel.signUpEmail)
+                    TextField.init(
+                        "email",
+                        text: self.$validationViewModel.signUpEmail
+                    )
+                    .focused($focusedField, equals: .email)
+                    .onChange(of: focusedField, perform: { newValue in
+                        isTextfieldEditting = true
+                    })
                         .padding(.vertical)
                         .padding(.leading)
                         .overlay(
@@ -33,6 +48,10 @@ struct EntryAuthView: View {
                             .font(.caption)
                 }
                 SecureField.init("password", text: self.$validationViewModel.signUpPassword)
+                    .focused($focusedField, equals: .password)
+                    .onChange(of: focusedField, perform: { newValue in
+                        isTextfieldEditting = true
+                    })
                         .textContentType(.newPassword)
                         .padding(.vertical)
                         .padding(.leading)
@@ -43,6 +62,10 @@ struct EntryAuthView: View {
                         .padding(.bottom)
                     
                     SecureField.init("retype - password", text: self.$validationViewModel.signUpRetypePassword)
+                    .focused($focusedField, equals: .retypePassword)
+                    .onChange(of: focusedField, perform: { newValue in
+                        isTextfieldEditting = true
+                    })
                         .textContentType(.newPassword)
                         .padding(.vertical)
                         .padding(.leading)
@@ -109,13 +132,14 @@ struct EntryAuthView: View {
             .fullScreenCover(isPresented: $isRegisterSuccess) {
                 IntroView()
             }
-            .fullScreenCover(isPresented: $authViewModel.isRegisterSuccess) {
+            .fullScreenCover(isPresented: $authViewModel.isGoogleSignInSuccess) {
                 IntroView()
             }
             .alert(isPresented: $isAlertShown) {
                 Alert(title: Text("登録に失敗しました。再度お試しください"))
             }
             .navigationTitle(Text("新規登録"))
+            .navigationBarTitleDisplayMode(isTextfieldEditting ? .inline : .large)
 //            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
 
         }

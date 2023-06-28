@@ -125,12 +125,14 @@ struct HomeView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
         .sheet(isPresented: $isShowSheet) {
             AddItemView(isShowSheet: $isShowSheet)
         }
         .fullScreenCover(isPresented: $isShowSetting) {
             SettingView()
         }
+        
         .onAppear {
 //            currentDarkModeOn = userDefaultsHelper.isDarkModeOn
 //            print("currentDarkModeOn on home page: \(currentDarkModeOn)")

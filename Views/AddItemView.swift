@@ -158,8 +158,8 @@ struct AddItemView: View {
                     }
                 }) {
                     Text("追加")
-                        .padding()
                         .font(.roundedFont())
+                        .frame(minWidth: 80, minHeight: 40)
                         .foregroundColor(Color.white)
                         .background(itemName == ""
                                     ? Color.gray.cornerRadius(10)
@@ -170,7 +170,7 @@ struct AddItemView: View {
             .padding(.horizontal)
             .padding(.bottom)
         }
-        .background(Color.background)
+//        .background(Color.background)
         .onAppear {
             screen = UIScreen.main.bounds.size
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){

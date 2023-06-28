@@ -5,7 +5,6 @@
 //  Created by Koichi Kishimoto on 2023/06/21.
 //
 
-import SwiftUI
 
 import SwiftUI
 
@@ -18,8 +17,8 @@ struct IntroPageView: View {
     let textWidth: CGFloat = 350
     
     var body: some View {
-        let size = UIImage(named: page.imageName)?.size ?? .zero
-        let aspect = size.width / size.height
+//        let size = UIImage(named: page.imageName)?.size ?? .zero
+//        let aspect = size.width / size.height
         
         return VStack(alignment: .center, spacing: 50) {
             Text(page.title)
@@ -35,7 +34,7 @@ struct IntroPageView: View {
 //                .frame(width: imageWidth, height: imageWidth)
 //                .cornerRadius(40)
 //                .clipped()
-            VStack(alignment: .center, spacing: 5) {
+//            VStack(alignment: .center, spacing: 5) {
 //                Text(page.header)
 //                    .font(.system(size: 25, weight: .bold, design: .rounded))
 //                    .foregroundColor(page.textColor)
@@ -46,7 +45,7 @@ struct IntroPageView: View {
                     .foregroundColor(page.textColor)
                     .frame(width: 300, alignment: .center)
                     .multilineTextAlignment(.center)
-            }
+//            }
         }
 //        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }

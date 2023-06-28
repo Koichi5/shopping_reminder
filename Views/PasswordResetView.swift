@@ -13,7 +13,7 @@ struct PasswordResetView: View {
     @ObservedObject var validationViewModel: ValidationViewModel = .init()
     var body: some View {
         NavigationView {
-            VStack {
+            VStack (alignment: .leading) {
                 TextField.init("mail address", text: self.$validationViewModel.resetPasswordEmail)
                     .padding(.vertical)
                     .padding(.leading)

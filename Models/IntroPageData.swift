@@ -41,13 +41,6 @@ struct IntroPageData {
             imageName: "third_tutorial_lottie",
             color: Color(hex: "95E1D3"),
             textColor: Color(hex: "4A4A4A")),
-        PageData(
-            title: "Eating grapes 101",
-            header: "Step 4",
-            content: "Place the seeds on your plate.",
-            imageName: "screen 4",
-            color: Color(hex: "EAFFD0"),
-            textColor: Color(hex: "4A4A4A")),
     ]
 }
 

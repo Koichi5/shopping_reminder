@@ -12,7 +12,18 @@ import GoogleSignIn
 
 class AuthViewModel: ObservableObject {
     
-    @Published var isRegisterSuccess: Bool = false
+    @Published var isRegisterSuccess: Bool = false {
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
+    
+    @Published var isGoogleSignInSuccess: Bool = false {
+        didSet {
+            self.objectWillChange.send()
+        }
+    }
+    
     static let shared = AuthViewModel()
     private var auth = Auth.auth()
     
@@ -23,7 +34,7 @@ class AuthViewModel: ObservableObject {
     
     @Published var state: SignInState = .signedOut
     
-    func createUserWithEmailAndPassword(email: String, password: String) -> Void {
+    func createUserWithEmailAndPassword(email: String, password: String) {
         auth.createUser(withEmail: email, password: password) { result, error in
             if (result?.user != nil) {
                 FirebaseUserRepository().addFirebaseUser(user: result!.user)
@@ -83,6 +94,7 @@ class AuthViewModel: ObservableObject {
 //    }
     
     func signInWithGoogle() async -> Bool {
+        print("sign in with google fired !")
       guard let clientID = FirebaseApp.app()?.options.clientID else {
         fatalError("No client ID found in Firebase configuration")
       }
@@ -113,7 +125,9 @@ class AuthViewModel: ObservableObject {
           let result = try await Auth.auth().signIn(with: credential)
           let firebaseUser = result.user
             if (firebaseUser != nil) {
-                isRegisterSuccess = true
+                FirebaseUserRepository().addFirebaseUser(user: result.user)
+                self.isGoogleSignInSuccess = true
+                print("is google sign in success in func: \(isGoogleSignInSuccess)")
             }
           print("User \(firebaseUser.uid) signed in with email \(firebaseUser.email ?? "unknown")")
           return true

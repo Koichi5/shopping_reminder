@@ -95,9 +95,11 @@ struct AddItemView: View {
             .listStyle(.plain)
             HStack(alignment: .center) {
                 TextField("アイテム名", text: $itemName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .overlay(
+                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                            .stroke(Color.foreground, lineWidth: 1.0)
+                    )
                     .padding(.horizontal)
-                //                    .padding(.bottom)
                     .focused($focusedField, equals: .itemName)
                 Button(action: {
                     print("-- current selected category: \(selectedCategory)")

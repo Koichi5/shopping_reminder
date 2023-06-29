@@ -95,7 +95,7 @@ struct SettingView: View {
                     }
                 }
             }
-            .navigationBarTitle("Settings")
+            .navigationBarTitle("設定")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     BackButtonView()

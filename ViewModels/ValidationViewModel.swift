@@ -37,12 +37,12 @@ class ValidationViewModel: ObservableObject {
             .assign(to: &$canSignUpSend) //結果をcanSendに格納します。
         
         //②メールアドレスのチェック
-        $signUpEmail.map({ $0.isEmpty || $0.isValidEmail ? "" : "enter valid mail address" }).assign(to: &$invalidSignUpMailMessage)
+        $signUpEmail.map({ $0.isEmpty || $0.isValidEmail ? "" : "入力されたメールアドレスは有効ではありません" }).assign(to: &$invalidSignUpMailMessage)
         
         //③パスワードのチェック
         $signUpPassword.combineLatest($signUpRetypePassword)
             .filter({ !$0.1.isEmpty && !$0.1.isEmpty })
-            .map({ $0.0 == $0.1 ? "" : "must match password" })
+            .map({ $0.0 == $0.1 ? "" : "パスワードが一致していません" })
             .assign(to: &$invalidPasswordMessage)
         
         //①登録できるかどうかの判定
@@ -50,14 +50,14 @@ class ValidationViewModel: ObservableObject {
         logInEmailValidation.assign(to: &$canLogInSend)
         
         //②メールアドレスのチェック
-        $logInEmail.map({ $0.isEmpty || $0.isValidEmail ? "" : "enter valid mail address" }).assign(to: &$invalidLogInMailMessage)
+        $logInEmail.map({ $0.isEmpty || $0.isValidEmail ? "" : "入力されたメールアドレスは有効ではありません" }).assign(to: &$invalidLogInMailMessage)
         
         //①登録できるかどうかの判定
         let resetPasswordEmailValidation = $resetPasswordEmail.map({ !$0.isEmpty && $0.isValidEmail }).eraseToAnyPublisher()
         resetPasswordEmailValidation.assign(to: &$canSendResetPasswordEmail)
         
         //②メールアドレスのチェック
-        $resetPasswordEmail.map({ $0.isEmpty || $0.isValidEmail ? "" : "enter valid mail address" }).assign(to: &$invalidResetPasswordMailMessage)
+        $resetPasswordEmail.map({ $0.isEmpty || $0.isValidEmail ? "" : "入力されたメールアドレスは有効ではありません" }).assign(to: &$invalidResetPasswordMailMessage)
     }
     
 }

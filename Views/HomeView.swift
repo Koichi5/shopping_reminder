@@ -30,7 +30,7 @@ struct HomeView: View {
 //                        .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
                 }
 //                .padding(.horizontal) .frame(maxWidth: .infinity)
-                .navigationBarTitle("Home")
+                .navigationBarTitle("ホーム")
 //        NavigationView {
 ////            VStack(alignment: .leading) {
 //            ScrollView (showsIndicators: false){

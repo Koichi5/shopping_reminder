@@ -15,7 +15,7 @@ struct LoginAuthView: View {
     var body: some View {
         NavigationView {
             VStack (alignment: .leading){
-                TextField.init("mail address", text: self.$validationViewModel.logInEmail)
+                TextField.init("メールアドレス", text: self.$validationViewModel.logInEmail)
                     .padding(.vertical)
                     .padding(.leading)
                     .overlay(
@@ -29,7 +29,7 @@ struct LoginAuthView: View {
                         .font(.caption)
             }
 //                    .textFieldStyle(.roundedBorder)
-                SecureField.init("password", text: $password)
+                SecureField.init("パスワード", text: $password)
                     .padding(.vertical)
                     .padding(.leading)
                     .overlay(

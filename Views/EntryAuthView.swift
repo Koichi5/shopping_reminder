@@ -16,100 +16,148 @@ struct EntryAuthView: View {
     }
     @FocusState private var focusedField: Field?
     @State var isRegisterSuccess: Bool = false
-//    @State var isGoogleSignInSuccess: Bool = false
+    //    @State var isGoogleSignInSuccess: Bool = false
     @State var isAlertShown: Bool = false
     @State var isTextfieldEditting : Bool = false
-//    @State var isLoading: Bool = false
+    @State private var isHidePassword: Bool = true
+    @State private var isHideRetypePassword: Bool = true
+    //    @State var isLoading: Bool = false
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @ObservedObject var authViewModel = AuthViewModel()
     @ObservedObject var validationViewModel: ValidationViewModel = .init()
     var body: some View {
         NavigationView(content: {
             VStack (alignment: .leading){
-//                Group {
-                    TextField.init(
-                        "email",
-                        text: self.$validationViewModel.signUpEmail
-                    )
-                    .focused($focusedField, equals: .email)
-                    .onChange(of: focusedField, perform: { newValue in
-                        isTextfieldEditting = true
-                    })
-                        .padding(.vertical)
-                        .padding(.leading)
-                        .overlay(
-                            RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
-                                .stroke(Color.foreground, lineWidth: 1.0)
-                        )
-                        .padding(.bottom, !self.validationViewModel.invalidSignUpMailMessage.isEmpty ? 0 : 10)
-                    if !self.validationViewModel.invalidSignUpMailMessage.isEmpty {
-                        Text(self.validationViewModel.invalidSignUpMailMessage)
-                            .foregroundColor(.error)
-                            .font(.caption)
+                //                Group {
+                TextField.init(
+                    "メールアドレス",
+                    text: self.$validationViewModel.signUpEmail
+                )
+                .focused($focusedField, equals: .email)
+                .onChange(of: focusedField, perform: { newValue in
+                    isTextfieldEditting = true
+                })
+                .padding(.vertical)
+                .padding(.leading)
+                .overlay(
+                    RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                        .stroke(Color.foreground, lineWidth: 1.0)
+                )
+                .padding(.bottom, !self.validationViewModel.invalidSignUpMailMessage.isEmpty ? 0 : 10)
+                if !self.validationViewModel.invalidSignUpMailMessage.isEmpty {
+                    Text(self.validationViewModel.invalidSignUpMailMessage)
+                        .foregroundColor(.error)
+                        .font(.caption)
                 }
-                SecureField.init("password", text: self.$validationViewModel.signUpPassword)
-                    .focused($focusedField, equals: .password)
-                    .onChange(of: focusedField, perform: { newValue in
-                        isTextfieldEditting = true
-                    })
-                        .textContentType(.newPassword)
-                        .padding(.vertical)
-                        .padding(.leading)
-                        .overlay(
-                            RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
-                                .stroke(Color.foreground, lineWidth: 1.0)
-                        )
-                        .padding(.bottom)
-                    
-                    SecureField.init("retype - password", text: self.$validationViewModel.signUpRetypePassword)
-                    .focused($focusedField, equals: .retypePassword)
-                    .onChange(of: focusedField, perform: { newValue in
-                        isTextfieldEditting = true
-                    })
-                        .textContentType(.newPassword)
-                        .padding(.vertical)
-                        .padding(.leading)
-                        .overlay(
-                            RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
-                                .stroke(Color.foreground, lineWidth: 1.0)
-                        )
-                        .padding(.bottom, !self.validationViewModel.invalidPasswordMessage.isEmpty ? 0 : 10)
-                    
-                    if !self.validationViewModel.invalidPasswordMessage.isEmpty {
-                        Text(self.validationViewModel.invalidPasswordMessage)
-                            .foregroundColor(.error)
-                            .font(.caption)
-                    }
+                ZStack (alignment: .trailing) {
+                        if isHidePassword {
+                            SecureField.init("パスワード", text: self.$validationViewModel.signUpPassword)
+                                .focused($focusedField, equals: .password)
+                                .onChange(of: focusedField, perform: { newValue in
+                                    isTextfieldEditting = true
+                                })
+                                .textContentType(.newPassword)
+                                .padding(.vertical)
+                                .padding(.leading)
+                                .overlay(
+                                    RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                                        .stroke(Color.foreground, lineWidth: 1.0)
+                                )
+                        } else {
+                            TextField.init("パスワード", text: self.$validationViewModel.signUpPassword)
+                                .focused($focusedField, equals: .password)
+                                .onChange(of: focusedField, perform: { newValue in
+                                    isTextfieldEditting = true
+                                })
+                                .textContentType(.newPassword)
+                                .padding(.vertical)
+                                .padding(.leading)
+                                .overlay(
+                                    RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                                        .stroke(Color.foreground, lineWidth: 1.0)
+                                )
+                        }
+                        Button(action: {
+                            isHidePassword.toggle()
+                        }) {
+                            Image(systemName: self.isHidePassword ? "eye.slash" : "eye")
+                                .foregroundColor(Color.foreground)
+                        }.padding()
+                }
+                .padding(.bottom, 10)
+                
+                ZStack (alignment: .trailing) {
+                        if isHideRetypePassword {
+                            SecureField.init("パスワード（確認）", text: self.$validationViewModel.signUpRetypePassword)
+                                .focused($focusedField, equals: .retypePassword)
+                                .onChange(of: focusedField, perform: { newValue in
+                                    isTextfieldEditting = true
+                                })
+                                .textContentType(.newPassword)
+                                .padding(.vertical)
+                                .padding(.leading)
+                                .overlay(
+                                    RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                                        .stroke(Color.foreground, lineWidth: 1.0)
+                                )
+                        } else {
+                            TextField.init("パスワード（確認）", text: self.$validationViewModel.signUpRetypePassword)
+                                .focused($focusedField, equals: .retypePassword)
+                                .onChange(of: focusedField, perform: { newValue in
+                                    isTextfieldEditting = true
+                                })
+                                .textContentType(.newPassword)
+                                .padding(.vertical)
+                                .padding(.leading)
+                                .overlay(
+                                    RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                                        .stroke(Color.foreground, lineWidth: 1.0)
+                                )
+                        }
+                        Button(action: {
+                            isHideRetypePassword.toggle()
+                        }) {
+                            Image(systemName: self.isHideRetypePassword ? "eye.slash" : "eye")
+                                .foregroundColor(Color.foreground)
+                        }.padding()
+                }
+                .padding(.bottom, !self.validationViewModel.invalidPasswordMessage.isEmpty ? 0 : 10)
+                
+                if !self.validationViewModel.invalidPasswordMessage.isEmpty {
+                    Text(self.validationViewModel.invalidPasswordMessage)
+                        .foregroundColor(.error)
+                        .font(.caption)
+                }
                 Button(action: {
                     Auth.auth().createUser(
                         withEmail: self.validationViewModel.signUpEmail,
                         password: self.validationViewModel.signUpPassword) { result, error in
-//                        isLoading = true
-                        if (result?.user) != nil {
-                            FirebaseUserRepository().addFirebaseUser(user: result!.user)
-                            isRegisterSuccess = true
-//                            isLoading = false
-                        } else {
-                            isAlertShown = true
-//                            isLoading = false
+                            //                        isLoading = true
+                            if (result?.user) != nil {
+                                FirebaseUserRepository().addFirebaseUser(user: result!.user)
+                                isRegisterSuccess = true
+                                //                            isLoading = false
+                            } else {
+                                isAlertShown = true
+                                //                            isLoading = false
+                            }
                         }
-                    }
                     Task{
                         ShoppingItemRepository().removeCurrentSnapshotListener()
                         try await ShoppingItemRepository().addUserSnapshotListener()
                     }
                 }) {
-//                    if (
-//                        isLoading
-//                    )
-//                    { LottieView(fileName: "loading_lottie.json")
-//                    } else {
-                        Text("新規登録")
-                            .fontWeight(.bold)
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, minHeight: 48)
-                            .background(!self.validationViewModel.canSignUpSend ? Color.gray.cornerRadius(10) : Color.blue.cornerRadius(10))
-//                    }
+                    //                    if (
+                    //                        isLoading
+                    //                    )
+                    //                    { LottieView(fileName: "loading_lottie.json")
+                    //                    } else {
+                    Text("新規登録")
+                        .fontWeight(.bold)
+                        .foregroundColor(Color.white)
+                        .frame(maxWidth: .infinity, minHeight: 48)
+                        .background(!self.validationViewModel.canSignUpSend ? Color.gray.cornerRadius(10) : Color.blue.cornerRadius(10))
+                    //                    }
                 }
                 .disabled(!self.validationViewModel.canSignUpSend)
                 .padding(.bottom)
@@ -140,8 +188,8 @@ struct EntryAuthView: View {
             }
             .navigationTitle(Text("新規登録"))
             .navigationBarTitleDisplayMode(isTextfieldEditting ? .inline : .large)
-//            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
-
+            //            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+            
         }
         )
     }

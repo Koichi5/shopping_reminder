@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct CategoryFieldRow: View {
+    var focusedField: FocusState<UUID?>.Binding
+    @State var textfieldUUID: UUID = UUID()
     @Binding var category: Category
     @State private var isNameEditing: Bool = false
     @State private var selectedColor = Color.gray
-    @State private var isColorEditing: Bool = false
+//    @State private var isColorEditing: Bool = false
     @State private var currentTask: Task<(), Never>?
     private func updateCategoryColor(categoryId: String, categoryColorNum: Int) async throws {
         try await CategoryRepository().updateCategoryColor(categoryId: categoryId, categoryColorNum: categoryColorNum)
@@ -26,9 +28,9 @@ struct CategoryFieldRow: View {
                 .foregroundColor(self.$category.color.wrappedValue.colorData)
                 .frame(width: 10, height: 10)
                 .padding(.horizontal)
-                .onTapGesture {
-                    isColorEditing = true
-                }
+//                .onTapGesture {
+//                    isColorEditing = true
+//                }
 //                .sheet(isPresented: $isColorEditing) {
 //                    VStack() {
 //                        Text("\(category.name)カテゴリの色変更")
@@ -72,13 +74,14 @@ struct CategoryFieldRow: View {
             TextField(
                 "",
                 text: self.$category.name,
-                onEditingChanged: {_ in
-                    isNameEditing = true
+                onEditingChanged: { onEditing in
+                    isNameEditing = onEditing
                 },
                 onCommit: {
                     isNameEditing = false
                 }
             )
+            .focused(focusedField, equals: textfieldUUID)
             //                }
             //                .onChange(of: self.category.name) { newValue in
             //                    isNameEditing = true

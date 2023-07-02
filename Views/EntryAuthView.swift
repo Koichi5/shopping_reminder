@@ -85,7 +85,6 @@ struct EntryAuthView: View {
                         }.padding()
                 }
                 .padding(.bottom, 10)
-                
                 ZStack (alignment: .trailing) {
                         if isHideRetypePassword {
                             SecureField.init("パスワード（確認）", text: self.$validationViewModel.signUpRetypePassword)
@@ -188,10 +187,20 @@ struct EntryAuthView: View {
             }
             .navigationTitle(Text("新規登録"))
             .navigationBarTitleDisplayMode(isTextfieldEditting ? .inline : .large)
-            //            .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
-            
+            .contentShape(RoundedRectangle(cornerRadius: 0.0))
+            .onTapGesture {
+                UIApplication.shared.endEditing()
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                isTextfieldEditting = false
+            }
         }
         )
+    }
+}
+
+extension UIApplication {
+    func endEditing() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

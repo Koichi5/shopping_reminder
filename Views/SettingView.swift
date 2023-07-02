@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingView: View {
+    @FocusState var focusField: UUID?
     @State private var isCategorySettingOn = false
     @State private var categoryList: [Category] = []
     @State private var selectedCategory: Category = Category(
@@ -17,10 +18,6 @@ struct SettingView: View {
     )
     let notificaitonManager = NotificationManager()
     let shareHelper = ShareHelper()
-//    @AppStorage("isDarkMode") private var isDarkMode = false
-//    @AppStorage("isVibrationOn") private var isVibrationOn = true
-    //    @ObservedObject var vibrationHepler = VibrationHelper()
-    //    @ObservedObject var darkModeHelper = DarkModeHelper()
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     var body: some View {
         NavigationStack {
@@ -32,12 +29,16 @@ struct SettingView: View {
                         isCategorySettingOn
                         ?
                         ForEach(self.categoryList.indices, id: \.self) { index in
-                            CategoryFieldRow.init(
-                                category: self.$categoryList[index]
+                            CategoryFieldRow(
+                                focusedField: $focusField, category: self.$categoryList[index]
                             )
                         }
                         : nil
-                    }.listStyle(.automatic)
+                    }
+                    .listStyle(.automatic)
+//                    .onTapGesture {
+//                        UIApplication.shared.endEditing()
+//                    }
                     Section("システム") {
                         Toggle(isOn: $userDefaultsHelper.isVibrationAllowed) {
                             Text("バイブレーション")

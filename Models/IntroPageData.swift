@@ -21,23 +21,23 @@ struct PageData {
 struct IntroPageData {
     static let pages: [PageData] = [
         PageData(
-            title: "買い忘れそうなアイテムを追加しよう",
+            title: "買い忘れそうな\nアイテムを追加しよう",
             header: "Step 1",
-            content: "Break off a branch holding a few grapes and lay it on your plate.",
+            content: "日用品から自動車の部品まで\n何でも登録しよう！",
             imageName: "first_tutorial_lottie",
             color: Color(hex: "F38181"),
-            textColor: Color(hex: "FFFFFF")),
+            textColor: Color(hex: "4A4A4A")),
         PageData(
             title: "通知を待とう",
             header: "Step 2",
-            content: "Put a grape in your mouth whole.",
+            content: "プッシュ通知を設定すると \n より忘れにくくなります！",
             imageName: "second_tutorial_lottie",
             color: Color(hex: "FCE38A"),
             textColor: Color(hex: "4A4A4A")),
         PageData(
-            title: "リンクで買い物を便利に",
+            title: "リンクでお買い物を便利に",
             header: "Step 3",
-            content: "Deposit the seeds into your thumb and first two fingers.",
+            content: "よく買い物をするリンク先を\n登録してより効率的に買い物を",
             imageName: "third_tutorial_lottie",
             color: Color(hex: "95E1D3"),
             textColor: Color(hex: "4A4A4A")),

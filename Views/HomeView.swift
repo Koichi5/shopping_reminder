@@ -31,6 +31,8 @@ struct HomeView: View {
                 }
 //                .padding(.horizontal) .frame(maxWidth: .infinity)
                 .navigationBarTitle("ホーム")
+                .navigationViewStyle(StackNavigationViewStyle())
+
 //        NavigationView {
 ////            VStack(alignment: .leading) {
 //            ScrollView (showsIndicators: false){

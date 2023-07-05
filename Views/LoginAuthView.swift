@@ -78,6 +78,7 @@ struct LoginAuthView: View {
             .padding()
             .navigationTitle("ログイン")
         }
+        .navigationViewStyle(StackNavigationViewStyle())
 //        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }

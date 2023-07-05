@@ -7,6 +7,14 @@
 
 import SwiftUI
 import FirebaseAuth
+import Foundation
+import FirebaseCore
+import GoogleSignIn
+
+enum ConversionError:Error{
+    case failed
+    case overflow
+}
 
 struct EntryAuthView: View {
     enum Field: Hashable {
@@ -16,14 +24,14 @@ struct EntryAuthView: View {
     }
     @FocusState private var focusedField: Field?
     @State var isRegisterSuccess: Bool = false
-    //    @State var isGoogleSignInSuccess: Bool = false
+        @State var isGoogleSignInSuccess: Bool = false
     @State var isAlertShown: Bool = false
     @State var isTextfieldEditting : Bool = false
     @State private var isHidePassword: Bool = true
     @State private var isHideRetypePassword: Bool = true
     //    @State var isLoading: Bool = false
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
-    @ObservedObject var authViewModel = AuthViewModel()
+    @ObservedObject var authViewModel: AuthViewModel = AuthViewModel()
     @ObservedObject var validationViewModel: ValidationViewModel = .init()
     var body: some View {
         NavigationView(content: {
@@ -169,17 +177,85 @@ struct EntryAuthView: View {
                 Divider()
                     .background(Color.foreground)
                     .padding(.bottom)
-                GoogleSignInButton()
+//                GoogleSignInButton()
+                Button(action: {
+                    Task {
+                        do {
+                            print("sign in with google fired !")
+                          guard let clientID = FirebaseApp.app()?.options.clientID else {
+                            fatalError("No client ID found in Firebase configuration")
+                          }
+                          let config = GIDConfiguration(clientID: clientID)
+                          GIDSignIn.sharedInstance.configuration = config
+                            guard let windowScene = await UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                  let window = await windowScene.windows.first,
+                                  let rootViewController = await window.rootViewController else {
+                            print("There is no root view controller!")
+                                throw ConversionError.failed
+                          }
+                            do {
+                              let userAuthentication = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
+
+                              let user = userAuthentication.user
+                              guard let idToken = user.idToken else {
+                                  print("error occured during google sign in")
+                                  throw ConversionError.failed
+                              }
+                              let accessToken = user.accessToken
+                              let credential = GoogleAuthProvider.credential(
+                                withIDToken: idToken.tokenString,
+                                accessToken: accessToken.tokenString
+                              )
+
+                              let result = try await Auth.auth().signIn(with: credential)
+                              let firebaseUser = result.user
+                                if (firebaseUser != nil) {
+                                    FirebaseUserRepository().addFirebaseUser(user: result.user)
+                                    isGoogleSignInSuccess = true
+                                    print("is google sign in success in func: \(self.isGoogleSignInSuccess)")
+                                }
+                              print("User \(firebaseUser.uid) signed in with email \(firebaseUser.email ?? "unknown")")
+                            }
+                            catch {
+                              print(error.localizedDescription)
+                    //          self.errorMessage = error.localizedDescription
+                            }
+                        }
+                    }
+                }) {
+                    HStack {
+                        Spacer()
+                        Image("google_logo")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                        Spacer()
+                        Text("Google でサインイン")
+                            .foregroundColor(Color.foreground)
+                        Spacer()
+                    }
+                    .padding(.vertical, 15)
+                    .overlay(
+                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                            .stroke(Color.foreground, lineWidth: 1.0)
+                    )
+                    .padding(.bottom)
+                }
                     .frame(maxWidth: .infinity, minHeight: 48)
                 AppleSignInButton()
                     .padding(.bottom)
                     .frame(maxWidth: .infinity, minHeight: 48, maxHeight: 65)
             }
             .padding()
+//            .fullScreenCover(isPresented: self.$authViewModel.isRegisterSuccess) {
+//                IntroView()
+//            }
             .fullScreenCover(isPresented: $isRegisterSuccess) {
                 IntroView()
             }
-            .fullScreenCover(isPresented: $authViewModel.isGoogleSignInSuccess) {
+//            .fullScreenCover(isPresented: self.$authViewModel.isGoogleSignInSuccess) {
+//                IntroView()
+//            }
+            .fullScreenCover(isPresented: $isGoogleSignInSuccess) {
                 IntroView()
             }
             .alert(isPresented: $isAlertShown) {
@@ -195,6 +271,7 @@ struct EntryAuthView: View {
             }
         }
         )
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

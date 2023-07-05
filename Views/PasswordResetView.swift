@@ -40,6 +40,7 @@ struct PasswordResetView: View {
             .padding()
         }
         .navigationTitle(Text("パスワード再設定"))
+        .navigationViewStyle(StackNavigationViewStyle())
 //        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }

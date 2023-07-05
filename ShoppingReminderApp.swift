@@ -17,7 +17,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                      //                     options: [UIApplication.OpenURLOptionsKey: Any] = [:],
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
-//        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+//        GIDSignIn.sharedInstance.restorePreviousSignIn() { user, error in
 //            if error != nil || user == nil {
 //                // Show the app's signed-out state.
 //                print("Not sign-in")
@@ -62,6 +62,13 @@ struct ShoppingReminderApp: App {
                 HomeView()
             } else {
                 EntryAuthView()
+                    .onOpenURL{ url in
+                        GIDSignIn.sharedInstance.handle(url)
+                    }
+                    .onAppear{
+                        GIDSignIn.sharedInstance.restorePreviousSignIn{ user,error in
+                        }
+                    }
             }
             //            IntroView()
         }

@@ -21,81 +21,81 @@ struct SettingView: View {
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     var body: some View {
         NavigationStack {
-            ZStack {
-//                Color.background.edgesIgnoringSafeArea(.all)
-                List {
-                    Section("カテゴリ") {
-                        sectionHeader(title: "カテゴリ", isExpanded: $isCategorySettingOn)
-                        isCategorySettingOn
-                        ?
-                        ForEach(self.categoryList.indices, id: \.self) { index in
-                            CategoryFieldRow(
-                                focusedField: $focusField, category: self.$categoryList[index]
-                            )
-                        }
-                        : nil
+            //                Color.background.edgesIgnoringSafeArea(.all)
+            List {
+                Section("カテゴリ") {
+                    sectionHeader(title: "カテゴリ", isExpanded: $isCategorySettingOn)
+                    isCategorySettingOn
+                    ?
+                    ForEach(self.categoryList.indices, id: \.self) { index in
+                        CategoryFieldRow(
+                            focusedField: $focusField, category: self.$categoryList[index]
+                        )
+                        
                     }
-                    .listStyle(.automatic)
-//                    .onTapGesture {
-//                        UIApplication.shared.endEditing()
-//                    }
-                    Section("システム") {
-                        Toggle(isOn: $userDefaultsHelper.isVibrationAllowed) {
-                            Text("バイブレーション")
-                                .font(.roundedFont())
-                                .foregroundColor(Color.foreground)
-                        }
-//                        Toggle("ダークモード", isOn: $userDefaultsHelper.isDarkModeOn)
-                        Text("通知設定")
+                    : nil
+                }
+                .listStyle(.automatic)
+                Section("システム") {
+                    Toggle(isOn: $userDefaultsHelper.isVibrationAllowed) {
+                        Text("バイブレーション")
                             .font(.roundedFont())
                             .foregroundColor(Color.foreground)
-                            .onTapGesture {
-                                UIApplication.shared.open(
-                                    URL(string: UIApplication.openSettingsURLString)!
-                                )
-                            }
-                        //                        HStack (alignment: .center) {
-                        DialogHelper(
-                            systemName: nil,
-                            buttonText: "全アラーム削除",
-                            titleText: "すべてのアラームを削除しますか？",
-                            messageText: "この処理は取り消すことができません。",
-                            primaryButtonText: "いいえ",
-                            secondaryButtonText: "削除",
-                            primaryButtonAction: nil,
-                            secondaryButtonAction: {
-                                notificaitonManager.deleteAllNotifications()
-                            }
-                        )
-                        .padding(.bottom, 7)
-                        .contentShape(Rectangle())
                     }
-                    Section("その他") {
-                        ShareLink(
-                            item: URL(string: "https://developer.apple.com/documentation/SwiftUI/ShareLink")!,
-                            message: Text("Shopping Reminder を使ってみよう！")
-                        ) {
-                            Text("アプリを共有する")
-                                .font(.roundedFont())
-                                .foregroundColor(Color.foreground)
+                    Text("通知設定")
+                        .font(.roundedFont())
+                        .foregroundColor(Color.foreground)
+                        .onTapGesture {
+                            UIApplication.shared.open(
+                                URL(string: UIApplication.openSettingsURLString)!
+                            )
                         }
-                        DialogHelper(
-                            systemName: nil,
-                            buttonText: "ログアウト",
-                            titleText: "ログアウトしますか？",
-                            messageText: "",
-                            primaryButtonText: "いいえ",
-                            secondaryButtonText: "ログアウト",
-                            primaryButtonAction: nil,
-                            secondaryButtonAction: {
-                                AuthViewModel().signOut()
-                            }
-                        )
-                        .padding(.bottom, 7)
-                        .contentShape(Rectangle())
+                    //                        HStack (alignment: .center) {
+                    DialogHelper(
+                        systemName: nil,
+                        buttonText: "全アラーム削除",
+                        titleText: "すべてのアラームを削除しますか？",
+                        messageText: "この処理は取り消すことができません。",
+                        primaryButtonText: "いいえ",
+                        secondaryButtonText: "削除",
+                        primaryButtonAction: nil,
+                        secondaryButtonAction: {
+                            notificaitonManager.deleteAllNotifications()
+                        }
+                    )
+                    .padding(.bottom, 7)
+                    .contentShape(Rectangle())
+                }
+                Section("その他") {
+                    ShareLink(
+                        item: URL(string: "https://developer.apple.com/documentation/SwiftUI/ShareLink")!,
+                        message: Text("Shopping Reminder を使ってみよう！")
+                    ) {
+                        Text("アプリを共有する")
+                            .font(.roundedFont())
+                            .foregroundColor(Color.foreground)
                     }
+                    DialogHelper(
+                        systemName: nil,
+                        buttonText: "ログアウト",
+                        titleText: "ログアウトしますか？",
+                        messageText: "",
+                        primaryButtonText: "いいえ",
+                        secondaryButtonText: "ログアウト",
+                        primaryButtonAction: nil,
+                        secondaryButtonAction: {
+                            AuthViewModel().signOut()
+                        }
+                    )
+                    .padding(.bottom, 7)
+                    .contentShape(Rectangle())
                 }
             }
+            //            .onTapGesture {
+            ////                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            //                // もしくは
+            //                // UIApplication.shared.windows.first { $0.isKeyWindow }?.endEditing(true)
+            //            }
             .navigationBarTitle("設定")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -110,22 +110,20 @@ struct SettingView: View {
                 print(error)
             }
         }
-//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+        //        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 
 extension SettingView {
     private func sectionHeader(title: String, isExpanded: Binding<Bool>) -> some View {
         Button(action: {isExpanded.wrappedValue.toggle()}) {
-            VStack {
-                HStack {
-                    Text(title)
-                        .font(.roundedFont())
-                        .foregroundColor(Color.foreground)
-                    Spacer()
-                    Image(systemName: isExpanded.wrappedValue ? "chevron.up" : "chevron.down")
-                        .foregroundColor(Color.gray)
-                }
+            HStack {
+                Text(title)
+                    .font(.roundedFont())
+                    .foregroundColor(Color.foreground)
+                Spacer()
+                Image(systemName: isExpanded.wrappedValue ? "chevron.up" : "chevron.down")
+                    .foregroundColor(Color.gray)
             }
         }
     }

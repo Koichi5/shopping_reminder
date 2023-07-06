@@ -11,7 +11,7 @@ import Foundation
 import FirebaseCore
 import GoogleSignIn
 
-enum ConversionError:Error{
+enum CustomAuthError:Error{
     case failed
     case overflow
 }
@@ -191,7 +191,7 @@ struct EntryAuthView: View {
                                   let window = await windowScene.windows.first,
                                   let rootViewController = await window.rootViewController else {
                             print("There is no root view controller!")
-                                throw ConversionError.failed
+                                throw CustomAuthError.failed
                           }
                             do {
                               let userAuthentication = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
@@ -199,7 +199,7 @@ struct EntryAuthView: View {
                               let user = userAuthentication.user
                               guard let idToken = user.idToken else {
                                   print("error occured during google sign in")
-                                  throw ConversionError.failed
+                                  throw CustomAuthError.failed
                               }
                               let accessToken = user.accessToken
                               let credential = GoogleAuthProvider.credential(

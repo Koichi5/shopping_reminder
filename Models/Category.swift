@@ -123,11 +123,3 @@ enum CategoryColor: Int, Codable, CaseIterable {
     }
 }
 
-//extension CategoryColor {
-//    func toCategoruColor(color: Color) {
-//        switch self {
-//        case color.red:
-//            return 1
-//        }
-//    }
-//}

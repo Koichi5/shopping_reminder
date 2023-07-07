@@ -32,11 +32,7 @@ struct AppleSignInButton: View {
                 }
             }
             .signInWithAppleButtonStyle(isDarkMode ? .white : .black)
-//            .padding(.vertical, 15)
-//            .overlay(
-//                RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
-//                    .stroke(Color.foreground, lineWidth: 1.0)
-//            )
+
         }
         .alert(isPresented: $isShowAlert) {
             Alert(
@@ -45,7 +41,6 @@ struct AppleSignInButton: View {
                 dismissButton: .default(Text("OK"))
             )
         }
-//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

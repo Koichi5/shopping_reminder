@@ -22,7 +22,6 @@ struct ItemDigitPicker: View {
                         Text(item).tag(digits.indices)
                     }
                 }.pickerStyle(.wheel)
-//                    .frame(width: 100)
             }
             VStack {
                 Picker("", selection: $selectedUnitsValue) {
@@ -30,10 +29,8 @@ struct ItemDigitPicker: View {
                         Text(item).tag(units.indices)
                     }
                 }.pickerStyle(.wheel)
-//                    .frame(width: 100)
             }
         }
-//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

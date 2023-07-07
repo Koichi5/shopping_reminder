@@ -38,11 +38,6 @@ struct EditItemView: View {
                     .font(.largeTitle.bold())
                     .padding(.horizontal)
                 Spacer()
-//                CategoryItemList(categoryItemList: $categoryItemList, selectedCategory: $selectedCategory)
-//                    .onAppear {
-//                        selectedCategory = shoppingItem.category
-//                        print("current selectedCategory: \(selectedCategory)")
-//                    }
                 List {
                     Section(header: sectionHeader(title: "メモ", isExpanded: $isDetailSettingOn)) {
                         isDetailSettingOn
@@ -91,20 +86,6 @@ struct EditItemView: View {
                         itemUrl = shoppingItem.customURL ?? ""
                     }
                 }.listStyle(.plain)
-                
-                //                shoppingItem.customURL != ""
-                //                ?
-                //                HStack {
-                //                    UrlButton(
-                //                        systemName: "cart",
-                //                        buttonText: "\(shoppingItem.customURL ?? "URL")",
-                //                        sourceUrl: shoppingItem.customURL!
-                //                    )}
-                //                : nil
-                //                shoppingItem.alermCycleString != ""
-                //                ? Text(shoppingItem.alermCycleString ?? "")
-                //                : nil
-                //                Spacer()
                 ButtonHelper(
                     buttonText: "変更",
                     buttonAction: {
@@ -196,22 +177,10 @@ struct EditItemView: View {
                                 }
                                 NotificationManager().fetchAllRegisteredNotifications()
                             }
-//                        }
                     }
-                    //                    Button(action: {
-                    //                        isShowSheet = true
-                    //                    }) {
-                    //                        Image(systemName: "pencil").foregroundColor(Color.foreground)
-                    //                    }
                 }
             }
-//            .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
         }
-//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
-//        .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
-        //        .sheet(isPresented: $isShowSheet) {
-        //            ShoppingItemEditModal(isShowSheet: $isShowSheet, shoppingItem: shoppingItem)
-        //        }
         .task {
             do {
                 categoryList = try await CategoryRepository().fetchCategories()
@@ -222,8 +191,6 @@ struct EditItemView: View {
                 print(error)
             }
         }
-//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
-
     }
 }
 

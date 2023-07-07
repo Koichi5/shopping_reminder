@@ -9,7 +9,6 @@ import Foundation
 import FirebaseFirestoreSwift
 
 struct ShoppingItem: Identifiable, Codable {
-//    let id: UUID
     @DocumentID var id: String?
     var name: String
     var category: Category
@@ -19,7 +18,6 @@ struct ShoppingItem: Identifiable, Codable {
         formatter.dateFormat = "yyyy年M月d日 H時m分"
         return formatter.string(from: addedAt)
     }
-//    var priority: Int
     var isUrlSettingOn: Bool
     var customURL: String?
     var isAlermSettingOn: Bool
@@ -28,21 +26,13 @@ struct ShoppingItem: Identifiable, Codable {
     var alermCycleSeconds: Int?
     var alermCycleString: String?
     var memo: String?
-//    var expirationDate: Date?
-//    var expirationDateString: String {
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "yyyy年M月d日 H時m分"
-//        return formatter.string(from: expirationDate ?? Date()
-//        )
-//    }
+
     
     private enum CodingKeys: String, CodingKey {
         case id
         case name
-//        case categoryName = "category_name"
         case category
         case memo
-//        case priority
         case addedAt = "added_at"
         case isUrlSettingOn = "is_url_setting_on"
         case isDetailSettingOn = "is_detail_setting_on"
@@ -51,15 +41,11 @@ struct ShoppingItem: Identifiable, Codable {
         case isAlermRepeatOn = "is_alerm_repeat_on"
         case alermCycleSeconds = "alerm_cycle_seconds"
         case alermCycleString = "alerm_cycle_string"
-//        case expirationDate = "expiration_date"
     }
     
     init(name: String,
-//         category: String,
          category: Category,
-//         priority: Int,
          addedAt: Date,
-//         expirationDate: Date? = nil,
          isUrlSettingOn: Bool,
          customURL: String?,
          isAlermSettingOn: Bool,
@@ -68,16 +54,10 @@ struct ShoppingItem: Identifiable, Codable {
          alermCycleSeconds: Int?,
          alermCycleString: String?,
          memo: String?
-//         customURL: String? = nil,
-//         id: UUID = UUID()
-//         id: String? = UUID().uuidString
     ) {
-//        self.id = id
         self.name = name
         self.category = category
-//        self.priority = priority
         self.addedAt = addedAt
-//        self.expirationDate = expirationDate
         self.isUrlSettingOn = isUrlSettingOn
         self.isAlermSettingOn = isAlermSettingOn
         self.alermCycleSeconds = alermCycleSeconds

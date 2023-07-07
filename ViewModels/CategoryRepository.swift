@@ -180,20 +180,4 @@ class CategoryRepository: ObservableObject {
         }
         return result
     }
-    
-    //    func deleteCategory(category: Category) async throws -> Void {
-    //        let currentUser = AuthModel().getCurrentUser()
-    //        if currentUser == nil {
-    //            print("current user is nil")
-    //        } else {
-    //            print("delete shopping item fired")
-    //            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
-    //            let categoriesRef = userRef.collection("categories").document(category.id ?? "")
-    //            do {
-    //                try await categoriesRef.delete()
-    //            } catch {
-    //                print(error)
-    //            }
-    //        }
-    //    }
 }

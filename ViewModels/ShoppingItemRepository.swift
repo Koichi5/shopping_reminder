@@ -14,24 +14,8 @@ class ShoppingItemRepository: ObservableObject {
     static var db = Firestore.firestore()
     var listenerRegistration: ListenerRegistration?
     @Published var shoppingItemList: [ShoppingItem] = []
-    //    {
-    //        didSet {
-    //            self.objectWillChange.send()
-    //        }
-    //    }
     @Published var shoppingItemCategoryList: [String] = []
-    //    {
-    //        didSet{
-    //            self.objectWillChange.send()
-    //        }
-    //    }
-    
     @Published var shoppingItemNameList: [String] = []
-    //    {
-    //        didSet {
-    //            self.objectWillChange.send()
-    //        }
-    //    }
     
     func addUserSnapshotListener() async throws -> Void {
         print("add user snapshot listener fired !")
@@ -62,11 +46,6 @@ class ShoppingItemRepository: ObservableObject {
                                     self.shoppingItemCategoryList.append(shoppingItem.category.name)
                                 }
                             }
-                            //                            for shoppingItem in self.shoppingItemList {
-                            //                                if(!self.categoryRepository.categoryNameList.contains(shoppingItem.category.name)) {
-                            //                                    self.categoryRepository.categoryNameList.append(shoppingItem.category.name)
-                            //                                }
-                            //                            }
                         } catch {
                             print(error)
                         }
@@ -94,11 +73,6 @@ class ShoppingItemRepository: ObservableObject {
                                     self.shoppingItemCategoryList.append(shoppingItem.category.name)
                                 }
                             }
-                            //                            for shoppingItem in self.shoppingItemList {
-                            //                                if(!self.categoryRepository.categoryNameList.contains(shoppingItem.category.name)) {
-                            //                                    self.categoryRepository.categoryNameList.append(shoppingItem.category.name)
-                            //                                }
-                            //                            }
                         } catch {
                             print(error)
                         }
@@ -135,9 +109,7 @@ class ShoppingItemRepository: ObservableObject {
         }
     }
     
-    func addShoppingItemWithDocumentId(shoppingItem: ShoppingItem) async throws -> String {
-        //        var newDocReference = ""
-        var docId = ""
+    func addShoppingItemWithDocumentId(shoppingItem: ShoppingItem) async throws -> String {        var docId = ""
         let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
             print("current user is nil")
@@ -195,13 +167,6 @@ class ShoppingItemRepository: ObservableObject {
                 try await itemRef.updateData([
                     //                    "id": shoppingItem.id,
                     "name": shoppingItem.name,
-//                    "category": [
-//                        "color": shoppingItem.category.color.colorNum,
-//                        "items": [],
-//                        "name": shoppingItem.category.name
-//                    ],
-                    //                    "added_at": shoppingItem.addedAt,
-                    //                    "priority": shoppingItem.priority,
                     "is_url_setting_on": shoppingItem.isUrlSettingOn,
                     "custom_url": shoppingItem.customURL,
                     "is_alerm_setting_on": shoppingItem.isAlermSettingOn,

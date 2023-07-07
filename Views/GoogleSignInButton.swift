@@ -37,8 +37,6 @@ struct GoogleSignInButton: View {
             )
             .padding(.bottom)
         }
-//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
-
     }
 }
 

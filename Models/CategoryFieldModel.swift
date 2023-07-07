@@ -28,49 +28,6 @@ struct CategoryFieldRow: View {
                 .foregroundColor(self.$category.color.wrappedValue.colorData)
                 .frame(width: 10, height: 10)
                 .padding(.horizontal)
-//                .onTapGesture {
-//                    isColorEditing = true
-//                }
-//                .sheet(isPresented: $isColorEditing) {
-//                    VStack() {
-//                        Text("\(category.name)カテゴリの色変更")
-//                        Picker("\(category.name)カテゴリの色変更", selection: $selectedColor) {
-//                            ForEach(colorList, id: \.self) { item in
-//                                HStack {
-//                                    Circle()
-//                                        .foregroundColor(item)
-//                                        .frame(width: 10, height: 10)
-//                                    Text(item.description)
-//                                }
-//                            }
-//                        }
-//                        .pickerStyle(WheelPickerStyle())
-//                        ButtonHelper(
-//                            buttonText: "変更",
-//                            buttonAction: {
-//                                isColorEditing = false
-//                                currentTask?.cancel()
-//                                currentTask = Task {
-//                                    do {
-//                                        try await updateCategoryColor(categoryId: category.id ?? "", categoryColorNum: category.color.colorNum)
-//                                        print("category id: \(category.id)")
-//                                    } catch {
-//                                        print(error)
-//                                    }
-//                                }
-//                            },
-//                            foregroundColor: Color.white,
-//                            backgroundColor: selectedColor,
-//                            buttonTextIsBold: nil,
-//                            buttonWidth: nil,
-//                            buttonHeight: nil,
-//                            buttonTextFontSize: nil)
-//                        .onDisappear {
-//                            currentTask?.cancel()
-//                        }
-//                    }
-//                }.presentationDetents([.medium])
-            //                Form {
             TextField(
                 "",
                 text: self.$category.name,
@@ -82,10 +39,6 @@ struct CategoryFieldRow: View {
                 }
             )
             .focused(focusedField, equals: textfieldUUID)
-            //                }
-            //                .onChange(of: self.category.name) { newValue in
-            //                    isNameEditing = true
-            //                }
             Spacer()
             isNameEditing
             ? Button(action: {

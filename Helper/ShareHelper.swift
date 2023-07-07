@@ -9,17 +9,6 @@ import Foundation
 import UIKit
 
 class ShareHelper: ObservableObject {
-//    func shareApp(
-//        shareText: String,
-//        shareImage: UIImage?,
-//        shareLink: String
-//    ) {
-//        let items = [shareText, URL(string: shareLink)!] as [Any]
-//        let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
-//        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-//        let rootVC = windowScene?.windows.first?.rootViewController
-//        rootVC?.present(activityVC, animated: true)
-//    }
     func shareApp(
         shareText: String,
         shareImage: UIImage?,

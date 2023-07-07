@@ -21,7 +21,6 @@ struct SettingView: View {
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     var body: some View {
         NavigationStack {
-            //                Color.background.edgesIgnoringSafeArea(.all)
             List {
                 Section("カテゴリ") {
                     sectionHeader(title: "カテゴリ", isExpanded: $isCategorySettingOn)
@@ -91,11 +90,6 @@ struct SettingView: View {
                     .contentShape(Rectangle())
                 }
             }
-            //            .onTapGesture {
-            ////                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-            //                // もしくは
-            //                // UIApplication.shared.windows.first { $0.isKeyWindow }?.endEditing(true)
-            //            }
             .navigationBarTitle("設定")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -110,7 +104,6 @@ struct SettingView: View {
                 print(error)
             }
         }
-        //        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

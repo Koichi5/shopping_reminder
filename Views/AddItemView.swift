@@ -30,11 +30,8 @@ struct AddItemView: View {
     @State private var shoppingItemDocId = ""
     @State var screen: CGSize!
     @State private var isSidebarOpen = false
-//    @State private var isSomeCategorySelected = true
     @State private var isNameNilAlertPresented = false
     @State private var isCategoryNilAlertPresented = false
-
-    //    @ObservedObject var keyboardHelper = KeyboardHelper()
     
     var body: some View {
         VStack {
@@ -54,7 +51,6 @@ struct AddItemView: View {
             CategoryItemList(
                 categoryItemList: $categoryItemList,
                 selectedCategory: $selectedCategory
-//                isSomeCategorySelected: $isSomeCategorySelected
             )
             List {
                 Section(header: sectionHeader(title: "メモ", isExpanded: $isDetailSettingOn)) {
@@ -173,7 +169,6 @@ struct AddItemView: View {
             .padding(.horizontal)
             .padding(.bottom)
         }
-//        .background(Color.background)
         .onAppear {
             screen = UIScreen.main.bounds.size
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
@@ -196,7 +191,6 @@ struct AddItemView: View {
         .alert (isPresented: $isCategoryNilAlertPresented) {
             Alert(title: Text("アイテムのカテゴリが指定されていません"))
         }
-//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 
@@ -220,10 +214,5 @@ extension AddItemView {
     }
 }
 
-//struct AddItemView_Previews: PreviewProvider {
-//    @State static var isShowSheet = true
-//    static var previews: some View {
-//        AddItemView(isShowSheet: $isShowSheet)
-//    }
-//}
+
 

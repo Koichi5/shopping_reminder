@@ -18,8 +18,6 @@ struct ItemView: View {
                 if (
                     shoppingItemRepository.shoppingItemCategoryList.isEmpty
                 ) {
-    //                GeometryReader { geometry in
-    //                    let frame = geometry.frame(in: .local)
                         VStack {
                             Text("アイテムを追加しよう")
                                 .font(.roundedBoldFont())
@@ -28,7 +26,6 @@ struct ItemView: View {
                                 .frame(width: 250, height: 250)
                         }
                         .padding(.top, 150)
-    //                }
                 } else {
                     ForEach (
                         shoppingItemRepository.shoppingItemCategoryList
@@ -68,16 +65,12 @@ struct ItemView: View {
                 do {
                     shoppingItemRepository.removeCurrentSnapshotListener()
                     try await shoppingItemRepository.addUserSnapshotListener()
-                    //                try await categoryRepository.addCategoryListener()
                     updateCategories()
                 } catch {
                     print(error)
                 }
             }
         }
-//        .background(Color.background)
-//        .colorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
-//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
     
     private func updateCategories() {
@@ -87,11 +80,6 @@ struct ItemView: View {
         }
         self.categories = Array(categories)
     }
-    
-    //    private var shoppingItemListFiltered: [ShoppingItem] {
-    //        let searchResult = shoppingItemRepository.shoppingItemList.filter { $0.name.contains(searchText)}
-    //        return searchText.isEmpty ? shoppingItemRepository.shoppingItemList : searchResult
-    //    }
 }
 
 struct ItemView_Previews: PreviewProvider {

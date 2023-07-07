@@ -29,7 +29,6 @@ struct EntryAuthView: View {
     @State var isTextfieldEditting : Bool = false
     @State private var isHidePassword: Bool = true
     @State private var isHideRetypePassword: Bool = true
-    //    @State var isLoading: Bool = false
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @ObservedObject var authViewModel: AuthViewModel = AuthViewModel()
     @ObservedObject var validationViewModel: ValidationViewModel = .init()

@@ -58,22 +58,6 @@ class FirebaseUserRepository {
         }
     }
     
-//    func fetchAllFirebaseUserId() async -> [String?] {
-//        var firebaseUserIdList = [String?]()
-//        db.collection("users").getDocuments() {
-//            (querySnapshot, error) in
-//            if let error = error {
-//                print("Error occured getting firebase user ids: \(error)")
-//                return []
-//            } else {
-//                for document in querySnapshot!.documents {
-//                    firebaseUserIdList.append(document.documentID)
-//                }
-//                return firebaseUserIdList
-//            }
-//        }
-//    }
-    
     func deleteFirebaseUser(userUid: String) {
         let userRef = db.collection("users").document(userUid)
         userRef.delete()

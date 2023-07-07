@@ -28,7 +28,6 @@ struct LoginAuthView: View {
                         .foregroundColor(.error)
                         .font(.caption)
             }
-//                    .textFieldStyle(.roundedBorder)
                 SecureField.init("パスワード", text: $password)
                     .padding(.vertical)
                     .padding(.leading)
@@ -37,7 +36,6 @@ struct LoginAuthView: View {
                             .stroke(Color.foreground, lineWidth: 1.0)
                     )
                     .padding(.bottom)
-//                    .textFieldStyle(.roundedBorder)
                 Button(action: {
                     Task {
                         try await Auth.auth().signIn(withEmail: self.validationViewModel.logInEmail, password: password){ result, error in
@@ -48,11 +46,6 @@ struct LoginAuthView: View {
                             }
                         }
                     }
-//                    { result, error in
-//                        if let user = result?.user {
-//                            Text(user.email ?? "")
-//                        }
-//                    }
                 }) {
                     Text("ログイン")
                         .fontWeight(.bold)
@@ -79,7 +72,6 @@ struct LoginAuthView: View {
             .navigationTitle("ログイン")
         }
         .navigationViewStyle(StackNavigationViewStyle())
-//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 

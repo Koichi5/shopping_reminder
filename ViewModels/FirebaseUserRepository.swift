@@ -25,25 +25,16 @@ class FirebaseUserRepository {
                     email: currentUser!.email ?? "",
                     items: [],
                     categories: [
-                        Category(name: "Groceries", color: CategoryColor.green, style: CategoryStyle(color: CategoryColor.green)),
-                        Category(name: "Clothing", color: CategoryColor.blue, style: CategoryStyle(color: CategoryColor.blue)),
-                        Category(name: "Electronics", color: CategoryColor.orange, style: CategoryStyle(color: CategoryColor.orange)),
-                        Category(name: "Furnitures", color: CategoryColor.gray, style: CategoryStyle(color: CategoryColor.gray)),
-                        Category(name: "Foods", color: CategoryColor.pink, style: CategoryStyle(color: CategoryColor.pink)),
-                        Category(name: "Bikes", color: CategoryColor.purple, style: CategoryStyle(color: CategoryColor.purple)),
-                        Category(name: "Cars", color: CategoryColor.yellow, style: CategoryStyle(color: CategoryColor.yellow)),
+                        Category(name: "日用品", color: CategoryColor.yellow, style: CategoryStyle(color: CategoryColor.yellow)),
+                        Category(name: "食品", color: CategoryColor.red, style: CategoryStyle(color: CategoryColor.red)),
+                        Category(name: "衣服", color: CategoryColor.orange, style: CategoryStyle(color: CategoryColor.orange)),
+                        Category(name: "家具・家電", color: CategoryColor.blue, style: CategoryStyle(color: CategoryColor.blue)),
+                        Category(name: "アウトドア用品", color: CategoryColor.green, style: CategoryStyle(color: CategoryColor.green)),
+                        Category(name: "ペット用品", color: CategoryColor.purple, style: CategoryStyle(color: CategoryColor.purple)),
+                        Category(name: "その他", color: CategoryColor.gray, style: CategoryStyle(color: CategoryColor.gray)),
+
                     ]
                 )
-//                let encoder = JSONEncoder()
-//                let data = try encoder.encode(firebaseUser)
-//                let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-//                userRef.setData(dict) { error in
-//                    if let error = error {
-//                        print("--Error adding document: \(error)--")
-//                    } else {
-//                        print("--Document added successfully--")
-//                    }
-//                }
                 try userRef.setData(from: firebaseUser)
                 
                 for category in firebaseUser.categories {

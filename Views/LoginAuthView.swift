@@ -12,6 +12,8 @@ struct LoginAuthView: View {
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @ObservedObject var validationViewModel: ValidationViewModel = .init()
     @State var password: String = ""
+    @State var isLogInSucceeded: Bool = false
+    @State var isShowLogInFailAlert: Bool = false
     var body: some View {
         NavigationView {
             VStack (alignment: .leading){
@@ -41,8 +43,9 @@ struct LoginAuthView: View {
                         try await Auth.auth().signIn(withEmail: self.validationViewModel.logInEmail, password: password){ result, error in
                             if let user = result?.user {
                                 print("logged in with user -- \(result?.user)")
+                                isLogInSucceeded = true
                             } else {
-                                print("login failed")
+                                isShowLogInFailAlert = true
                             }
                         }
                     }
@@ -70,6 +73,16 @@ struct LoginAuthView: View {
             }
             .padding()
             .navigationTitle("ログイン")
+            .fullScreenCover(isPresented: $isLogInSucceeded) {
+                HomeView()
+            }
+            .alert(isPresented: $isShowLogInFailAlert){
+                Alert(
+                    title: Text("ログインに失敗しました"),
+                    message: Text("メールアドレスまたはパスワードが誤っています"),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

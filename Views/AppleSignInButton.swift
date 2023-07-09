@@ -20,7 +20,7 @@ struct AppleSignInButton: View {
 
     var body: some View {
         VStack {
-            SignInWithAppleButton(.signIn) { request in
+            SignInWithAppleButton(.signUp) { request in
                 request.requestedScopes = [.fullName, .email]
             } onCompletion: { authResults in
                 switch authResults {
@@ -32,7 +32,6 @@ struct AppleSignInButton: View {
                 }
             }
             .signInWithAppleButtonStyle(isDarkMode ? .white : .black)
-
         }
         .alert(isPresented: $isShowAlert) {
             Alert(

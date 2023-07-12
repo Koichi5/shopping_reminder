@@ -26,6 +26,7 @@ class AuthViewModel: ObservableObject {
     
     static let shared = AuthViewModel()
     private var auth = Auth.auth()
+    private var firebaseUserRepository = FirebaseUserRepository()
     
     enum SignInState {
         case signedIn
@@ -69,29 +70,6 @@ class AuthViewModel: ObservableObject {
         }
       }
     }
-    
-//    func signInWithGoogle() {
-//        if GIDSignIn.sharedInstance.hasPreviousSignIn() {
-//          GIDSignIn.sharedInstance.restorePreviousSignIn { [unowned self] user, error in
-////              authenticateUser(for: user, with: error)
-//          }
-//        } else {
-//          // 2
-//          guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-//
-//          // 3
-//          let configuration = GIDConfiguration(clientID: clientID)
-//
-//          // 4
-//          guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-//          guard let rootViewController = windowScene.windows.first?.rootViewController else { return }
-//
-//          // 5
-//          GIDSignIn.sharedInstance.signIn(with: configuration, presenting: rootViewController) { [unowned self] user, error in
-////            authenticateUser(for: user, with: error)
-//          }
-//        }
-//    }
     
     func signInWithGoogle() async -> Bool {
         print("sign in with google fired !")
@@ -174,9 +152,21 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-
     
-    //    sign out
+    func signInAnnonymously() async throws -> Void {
+        do {
+            try await auth.signInAnonymously()
+        } catch let error as NSError {
+            let errorCode = AuthErrorCode.Code(rawValue: error.code)
+            switch errorCode {
+            case .networkError:
+                throw AuthError.networkError
+            default:
+                throw AuthError.unknown
+            }
+        }
+    }
+    
     func signOut() -> String? {
         do {
             try auth.signOut()
@@ -189,6 +179,19 @@ class AuthViewModel: ObservableObject {
             default:
                 return AuthError.unknown.title
             }
+        }
+    }
+    
+    func deleteUser() {
+        let user = Auth.auth().currentUser
+
+        user?.delete { error in
+          if let error = error {
+            print("Error occured during deleting user")
+          } else {
+              self.firebaseUserRepository.deleteFirebaseUser(userUid: user!.uid)
+            print("Accounted deleted")
+          }
         }
     }
     

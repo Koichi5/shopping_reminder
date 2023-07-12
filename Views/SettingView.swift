@@ -88,6 +88,17 @@ struct SettingView: View {
                     )
                     .padding(.bottom, 7)
                     .contentShape(Rectangle())
+                    DialogHelper(
+                        systemName: nil,
+                        buttonText: "アカウント削除",
+                        titleText: "アカウントを削除しますか？",
+                        messageText: "この処理は取り消すことができません",
+                        primaryButtonText: "いいえ",
+                        secondaryButtonText: "削除",
+                        primaryButtonAction: nil,
+                        secondaryButtonAction: {
+                        AuthViewModel().deleteUser()
+                    })
                 }
             }
             .navigationBarTitle("設定")

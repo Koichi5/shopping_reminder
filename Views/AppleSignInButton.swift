@@ -25,7 +25,6 @@ struct AppleSignInButton: View {
             } onCompletion: { authResults in
                 switch authResults {
                 case .success(_): break
-                    // AppleIDログイン完了時にはしる処理。サーバにAuth情報を保存したりする。
                 case .failure(let error):
                     self.alertMessage = error.localizedDescription
                     self.isShowAlert.toggle()

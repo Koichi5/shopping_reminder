@@ -10,6 +10,7 @@ import FirebaseAuth
 import Foundation
 import FirebaseCore
 import GoogleSignIn
+import _AuthenticationServices_SwiftUI
 
 enum CustomAuthError:Error{
     case failed
@@ -23,6 +24,8 @@ struct EntryAuthView: View {
         case retypePassword
     }
     @FocusState private var focusedField: Field?
+    @State var isShowAppleAlert: Bool = false
+    @State var appleAlertMessage: String = ""
     @State var isRegisterSuccess: Bool = false
     @State var isGoogleSignInSuccess: Bool = false
     @State var isSignInAnnonymouslySuccess: Bool = false
@@ -33,6 +36,10 @@ struct EntryAuthView: View {
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @ObservedObject var authViewModel: AuthViewModel = AuthViewModel()
     @ObservedObject var validationViewModel: ValidationViewModel = .init()
+    @Environment(\.colorScheme) var colorScheme
+    var isDarkMode: Bool {
+        colorScheme == .dark
+    }
     let termsOfserviceUrl: String = "https://koichi5.github.io/shopping_reminder_terms_of_service/"
     let privacyPolicyUrl: String = "https://koichi5.github.io/shopping_reminder_privacy_policy/"
     var body: some View {
@@ -94,6 +101,7 @@ struct EntryAuthView: View {
                                 .foregroundColor(Color.foreground)
                         }.padding()
                     }
+                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
                     .padding(.bottom, 10)
                     ZStack (alignment: .trailing) {
                         if isHideRetypePassword {
@@ -130,6 +138,7 @@ struct EntryAuthView: View {
                                 .foregroundColor(Color.foreground)
                         }.padding()
                     }
+                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
                     .padding(.bottom, !self.validationViewModel.invalidPasswordMessage.isEmpty ? 0 : 10)
                     
                     if !self.validationViewModel.invalidPasswordMessage.isEmpty {
@@ -162,12 +171,13 @@ struct EntryAuthView: View {
                     }
                     .disabled(!self.validationViewModel.canSignUpSend)
                     .padding(.bottom)
+                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
                     NavigationLink(destination: LoginAuthView().navigationBarBackButtonHidden(true)) {
                         Text("アカウントをお持ちの方はこちら")
                             .font(.roundedBoldFont())
                     }
                     .padding(.bottom)
-                    .frame(maxWidth: .infinity, minHeight: 48)
+                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
                     Button(action: {
                         Task {
                             do {
@@ -187,7 +197,7 @@ struct EntryAuthView: View {
                             .font(.roundedBoldFont())
                     }
                     .padding(.bottom)
-                    .frame(maxWidth: .infinity, minHeight: 48)
+                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
                 }
                 Divider()
                     .background(Color.foreground)
@@ -256,10 +266,19 @@ struct EntryAuthView: View {
                         )
                         .padding(.bottom)
                     }
-                    .frame(maxWidth: .infinity, minHeight: 48)
-                    AppleSignInButton()
-                        .padding(.bottom)
-                        .frame(maxWidth: .infinity, minHeight: 48, maxHeight: 65)
+                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
+                    SignInWithAppleButton(.signUp) { request in
+                        request.requestedScopes = [.fullName, .email]
+                    } onCompletion: { authResults in
+                        switch authResults {
+                        case .success(_): break
+                        case .failure(let error):
+                            self.appleAlertMessage = error.localizedDescription
+                            self.isShowAppleAlert.toggle()
+                        }
+                    }
+                    .signInWithAppleButtonStyle(isDarkMode ? .white : .black)
+                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
                     HStack{
                         Spacer()
                         Text("登録することで")
@@ -308,6 +327,13 @@ struct EntryAuthView: View {
             }
             .alert(isPresented: $isAlertShown) {
                 Alert(title: Text("登録に失敗しました。再度お試しください"))
+            }
+            .alert(isPresented: $isShowAppleAlert) {
+                Alert(
+                    title: Text("Error"),
+                    message: Text(appleAlertMessage),
+                    dismissButton: .default(Text("OK"))
+                )
             }
             .navigationTitle(Text("新規登録"))
             .navigationBarTitleDisplayMode(isTextfieldEditting ? .inline : .large)

@@ -10,7 +10,8 @@ import FirebaseAuth
 import Foundation
 import FirebaseCore
 import GoogleSignIn
-import _AuthenticationServices_SwiftUI
+import AuthenticationServices
+import CryptoKit
 
 enum CustomAuthError:Error{
     case failed
@@ -28,6 +29,7 @@ struct EntryAuthView: View {
     @State var appleAlertMessage: String = ""
     @State var isRegisterSuccess: Bool = false
     @State var isGoogleSignInSuccess: Bool = false
+    @State var isAppleSignInSuccess: Bool = false
     @State var isSignInAnnonymouslySuccess: Bool = false
     @State var isAlertShown: Bool = false
     @State var isTextfieldEditting : Bool = false
@@ -42,6 +44,54 @@ struct EntryAuthView: View {
     }
     let termsOfserviceUrl: String = "https://koichi5.github.io/shopping_reminder_terms_of_service/"
     let privacyPolicyUrl: String = "https://koichi5.github.io/shopping_reminder_privacy_policy/"
+    // MARK: - Firebase用
+    private func randomNonceString(length: Int = 32) -> String {
+        precondition(length > 0)
+        let charset: [Character] =
+        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        var result = ""
+        var remainingLength = length
+        
+        while remainingLength > 0 {
+            let randoms: [UInt8] = (0 ..< 16).map { _ in
+                var random: UInt8 = 0
+                let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+                if errorCode != errSecSuccess {
+                    fatalError(
+                        "Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)"
+                    )
+                }
+                return random
+            }
+            
+            randoms.forEach { random in
+                if remainingLength == 0 {
+                    return
+                }
+                
+                if random < charset.count {
+                    result.append(charset[Int(random)])
+                    remainingLength -= 1
+                }
+            }
+        }
+        
+        return result
+    }
+    
+    // MARK: - Firebase用
+    @available(iOS 13, *)
+    private func sha256(_ input: String) -> String {
+        let inputData = Data(input.utf8)
+        let hashedData = SHA256.hash(data: inputData)
+        let hashString = hashedData.compactMap {
+            String(format: "%02x", $0)
+        }.joined()
+        
+        return hashString
+    }
+    // MARK: - Firebase用
+    @State  var currentNonce:String?
     var body: some View {
         NavigationView(content: {
             VStack (alignment: .leading){
@@ -267,14 +317,60 @@ struct EntryAuthView: View {
                         .padding(.bottom)
                     }
                     .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
-                    SignInWithAppleButton(.signUp) { request in
-                        request.requestedScopes = [.fullName, .email]
-                    } onCompletion: { authResults in
-                        switch authResults {
-                        case .success(_): break
+                    //                    SignInWithAppleButton(.signUp, onRequest: { request in
+                    //                        print("apple sign in pressed")
+                    //                        request.requestedScopes = [.fullName, .email]
+                    //                    }, onCompletion: { authResults in
+                    //                        switch authResults {
+                    //                        case .success(let authResults):
+                    //                            isAppleSignInSuccess = true
+                    //                            print("Authorisation successful \(authResults)")
+                    //                        case .failure(let error):
+                    //                            appleAlertMessage = error.localizedDescription
+                    //                            isShowAppleAlert = true
+                    //                        }
+                    //                    })
+                    SignInWithAppleButton(.signIn) { request in
+                        request.requestedScopes = [.email,.fullName]
+                        let nonce = randomNonceString()
+                        currentNonce = nonce
+                        request.nonce = sha256(nonce)
+                        
+                    } onCompletion: { result in
+                        switch result {
+                        case .success(let authResults):
+                            let appleIDCredential = authResults.credential as? ASAuthorizationAppleIDCredential
+                            
+                            guard let nonce = currentNonce else {
+                                fatalError("Invalid state: A login callback was received, but no login request was sent.")
+                            }
+                            guard let appleIDToken = appleIDCredential?.identityToken else {
+                                fatalError("Invalid state: A login callback was received, but no login request was sent.")
+                            }
+                            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                                return
+                            }
+                            
+                            let credential = OAuthProvider.credential(withProviderID: "apple.com",idToken: idTokenString,rawNonce: nonce)
+                            Auth.auth().signIn(with: credential) { result, error in
+                                if result?.user != nil{
+                                    FirebaseUserRepository().addFirebaseUser(user: result!.user)
+                                    isAppleSignInSuccess = true
+                                    print("ログイン完了")
+                                } else {
+                                    isAlertShown = true
+                                }
+                            }
+                            Task {
+                                ShoppingItemRepository().removeCurrentSnapshotListener()
+                                try await ShoppingItemRepository().addUserSnapshotListener()
+                            }
                         case .failure(let error):
-                            self.appleAlertMessage = error.localizedDescription
-                            self.isShowAppleAlert.toggle()
+                            appleAlertMessage = error.localizedDescription
+                            isShowAppleAlert = true
+                            print("Authentication failed: \(error.localizedDescription)")
+                            break
                         }
                     }
                     .signInWithAppleButtonStyle(isDarkMode ? .white : .black)
@@ -320,6 +416,9 @@ struct EntryAuthView: View {
                 IntroView()
             }
             .fullScreenCover(isPresented: $isGoogleSignInSuccess) {
+                IntroView()
+            }
+            .fullScreenCover(isPresented: $isAppleSignInSuccess) {
                 IntroView()
             }
             .fullScreenCover(isPresented: $isSignInAnnonymouslySuccess) {

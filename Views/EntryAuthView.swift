@@ -353,12 +353,15 @@ struct EntryAuthView: View {
                             }
                             
                             let credential = OAuthProvider.credential(withProviderID: "apple.com",idToken: idTokenString,rawNonce: nonce)
+                            print("credential: \(credential)")
                             Auth.auth().signIn(with: credential) { result, error in
                                 if result?.user != nil{
+                                    print("result data: \(result)")
                                     FirebaseUserRepository().addFirebaseUser(user: result!.user)
                                     isAppleSignInSuccess = true
                                     print("ログイン完了")
                                 } else {
+                                    print("apple sign in error: \(error)")
                                     isAlertShown = true
                                 }
                             }

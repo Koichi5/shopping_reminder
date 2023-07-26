@@ -440,11 +440,6 @@ struct EntryAuthView: View {
             .navigationTitle(Text("新規登録"))
             .navigationBarTitleDisplayMode(isTextfieldEditting ? .inline : .large)
             .contentShape(RoundedRectangle(cornerRadius: 0.0))
-            .onTapGesture {
-                UIApplication.shared.endEditing()
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                isTextfieldEditting = false
-            }
         }
         )
         .navigationViewStyle(StackNavigationViewStyle())

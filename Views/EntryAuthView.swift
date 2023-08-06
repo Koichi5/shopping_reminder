@@ -317,19 +317,6 @@ struct EntryAuthView: View {
                         .padding(.bottom)
                     }
                     .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
-                    //                    SignInWithAppleButton(.signUp, onRequest: { request in
-                    //                        print("apple sign in pressed")
-                    //                        request.requestedScopes = [.fullName, .email]
-                    //                    }, onCompletion: { authResults in
-                    //                        switch authResults {
-                    //                        case .success(let authResults):
-                    //                            isAppleSignInSuccess = true
-                    //                            print("Authorisation successful \(authResults)")
-                    //                        case .failure(let error):
-                    //                            appleAlertMessage = error.localizedDescription
-                    //                            isShowAppleAlert = true
-                    //                        }
-                    //                    })
                     SignInWithAppleButton(.signIn) { request in
                         request.requestedScopes = [.email,.fullName]
                         let nonce = randomNonceString()

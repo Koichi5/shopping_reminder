@@ -2,7 +2,7 @@
 //  LocationView.swift
 //  shopping_reminder
 //
-//  Created by Koichi Kishimoto on 2023/08/06.
+//  Created by Koichi Kishimoto on 2023/08/07.
 //
 
 import SwiftUI

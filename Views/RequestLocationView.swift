@@ -2,7 +2,7 @@
 //  RequestLocationView.swift
 //  shopping_reminder
 //
-//  Created by Koichi Kishimoto on 2023/08/06.
+//  Created by Koichi Kishimoto on 2023/08/07.
 //
 
 import SwiftUI
@@ -18,8 +18,8 @@ struct RequestLocationView: View {
     }
 }
 
-//struct RequestLocationView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        RequestLocationView()
-//    }
-//}
+struct RequestLocationView_Previews: PreviewProvider {
+    static var previews: some View {
+        RequestLocationView()
+    }
+}

@@ -1,3 +1,10 @@
+//
+//  LocationViewModel.swift
+//  shopping_reminder
+//
+//  Created by Koichi Kishimoto on 2023/08/07.
+//
+
 import CoreLocation
 
 class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {

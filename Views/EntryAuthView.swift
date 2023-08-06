@@ -343,12 +343,12 @@ struct EntryAuthView: View {
                             print("credential: \(credential)")
                             Auth.auth().signIn(with: credential) { result, error in
                                 if result?.user != nil{
-                                    print("result data: \(result)")
+                                    print("result data: \(String(describing: result))")
                                     FirebaseUserRepository().addFirebaseUser(user: result!.user)
                                     isAppleSignInSuccess = true
                                     print("ログイン完了")
                                 } else {
-                                    print("apple sign in error: \(error)")
+                                    print("apple sign in error: \(String(describing: error))")
                                     isAlertShown = true
                                 }
                             }

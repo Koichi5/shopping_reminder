@@ -174,7 +174,9 @@ class ShoppingItemRepository: ObservableObject {
                     "alerm_cycle_seconds": shoppingItem.alermCycleSeconds,
                     "alerm_cycle_string": shoppingItem.alermCycleString,
                     "memo": shoppingItem.memo,
-                    "is_detail_setting_on": shoppingItem.isDetailSettingOn
+                    "is_detail_setting_on": shoppingItem.isDetailSettingOn,
+                    "latitude": shoppingItem.latitude,
+                    "longitude": shoppingItem.longitude
                 ])
             } catch {
                 print(error)

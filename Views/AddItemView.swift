@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct AddItemView: View {
     enum Field: Hashable {
@@ -24,6 +25,8 @@ struct AddItemView: View {
     @State private var selectedUnitsValue = "時間ごと"
     @State private var timeIntervalSinceNow = 0
     @State private var isAlermSettingOn = false
+    @State private var isTimeAlermSettingOn = false
+    @State private var isLocationAlermSettingOn = false
     @State private var isUrlSettingOn = false
     @State private var isDetailSettingOn = false
     @State private var isAlermRepeatOn = false
@@ -32,6 +35,8 @@ struct AddItemView: View {
     @State private var isSidebarOpen = false
     @State private var isNameNilAlertPresented = false
     @State private var isCategoryNilAlertPresented = false
+    @State private var isLocationAlermScreenPresented = false
+    @State private var pinCoordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
     
     var body: some View {
         VStack {
@@ -63,20 +68,56 @@ struct AddItemView: View {
                     : nil
                 }
                 Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
-                    isAlermSettingOn
-                    ? ItemDigitPicker(
+                    isAlermSettingOn ?
+                    Button(action: { isTimeAlermSettingOn.toggle() }) {
+                        VStack {
+                            HStack {
+                                Text("時間で設定")
+                                Spacer()
+                                Image(systemName: isTimeAlermSettingOn ? "chevron.up" : "chevron.down")
+                            }
+//                            if isTimeAlermSettingOn {
+//                                Divider()
+//                            } else {
+//                                Divider().frame(width: 0, height: 0)
+//                            }
+                        }
+                    }
+                    .foregroundColor(Color.gray)
+                    .padding(.leading)
+                    : nil
+                    isTimeAlermSettingOn && isAlermSettingOn
+                    ?
+                    ItemDigitPicker(
                         selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
                     )
                     .frame(height: 100)
                     .listRowBackground(Color.clear)
                     : nil
-                    isAlermSettingOn
+                    isTimeAlermSettingOn && isAlermSettingOn
                     ? Toggle(isOn: $isAlermRepeatOn) {
                         Text("繰り返し")
                             .font(.roundedFont())
+                            .foregroundColor(Color.gray)
                     }
-                        .listRowBackground(Color.clear)
-                        .padding(.horizontal)
+                    .listRowBackground(Color.clear)
+                    .padding(.horizontal)
+                    : nil
+                    isAlermSettingOn
+                    ? Button(action: {
+                        isLocationAlermScreenPresented = true
+                    }) {
+                        VStack {
+                            HStack {
+                                Text("場所を設定")
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                            }
+                        }
+                    }
+                    .foregroundColor(Color.gray)
+                    .listRowBackground(Color.clear)
+                    .padding(.leading)
                     : nil
                 }
                 Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
@@ -98,6 +139,8 @@ struct AddItemView: View {
                     )
                     .focused($focusedField, equals: .itemName)
                 Button(action: {
+                    print("-- current pin location latitude: \(pinCoordinate.latitude)")
+                    print("-- current pin location longitude: \(pinCoordinate.longitude)")
                     print("-- current selected category: \(selectedCategory)")
                     if (itemName != "") {
                         if (selectedCategory != nil) {
@@ -118,7 +161,9 @@ struct AddItemView: View {
                                         isDetailSettingOn: isDetailSettingOn,
                                         alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
                                         alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
-                                        memo: itemMemo
+                                        memo: itemMemo,
+                                        latitude: pinCoordinate.latitude,
+                                        longitude: pinCoordinate.longitude
                                     )
                                     )
                                     if (isAlermSettingOn) {
@@ -134,7 +179,9 @@ struct AddItemView: View {
                                                 isDetailSettingOn: isDetailSettingOn,
                                                 alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
                                                 alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue) \(selectedUnitsValue)" : nil,
-                                                memo: itemMemo
+                                                memo: itemMemo,
+                                                latitude: pinCoordinate.latitude,
+                                                longitude: pinCoordinate.longitude
                                             ),
                                             shoppingItemDocId: shoppingItemDocId
                                         )
@@ -191,6 +238,9 @@ struct AddItemView: View {
         .alert (isPresented: $isCategoryNilAlertPresented) {
             Alert(title: Text("アイテムのカテゴリが指定されていません"))
         }
+        .fullScreenCover(isPresented: $isLocationAlermScreenPresented) {
+            MapView(pinCoordinate: $pinCoordinate)
+        }
     }
 }
 
@@ -213,6 +263,3 @@ extension AddItemView {
         .foregroundColor(Color.gray)
     }
 }
-
-
-

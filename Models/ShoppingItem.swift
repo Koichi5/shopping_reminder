@@ -26,6 +26,8 @@ struct ShoppingItem: Identifiable, Codable {
     var alermCycleSeconds: Int?
     var alermCycleString: String?
     var memo: String?
+    var latitude: Double?
+    var longitude: Double?
 
     
     private enum CodingKeys: String, CodingKey {
@@ -33,6 +35,8 @@ struct ShoppingItem: Identifiable, Codable {
         case name
         case category
         case memo
+        case latitude
+        case longitude
         case addedAt = "added_at"
         case isUrlSettingOn = "is_url_setting_on"
         case isDetailSettingOn = "is_detail_setting_on"
@@ -53,7 +57,9 @@ struct ShoppingItem: Identifiable, Codable {
          isDetailSettingOn: Bool,
          alermCycleSeconds: Int?,
          alermCycleString: String?,
-         memo: String?
+         memo: String?,
+         latitude: Double?,
+         longitude: Double?
     ) {
         self.name = name
         self.category = category
@@ -66,5 +72,7 @@ struct ShoppingItem: Identifiable, Codable {
         self.isDetailSettingOn = isDetailSettingOn
         self.customURL = customURL
         self.memo = memo
+        self.latitude = latitude
+        self.longitude = longitude
     }
 }

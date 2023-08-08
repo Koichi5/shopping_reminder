@@ -29,20 +29,21 @@ struct ShoppingReminderApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var body: some Scene {
         WindowGroup {
-            LocationView()
-//            if Auth.auth().currentUser != nil {
-//                HomeView()
-//            } else {
-//                EntryAuthView()
-//                    .onOpenURL{ url in
-//                        GIDSignIn.sharedInstance.handle(url)
-//                    }
-//                    .onAppear{
-//                        GIDSignIn.sharedInstance.restorePreviousSignIn{ user,error in
-//                            print("logged in as: \(user?.userID)")
-//                        }
-//                    }
-//            }
+//            LocationView()
+//            MapView()
+            if Auth.auth().currentUser != nil {
+                HomeView()
+            } else {
+                EntryAuthView()
+                    .onOpenURL{ url in
+                        GIDSignIn.sharedInstance.handle(url)
+                    }
+                    .onAppear{
+                        GIDSignIn.sharedInstance.restorePreviousSignIn{ user,error in
+                            print("logged in as: \(user?.userID)")
+                        }
+                    }
+            }
         }
     }
 }

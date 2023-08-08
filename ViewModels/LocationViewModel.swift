@@ -10,7 +10,9 @@ import CoreLocation
 class LocationViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var authorizationStatus: CLAuthorizationStatus
     @Published var lastScreenLocation: CLLocation?
-    
+    var distanceFilter: CLLocationDistance = 2.0
+    var regionMeters: CLLocationDistance = 1000.0
+    var updateOnce: Bool = true
     private let locationManager: CLLocationManager
     
     override init() {

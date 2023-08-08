@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Foundation
+import CoreLocation
 
 struct EditItemView: View {
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
@@ -27,6 +28,8 @@ struct EditItemView: View {
     @State private var isAlermRepeatOn = false
     @State private var isShowingDeleteAlert = false
     @State private var shoppingItemDocId = ""
+    @State private var isLocationAlermScreenPresented = false
+    @State private var pinCoordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
     let shoppingItem: ShoppingItem
     var body: some View {
         NavigationStack {
@@ -68,6 +71,21 @@ struct EditItemView: View {
                         Toggle("繰り返し", isOn: $isAlermRepeatOn)
                             .listRowBackground(Color.clear)
                             .padding(.horizontal) : nil
+                        isAlermSettingOn
+                        ? HStack {
+                            Text("場所を設定")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                        }
+                        .listRowBackground(Color.clear)
+                        .padding(.horizontal)
+                        .onTapGesture {
+                            isLocationAlermScreenPresented = true
+                        }
+                        .onAppear {
+                            pinCoordinate = CLLocationCoordinate2D(latitude: shoppingItem.latitude ?? 0.0, longitude: shoppingItem.longitude ?? 0.0)
+                        }
+                        : nil
                     }
                     .onAppear {
                         isAlermSettingOn = shoppingItem.isAlermSettingOn
@@ -108,7 +126,9 @@ struct EditItemView: View {
                                     isDetailSettingOn: isDetailSettingOn,
                                     alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
                                     alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
-                                    memo: itemMemo
+                                    memo: itemMemo,
+                                    latitude: pinCoordinate.latitude,
+                                    longitude: pinCoordinate.longitude
                                 ),
                                                                                       shoppingItemId: shoppingItem.id ?? "")
                                 if (isAlermSettingOn) {
@@ -124,7 +144,9 @@ struct EditItemView: View {
                                             isDetailSettingOn: isDetailSettingOn,
                                             alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
                                             alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
-                                            memo: itemMemo
+                                            memo: itemMemo,
+                                            latitude: pinCoordinate.latitude,
+                                            longitude: pinCoordinate.longitude
                                         ),
                                         shoppingItemDocId: shoppingItemDocId
                                     )
@@ -179,6 +201,9 @@ struct EditItemView: View {
                             }
                     }
                 }
+            }
+            .fullScreenCover(isPresented: $isLocationAlermScreenPresented) {
+                MapView(pinCoordinate: $pinCoordinate)
             }
         }
         .task {

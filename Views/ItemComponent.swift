@@ -84,7 +84,9 @@ struct ItemComponent_Previews: PreviewProvider {
             isDetailSettingOn: false,
             alermCycleSeconds: 100,
             alermCycleString: "",
-            memo: ""
+            memo: "",
+            latitude: 0.0,
+            longitude: 0.0
         ))
     }
 }

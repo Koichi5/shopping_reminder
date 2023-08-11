@@ -76,11 +76,6 @@ struct AddItemView: View {
                                 Spacer()
                                 Image(systemName: isTimeAlermSettingOn ? "chevron.up" : "chevron.down")
                             }
-//                            if isTimeAlermSettingOn {
-//                                Divider()
-//                            } else {
-//                                Divider().frame(width: 0, height: 0)
-//                            }
                         }
                     }
                     .foregroundColor(Color.gray)
@@ -166,7 +161,7 @@ struct AddItemView: View {
                                         longitude: pinCoordinate.longitude
                                     )
                                     )
-                                    if (isAlermSettingOn) {
+                                    if (isAlermSettingOn && isTimeAlermSettingOn) {
                                         NotificationManager().sendIntervalNotification(
                                             shoppingItem: ShoppingItem(
                                                 name: itemName,
@@ -185,9 +180,10 @@ struct AddItemView: View {
                                             ),
                                             shoppingItemDocId: shoppingItemDocId
                                         )
+                                    } else if (isAlermSettingOn && isLocationAlermSettingOn) {
+                                        NotificationManager().sendLocationNotification(itemName: itemName, notificationLatitude: pinCoordinate.latitude, notificationLongitude: pinCoordinate.longitude, shoppingItemDocId: shoppingItemDocId)
                                     }
                                     NotificationManager().fetchAllRegisteredNotifications()
-                                    
                                 } catch {
                                     print("error occured while adding shopping item: \(error)")
                                 }

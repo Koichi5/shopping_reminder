@@ -10,6 +10,8 @@ import MapKit
 import SwiftUI
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    @Published var authorizationStatus: CLAuthorizationStatus
+    @Published var lastScreenLocation: CLLocation?
     let manager = CLLocationManager()
     var distanceFilter: CLLocationDistance = 2.0
     var regionMeters: CLLocationDistance = 1000.0
@@ -18,16 +20,29 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var region: MKCoordinateRegion = MKCoordinateRegion()
     
     override init() {
+        authorizationStatus = manager.authorizationStatus
+        
         super.init()
         manager.delegate = self
-        manager.requestWhenInUseAuthorization()
+//        manager.requestWhenInUseAuthorization()
         manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.allowsBackgroundLocationUpdates = false
         manager.distanceFilter = distanceFilter
-        
         self.startUpdatingLocation()
     }
     
+    func requestPremission() {
+        manager.requestWhenInUseAuthorization()
+        manager.requestAlwaysAuthorization()
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        authorizationStatus = manager.authorizationStatus
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        lastScreenLocation = locations.first
+        
         DispatchQueue.main.async {
             locations.last.map {
                 let center = CLLocationCoordinate2D(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude)
@@ -36,6 +51,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             if self.updateOnce {
                 self.stopUpdatingLocation()
             }
+        }
+        
+        guard let location = lastScreenLocation else {
+            return
         }
     }
     

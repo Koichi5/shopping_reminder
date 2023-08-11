@@ -7,6 +7,7 @@
 
 import Foundation
 import UserNotifications
+import CoreLocation
 
 final class NotificationManager {
     static let instance: NotificationManager = NotificationManager()
@@ -46,8 +47,8 @@ final class NotificationManager {
     ) {
         print("Send interval notification fired")
         let content = UNMutableNotificationContent()
-        content.title = "\(shoppingItem.name) is expiring"
-        content.body = "Let's go to buy \(shoppingItem.name) ! The expire date of this alerm is \(shoppingItem.alermCycleSeconds). The created at date of this alerm is \(shoppingItem.addedAt)"
+        content.title = "\(shoppingItem.name)の期限が迫っています。"
+        content.body = "\(shoppingItem.name)を買いに行きましょう!"
         content.sound = UNNotificationSound.default
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(shoppingItem.alermCycleSeconds!), repeats: shoppingItem.isAlermRepeatOn ?? false)
@@ -62,6 +63,30 @@ final class NotificationManager {
                 print("Error adding interval notification \(error.localizedDescription)")
             } else {
                 print("Interval notification added successfully !")
+            }
+        }
+    }
+    
+    func sendLocationNotification (
+        itemName: String,
+        notificationLatitude: Double,
+        notificationLongitude: Double,
+        shoppingItemDocId: String
+    ) {
+        print("Send location notification fired")
+        let content = UNMutableNotificationContent()
+        content.title = "\(itemName)を買い忘れないようにしましょう！"
+        content.body = "\(itemName)の登録場所に到着しました。"
+        content.sound = UNNotificationSound.default
+        let center = CLLocationCoordinate2D(latitude: notificationLatitude, longitude: notificationLongitude)
+        let region = CLCircularRegion(center: center, radius: 20, identifier: shoppingItemDocId)
+        region.notifyOnEntry = true
+        region.notifyOnExit = false
+        let trigger = UNLocationNotificationTrigger(region: region, repeats: false)
+        let request = UNNotificationRequest(identifier: shoppingItemDocId, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request)  { error in
+            if let error = error {
+                print(error)
             }
         }
     }

@@ -183,7 +183,7 @@ struct AddItemView: View {
                                     } else if (isAlermSettingOn && isLocationAlermSettingOn) {
                                         NotificationManager().sendLocationNotification(itemName: itemName, notificationLatitude: pinCoordinate.latitude, notificationLongitude: pinCoordinate.longitude, shoppingItemDocId: shoppingItemDocId)
                                     }
-                                    NotificationManager().fetchAllRegisteredNotifications()
+                                    NotificationManager().fetchAllRegisteredNotifications() 
                                 } catch {
                                     print("error occured while adding shopping item: \(error)")
                                 }

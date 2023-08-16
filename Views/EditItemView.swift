@@ -11,6 +11,7 @@ import CoreLocation
 
 struct EditItemView: View {
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
+    @ObservedObject var locationManager = LocationManager()
     @Binding var isShowSheet: Bool
     @State private var shoppingItemId: String = ""
     @State private var shoppingItemName = ""
@@ -24,6 +25,8 @@ struct EditItemView: View {
     @State private var selectedUnitsValue = "時間ごと"
     @State private var timeIntervalSinceNow = 0
     @State private var isAlermSettingOn = false
+    @State private var isTimeAlermSettingOn = false
+    @State private var isLocationAlermSettingOn = false
     @State private var isUrlSettingOn = false
     @State private var isAlermRepeatOn = false
     @State private var isShowingDeleteAlert = false
@@ -57,6 +60,20 @@ struct EditItemView: View {
                     }
                     Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
                         isAlermSettingOn ?
+                        Button(action: { isTimeAlermSettingOn.toggle() }) {
+                            VStack {
+                                HStack {
+                                    Text("時間で設定")
+                                    Spacer()
+                                    Image(systemName: isTimeAlermSettingOn ? "chevron.up" : "chevron.down")
+                                }
+                            }
+                        }
+                        .foregroundColor(Color.gray)
+                        .padding(.leading)
+                        : nil
+                        isTimeAlermSettingOn && isAlermSettingOn
+                        ?
                         ItemDigitPicker(
                             selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
                         ).onAppear {
@@ -67,21 +84,30 @@ struct EditItemView: View {
                         .frame(height: 100)
                         .listRowBackground(Color.clear)
                         : nil
-                        isAlermSettingOn ?
+                        isTimeAlermSettingOn && isAlermSettingOn ?
                         Toggle("繰り返し", isOn: $isAlermRepeatOn)
                             .listRowBackground(Color.clear)
                             .padding(.horizontal) : nil
                         isAlermSettingOn
-                        ? HStack {
-                            Text("場所を設定")
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }
-                        .listRowBackground(Color.clear)
-                        .padding(.horizontal)
-                        .onTapGesture {
+                        ? Button(action: {
+                            if (
+                                locationManager.authorizationStatus == CLAuthorizationStatus.denied || locationManager.authorizationStatus == CLAuthorizationStatus.notDetermined || locationManager.authorizationStatus == CLAuthorizationStatus.restricted
+                            ) {
+                                locationManager.requestPremission()
+                            }
                             isLocationAlermScreenPresented = true
+                        }) {
+                            VStack {
+                                HStack {
+                                    Text("場所を設定")
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                }
+                            }
                         }
+                        .foregroundColor(Color.gray)
+                        .listRowBackground(Color.clear)
+                        .padding(.leading)
                         .onAppear {
                             pinCoordinate = CLLocationCoordinate2D(latitude: shoppingItem.latitude ?? 0.0, longitude: shoppingItem.longitude ?? 0.0)
                         }
@@ -131,7 +157,7 @@ struct EditItemView: View {
                                     longitude: pinCoordinate.longitude
                                 ),
                                                                                       shoppingItemId: shoppingItem.id ?? "")
-                                if (isAlermSettingOn) {
+                                if (isAlermSettingOn && isTimeAlermSettingOn) {
                                     NotificationManager().sendIntervalNotification(
                                         shoppingItem: ShoppingItem(
                                             name: shoppingItemName,
@@ -150,6 +176,9 @@ struct EditItemView: View {
                                         ),
                                         shoppingItemDocId: shoppingItemDocId
                                     )
+                                } else if (isAlermSettingOn && isLocationAlermSettingOn) {
+                                    NotificationManager().deleteNotification(shoppingItemIndentifier: [shoppingItemDocId])
+                                    NotificationManager().sendLocationNotification(itemName: shoppingItemName, notificationLatitude: pinCoordinate.latitude, notificationLongitude: pinCoordinate.longitude, shoppingItemDocId: shoppingItemDocId)
                                 }
                                 NotificationManager().fetchAllRegisteredNotifications()
                             } catch {
@@ -168,7 +197,6 @@ struct EditItemView: View {
                 .padding(.horizontal)
                 .padding(.bottom)
             }
-            //            .navigationTitle("\(shoppingItem.name)")
             .toolbar {
                 ToolbarItemGroup (placement: .confirmationAction) {
                     Spacer()

@@ -24,7 +24,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         super.init()
         manager.delegate = self
-//        manager.requestWhenInUseAuthorization()
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.allowsBackgroundLocationUpdates = false
         manager.distanceFilter = distanceFilter
@@ -66,8 +65,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         manager.stopUpdatingLocation()
     }
 }
-
-
 
 extension MKCoordinateRegion: Equatable {
     public static func == (lhs: MKCoordinateRegion, rhs: MKCoordinateRegion) -> Bool {

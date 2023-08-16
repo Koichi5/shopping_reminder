@@ -49,32 +49,24 @@ import SwiftUI
 import MapKit
 
 struct MapView: View {
-//    @State var locationName: String = "テスト"
+    //    @State var locationName: String = "テスト"
     @Binding var pinCoordinate: CLLocationCoordinate2D
     @State var pinDropped: Bool = false
     @State var selectedTab: Int = 1
- 
+    
     var body: some View {
         NavigationStack {
-            VStack {
-    //            TextField("場所名", text: $locationName)
-    //                .textFieldStyle(.roundedBorder)
-                let latitude = pinDropped ? "\(pinCoordinate.latitude)" : "(未設定)"
-                let longitude = pinDropped ? "\(pinCoordinate.longitude)" : "(未設定)"
-                Text("緯度: \(latitude)")
-                Text("経度: \(longitude)")
-                TabView(selection: $selectedTab) {
-                    MapViewWithPinMode(pinCoordinate: $pinCoordinate, pinDropped: $pinDropped)
-                        .tabItem {
-                            Image(systemName: "mappin.circle")
-                            Text("ピンドラッグモード版")
-                        }.tag(1)
-                    MapViewWithCross(pinCoordinate: $pinCoordinate, pinDropped: $pinDropped)
-                        .tabItem {
-                            Image(systemName: "plus.viewfinder")
-                            Text("十字版")
-                        }.tag(2)
-                }
+            TabView(selection: $selectedTab) {
+                MapViewWithPinMode(pinCoordinate: $pinCoordinate, pinDropped: $pinDropped)
+                    .tabItem {
+                        Image(systemName: "mappin.circle")
+                        Text("ピンドラッグモード版")
+                    }.tag(1)
+                MapViewWithCross(pinCoordinate: $pinCoordinate, pinDropped: $pinDropped)
+                    .tabItem {
+                        Image(systemName: "plus.viewfinder")
+                        Text("十字版")
+                    }.tag(2)
             }
             .padding()
             .toolbar {

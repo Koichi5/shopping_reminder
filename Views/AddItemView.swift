@@ -14,6 +14,7 @@ struct AddItemView: View {
     }
     @FocusState private var focusedField: Field?
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
+    @ObservedObject var locationManager = LocationManager()
     @Binding var isShowSheet: Bool
     @State private var itemName = ""
     @State private var itemUrl = ""
@@ -100,6 +101,11 @@ struct AddItemView: View {
                     : nil
                     isAlermSettingOn
                     ? Button(action: {
+                        if (
+                            locationManager.authorizationStatus == CLAuthorizationStatus.denied || locationManager.authorizationStatus == CLAuthorizationStatus.notDetermined || locationManager.authorizationStatus == CLAuthorizationStatus.restricted
+                        ) {
+                            locationManager.requestPremission()
+                        }
                         isLocationAlermScreenPresented = true
                     }) {
                         VStack {
@@ -183,7 +189,7 @@ struct AddItemView: View {
                                     } else if (isAlermSettingOn && isLocationAlermSettingOn) {
                                         NotificationManager().sendLocationNotification(itemName: itemName, notificationLatitude: pinCoordinate.latitude, notificationLongitude: pinCoordinate.longitude, shoppingItemDocId: shoppingItemDocId)
                                     }
-                                    NotificationManager().fetchAllRegisteredNotifications() 
+                                    NotificationManager().fetchAllRegisteredNotifications()
                                 } catch {
                                     print("error occured while adding shopping item: \(error)")
                                 }

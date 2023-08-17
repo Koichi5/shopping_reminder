@@ -45,7 +45,6 @@ struct CategoryFieldRow: View {
                 currentTask = Task {
                     do {
                         try await updateCategoryName(categoryId: category.id ?? "", categoryName: self.category.name)
-                        print("category id: \(category.id)")
                     } catch {
                         print(error)
                     }

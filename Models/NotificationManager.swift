@@ -45,7 +45,6 @@ final class NotificationManager {
         shoppingItem: ShoppingItem,
         shoppingItemDocId: String
     ) {
-        print("Send interval notification fired")
         let content = UNMutableNotificationContent()
         content.title = "\(shoppingItem.name)の期限が迫っています。"
         content.body = "\(shoppingItem.name)を買いに行きましょう!"
@@ -73,7 +72,6 @@ final class NotificationManager {
         notificationLongitude: Double,
         shoppingItemDocId: String
     ) {
-        print("Send location notification fired")
         let content = UNMutableNotificationContent()
         content.title = "\(itemName)を買い忘れないようにしましょう！"
         content.body = "\(itemName)の登録場所に到着しました。"
@@ -94,20 +92,16 @@ final class NotificationManager {
     func deleteNotification(shoppingItemIndentifier: [String]) {
         let center = UNUserNotificationCenter.current()
         center.removePendingNotificationRequests(withIdentifiers: shoppingItemIndentifier)
-        print("Identifier of this notification is: \(shoppingItemIndentifier)")
-        print("Notification successfully deleted")
     }
     
     func deleteAllNotifications() {
         let center = UNUserNotificationCenter.current()
         center.removeAllPendingNotificationRequests()
-        print("All notification successfully deleted")
     }
     
     func fetchAllRegisteredNotifications() {
         let center = UNUserNotificationCenter.current()
         center.getPendingNotificationRequests { array in
-          print("Registered all notifications: \(array)")
         }
     }
 }

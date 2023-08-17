@@ -28,7 +28,6 @@ struct ShoppingItem: Identifiable, Codable {
     var memo: String?
     var latitude: Double?
     var longitude: Double?
-
     
     private enum CodingKeys: String, CodingKey {
         case id

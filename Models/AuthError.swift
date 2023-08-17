@@ -8,19 +8,12 @@
 import Foundation
 
 public enum AuthError: Error {
-    // ネットワークエラー
     case networkError
-    // パスワードが条件より脆弱であることを示します。
     case weakPassword
-    // ユーザーが間違ったパスワードでログインしようとしたことを示します。
     case wrongPassword
-    // ユーザーのアカウントが無効になっていることを示します。
     case userNotFound
-    // メールアドレスの形式が正しくないことを示します。
     case invalidEmail
-    // 既に登録されているメールアドレス
     case emailAlreadyInUse
-    // 不明なエラー
     case unknown
     
     //エラーによって表示する文字を定義

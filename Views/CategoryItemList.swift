@@ -42,9 +42,3 @@ struct CategoryItemList: View {
         }
     }
 }
-
-//struct CategoryItemList_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CategoryItemList()
-//    }
-//}

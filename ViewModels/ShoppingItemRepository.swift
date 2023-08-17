@@ -10,7 +10,6 @@ import SwiftUI
 import FirebaseFirestore
 
 class ShoppingItemRepository: ObservableObject {
-    //    @ObservedObject private var categoryRepository = CategoryRepository()
     static var db = Firestore.firestore()
     var listenerRegistration: ListenerRegistration?
     @Published var shoppingItemList: [ShoppingItem] = []
@@ -26,12 +25,10 @@ class ShoppingItemRepository: ObservableObject {
             let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
             let itemsRef = userRef.collection("items")
             let currentListenerRegistration = itemsRef.addSnapshotListener(includeMetadataChanges: true) { (documentSnapshot, error) in
-                // ドキュメントスナップショットの取得に失敗した場合はエラー内容を表示
                 guard let documentSnapshot = documentSnapshot else {
                     print("Error fetching document: \(error!)")
                     return
                 }
-                // 対象ドキュメントの変更内容
                 documentSnapshot.documentChanges.forEach{ diff in
                     if (diff.type == .added){
                         print("ドキュメントが追加された場合")
@@ -165,7 +162,6 @@ class ShoppingItemRepository: ObservableObject {
             let itemRef = userRef.collection("items").document(shoppingItemId)
             do {
                 try await itemRef.updateData([
-                    //                    "id": shoppingItem.id,
                     "name": shoppingItem.name,
                     "is_url_setting_on": shoppingItem.isUrlSettingOn,
                     "custom_url": shoppingItem.customURL,

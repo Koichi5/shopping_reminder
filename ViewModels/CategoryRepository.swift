@@ -36,12 +36,10 @@ class CategoryRepository: ObservableObject {
             let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
             let categoriesRef = userRef.collection("categories").order(by: "color")
             let listener = categoriesRef.addSnapshotListener(includeMetadataChanges: true) { (documentSnapshot, error) in
-                // ドキュメントスナップショットの取得に失敗した場合はエラー内容を表示
                 guard let documentSnapshot = documentSnapshot else {
                     print("Error fetching document: \(error!)")
                     return
                 }
-                // 対象ドキュメントの変更内容
                 documentSnapshot.documentChanges.forEach{ diff in
                     if (diff.type == .added){
                         print("ドキュメントが追加された場合")

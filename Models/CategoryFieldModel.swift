@@ -13,7 +13,6 @@ struct CategoryFieldRow: View {
     @Binding var category: Category
     @State private var isNameEditing: Bool = false
     @State private var selectedColor = Color.gray
-//    @State private var isColorEditing: Bool = false
     @State private var currentTask: Task<(), Never>?
     private func updateCategoryColor(categoryId: String, categoryColorNum: Int) async throws {
         try await CategoryRepository().updateCategoryColor(categoryId: categoryId, categoryColorNum: categoryColorNum)

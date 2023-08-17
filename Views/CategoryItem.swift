@@ -27,9 +27,3 @@ struct CategoryItem: View, Identifiable {
             .onTapGesture {}
     }
 }
-
-//struct CategoryItem_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CategoryItem(category: Category(name: "Clothes", color: CategoryColor.red))
-//    }
-//}

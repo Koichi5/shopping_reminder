@@ -15,7 +15,6 @@ class FirebaseUser: Identifiable, Codable {
     var categories: [Category]
     
     private enum CodingKeys: String, CodingKey {
-//        case id
         case email
         case items
         case categories

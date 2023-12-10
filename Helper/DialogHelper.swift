@@ -26,22 +26,27 @@ struct DialogHelper: View {
             Text(buttonText ?? "")
                 .foregroundColor(Color.foreground)
         }
-        .alert(titleText, isPresented: $isShowingAlert) {
-            Button(primaryButtonText) {
+        .alert(isPresented: $isShowingAlert) {
+            Alert(title: Text(titleText), message: Text(messageText ?? ""), primaryButton: .default(Text(primaryButtonText)) {
                 primaryButtonAction?()
-            }
-            Button(action: {secondaryButtonAction?()}) {
-                Text(secondaryButtonText ?? "")
-            }
-        } message: {
-            Text(messageText ?? "")
+            }, secondaryButton: .cancel(Text(secondaryButtonText ?? "")) {secondaryButtonAction?()})
         }
-//        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
+        //        .alert(titleText, isPresented: $isShowingAlert) {
+        //            Button(primaryButtonText) {
+        //                primaryButtonAction?()
+        //            }
+        //            Button(action: {secondaryButtonAction?()}) {
+        //                Text(secondaryButtonText ?? "")
+        //            }
+        //        } message: {
+        //            Text(messageText ?? "")
+        //        }
+        //        .preferredColorScheme(userDefaultsHelper.isDarkModeOn ? .dark : .light)
     }
 }
 
-struct DialogHelper_Previews: PreviewProvider {
-    static var previews: some View {
-        DialogHelper(systemName: "trash", buttonText: "", titleText: "title", messageText: "message", primaryButtonText: "OK", secondaryButtonText: "NG", primaryButtonAction: {print("primary button pushed")}, secondaryButtonAction: nil)
-    }
-}
+//struct DialogHelper_Previews: PreviewProvider {
+//    static var previews: some View {
+//        DialogHelper(systemName: "trash", buttonText: "", titleText: "title", messageText: "message", primaryButtonText: "OK", secondaryButtonText: "NG", primaryButtonAction: {print("primary button pushed")}, secondaryButtonAction: nil)
+//    }
+//}

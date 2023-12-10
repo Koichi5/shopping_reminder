@@ -35,185 +35,186 @@ struct EditItemView: View {
     @State private var pinCoordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
     let shoppingItem: ShoppingItem
     var body: some View {
-        NavigationStack {
-            VStack {
-                TextField("", text: $shoppingItemName)
-                    .onAppear {
-                        shoppingItemName = shoppingItem.name
-                    }
-                    .font(.largeTitle.bold())
-                    .padding(.horizontal)
-                Spacer()
-                List {
-                    Section(header: sectionHeader(title: "メモ", isExpanded: $isDetailSettingOn)) {
-                        isDetailSettingOn
-                        ?
-                        TextField("メモ", text: $itemMemo, axis: .vertical)
-                            .listRowBackground(Color.clear)
-                            .padding(.horizontal)
-                            .padding(.bottom, 30)
-                        : nil
-                    }
-                    .onAppear {
-                        isDetailSettingOn = shoppingItem.isDetailSettingOn
-                        itemMemo = shoppingItem.memo ?? ""
-                    }
-                    Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
-                        isAlermSettingOn ?
-                        Button(action: { isTimeAlermSettingOn.toggle() }) {
-                            VStack {
-                                HStack {
-                                    Text("時間で設定")
-                                    Spacer()
-                                    Image(systemName: isTimeAlermSettingOn ? "chevron.up" : "chevron.down")
-                                }
-                            }
-                        }
-                        .foregroundColor(Color.gray)
-                        .padding(.leading)
-                        : nil
-                        isTimeAlermSettingOn && isAlermSettingOn
-                        ?
-                        ItemDigitPicker(
-                            selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
-                        ).onAppear {
-                            let arr:[String] = shoppingItem.alermCycleString?.components(separatedBy: " ") ?? ["1", "時間ごと"]
-                            selectedDigitsValue = arr[0]
-                            selectedUnitsValue = arr[1]
-                        }
-                        .frame(height: 100)
-                        .listRowBackground(Color.clear)
-                        : nil
-                        isTimeAlermSettingOn && isAlermSettingOn ?
-                        Toggle("繰り返し", isOn: $isAlermRepeatOn)
-                            .listRowBackground(Color.clear)
-                            .padding(.horizontal) : nil
-                        isAlermSettingOn
-                        ? Button(action: {
-                            if (
-                                locationManager.authorizationStatus == CLAuthorizationStatus.denied || locationManager.authorizationStatus == CLAuthorizationStatus.notDetermined || locationManager.authorizationStatus == CLAuthorizationStatus.restricted
-                            ) {
-                                locationManager.requestPremission()
-                            }
-                            isLocationAlermScreenPresented = true
-                        }) {
-                            VStack {
-                                HStack {
-                                    Text("場所を設定")
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                }
-                            }
-                        }
-                        .foregroundColor(Color.gray)
-                        .listRowBackground(Color.clear)
-                        .padding(.leading)
+        if #available(iOS 16.0, *) {
+            NavigationStack {
+                VStack {
+                    TextField("", text: $shoppingItemName)
                         .onAppear {
-                            pinCoordinate = CLLocationCoordinate2D(latitude: shoppingItem.latitude ?? 0.0, longitude: shoppingItem.longitude ?? 0.0)
+                            shoppingItemName = shoppingItem.name
                         }
-                        : nil
-                    }
-                    .onAppear {
-                        isAlermSettingOn = shoppingItem.isAlermSettingOn
-                    }
-                    Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
-                        isUrlSettingOn ?
-                        TextField("URL", text: $itemUrl)
-                            .listRowBackground(Color.clear)
-                            .padding(.horizontal)
-                            .padding(.bottom)
-                            .frame(height: isUrlSettingOn ? 40 : 0)
-                        : nil
-                    }
-                    .onAppear {
-                        isUrlSettingOn = shoppingItem.customURL != ""
-                        itemUrl = shoppingItem.customURL ?? ""
-                    }
-                }.listStyle(.plain)
-                ButtonHelper(
-                    buttonText: "変更",
-                    buttonAction: {
-                        VibrationHelper().feedbackVibration()
-                        let intSelectedDigitsValue = Int(selectedDigitsValue)
-                        timeIntervalSinceNow = TimeHelper()
-                            .calcSecondsFromString(
-                                selectedUnitsValue: selectedUnitsValue,
-                                intSelectedDigitsValue: intSelectedDigitsValue ?? 0)
-                        Task {
-                            do {
-                                try await ShoppingItemRepository().updateShoppingItem(shoppingItem: ShoppingItem(
-                                    name: shoppingItemName,
-                                    category: selectedCategory,
-                                    addedAt: Date(),
-                                    isUrlSettingOn: isUrlSettingOn,
-                                    customURL: itemUrl,
-                                    isAlermSettingOn: isAlermSettingOn,
-                                    isAlermRepeatOn: isAlermRepeatOn,
-                                    isDetailSettingOn: isDetailSettingOn,
-                                    alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                    alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
-                                    memo: itemMemo,
-                                    latitude: pinCoordinate.latitude,
-                                    longitude: pinCoordinate.longitude
-                                ),
-                                                                                      shoppingItemId: shoppingItem.id ?? "")
-                                if (isAlermSettingOn && isTimeAlermSettingOn) {
-                                    NotificationManager().sendIntervalNotification(
-                                        shoppingItem: ShoppingItem(
-                                            name: shoppingItemName,
-                                            category: selectedCategory,
-                                            addedAt: Date(),
-                                            isUrlSettingOn: isUrlSettingOn,
-                                            customURL: itemUrl,
-                                            isAlermSettingOn: isAlermSettingOn,
-                                            isAlermRepeatOn: isAlermRepeatOn,
-                                            isDetailSettingOn: isDetailSettingOn,
-                                            alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
-                                            alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
-                                            memo: itemMemo,
-                                            latitude: pinCoordinate.latitude,
-                                            longitude: pinCoordinate.longitude
-                                        ),
-                                        shoppingItemDocId: shoppingItemDocId
-                                    )
-                                } else if (isAlermSettingOn && isLocationAlermSettingOn) {
-                                    NotificationManager().deleteNotification(shoppingItemIndentifier: [shoppingItemDocId])
-                                    NotificationManager().sendLocationNotification(itemName: shoppingItemName, notificationLatitude: pinCoordinate.latitude, notificationLongitude: pinCoordinate.longitude, shoppingItemDocId: shoppingItemDocId)
-                                }
-                                NotificationManager().fetchAllRegisteredNotifications()
-                            } catch {
-                                print("error occured while adding shopping item: \(error)")
-                            }
-                        }
-                        isShowSheet = false
-                    },
-                    foregroundColor: Color.white,
-                    backgroundColor: Color.blue,
-                    buttonTextIsBold: nil,
-                    buttonWidth: nil,
-                    buttonHeight: nil,
-                    buttonTextFontSize: nil
-                )
-                .padding(.horizontal)
-                .padding(.bottom)
-            }
-            .toolbar {
-                ToolbarItemGroup (placement: .confirmationAction) {
+                        .font(.largeTitle.bold())
+                        .padding(.horizontal)
                     Spacer()
-                    ShareLink(
-                        item: "\(shoppingItem.name)を買い忘れないようにしよう！"
-                    ) {
-                        Image(systemName: "square.and.arrow.up")
-                            .foregroundColor(Color.foreground)
-                    }
-                    Button(action: { isShowingDeleteAlert = true}) {
-                        Image(systemName: "trash").foregroundColor(Color.foreground)
-                    }
-                    .alert("このアイテムを削除しますか？", isPresented: $isShowingDeleteAlert) {
-                        Button("キャンセル") {
-                            isShowingDeleteAlert = false
+                    List {
+                        Section(header: sectionHeader(title: "メモ", isExpanded: $isDetailSettingOn)) {
+                            isDetailSettingOn
+                            ?
+                            TextField("メモ", text: $itemMemo, axis: .vertical)
+                                .listRowBackground(Color.clear)
+                                .padding(.horizontal)
+                                .padding(.bottom, 30)
+                            : nil
                         }
-//                        NavigationLink(destination: HomeView()) {
+                        .onAppear {
+                            isDetailSettingOn = shoppingItem.isDetailSettingOn
+                            itemMemo = shoppingItem.memo ?? ""
+                        }
+                        Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
+                            isAlermSettingOn ?
+                            Button(action: { isTimeAlermSettingOn.toggle() }) {
+                                VStack {
+                                    HStack {
+                                        Text("時間で設定")
+                                        Spacer()
+                                        Image(systemName: isTimeAlermSettingOn ? "chevron.up" : "chevron.down")
+                                    }
+                                }
+                            }
+                            .foregroundColor(Color.gray)
+                            .padding(.leading)
+                            : nil
+                            isTimeAlermSettingOn && isAlermSettingOn
+                            ?
+                            ItemDigitPicker(
+                                selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
+                            ).onAppear {
+                                let arr:[String] = shoppingItem.alermCycleString?.components(separatedBy: " ") ?? ["1", "時間ごと"]
+                                selectedDigitsValue = arr[0]
+                                selectedUnitsValue = arr[1]
+                            }
+                            .frame(height: 100)
+                            .listRowBackground(Color.clear)
+                            : nil
+                            isTimeAlermSettingOn && isAlermSettingOn ?
+                            Toggle("繰り返し", isOn: $isAlermRepeatOn)
+                                .listRowBackground(Color.clear)
+                                .padding(.horizontal) : nil
+                            isAlermSettingOn
+                            ? Button(action: {
+                                if (
+                                    locationManager.authorizationStatus == CLAuthorizationStatus.denied || locationManager.authorizationStatus == CLAuthorizationStatus.notDetermined || locationManager.authorizationStatus == CLAuthorizationStatus.restricted
+                                ) {
+                                    locationManager.requestPremission()
+                                }
+                                isLocationAlermScreenPresented = true
+                            }) {
+                                VStack {
+                                    HStack {
+                                        Text("場所を設定")
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                    }
+                                }
+                            }
+                            .foregroundColor(Color.gray)
+                            .listRowBackground(Color.clear)
+                            .padding(.leading)
+                            .onAppear {
+                                pinCoordinate = CLLocationCoordinate2D(latitude: shoppingItem.latitude ?? 0.0, longitude: shoppingItem.longitude ?? 0.0)
+                            }
+                            : nil
+                        }
+                        .onAppear {
+                            isAlermSettingOn = shoppingItem.isAlermSettingOn
+                        }
+                        Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
+                            isUrlSettingOn ?
+                            TextField("URL", text: $itemUrl)
+                                .listRowBackground(Color.clear)
+                                .padding(.horizontal)
+                                .padding(.bottom)
+                                .frame(height: isUrlSettingOn ? 40 : 0)
+                            : nil
+                        }
+                        .onAppear {
+                            isUrlSettingOn = shoppingItem.customURL != ""
+                            itemUrl = shoppingItem.customURL ?? ""
+                        }
+                    }.listStyle(.plain)
+                    ButtonHelper(
+                        buttonText: "変更",
+                        buttonAction: {
+                            VibrationHelper().feedbackVibration()
+                            let intSelectedDigitsValue = Int(selectedDigitsValue)
+                            timeIntervalSinceNow = TimeHelper()
+                                .calcSecondsFromString(
+                                    selectedUnitsValue: selectedUnitsValue,
+                                    intSelectedDigitsValue: intSelectedDigitsValue ?? 0)
+                            Task {
+                                do {
+                                    try await ShoppingItemRepository().updateShoppingItem(shoppingItem: ShoppingItem(
+                                        name: shoppingItemName,
+                                        category: selectedCategory,
+                                        addedAt: Date(),
+                                        isUrlSettingOn: isUrlSettingOn,
+                                        customURL: itemUrl,
+                                        isAlermSettingOn: isAlermSettingOn,
+                                        isAlermRepeatOn: isAlermRepeatOn,
+                                        isDetailSettingOn: isDetailSettingOn,
+                                        alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
+                                        alermCycleString: isAlermSettingOn ?  "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
+                                        memo: itemMemo,
+                                        latitude: pinCoordinate.latitude,
+                                        longitude: pinCoordinate.longitude
+                                    ),
+                                                                                          shoppingItemId: shoppingItem.id ?? "")
+                                    if (isAlermSettingOn && isTimeAlermSettingOn) {
+                                        NotificationManager().sendIntervalNotification(
+                                            shoppingItem: ShoppingItem(
+                                                name: shoppingItemName,
+                                                category: selectedCategory,
+                                                addedAt: Date(),
+                                                isUrlSettingOn: isUrlSettingOn,
+                                                customURL: itemUrl,
+                                                isAlermSettingOn: isAlermSettingOn,
+                                                isAlermRepeatOn: isAlermRepeatOn,
+                                                isDetailSettingOn: isDetailSettingOn,
+                                                alermCycleSeconds: isAlermSettingOn ? timeIntervalSinceNow : nil,
+                                                alermCycleString: isAlermSettingOn ? "\(selectedDigitsValue)\(selectedUnitsValue)" : nil,
+                                                memo: itemMemo,
+                                                latitude: pinCoordinate.latitude,
+                                                longitude: pinCoordinate.longitude
+                                            ),
+                                            shoppingItemDocId: shoppingItemDocId
+                                        )
+                                    } else if (isAlermSettingOn && isLocationAlermSettingOn) {
+                                        NotificationManager().deleteNotification(shoppingItemIndentifier: [shoppingItemDocId])
+                                        NotificationManager().sendLocationNotification(itemName: shoppingItemName, notificationLatitude: pinCoordinate.latitude, notificationLongitude: pinCoordinate.longitude, shoppingItemDocId: shoppingItemDocId)
+                                    }
+                                    NotificationManager().fetchAllRegisteredNotifications()
+                                } catch {
+                                    print("error occured while adding shopping item: \(error)")
+                                }
+                            }
+                            isShowSheet = false
+                        },
+                        foregroundColor: Color.white,
+                        backgroundColor: Color.blue,
+                        buttonTextIsBold: nil,
+                        buttonWidth: nil,
+                        buttonHeight: nil,
+                        buttonTextFontSize: nil
+                    )
+                    .padding(.horizontal)
+                    .padding(.bottom)
+                }
+                .toolbar {
+                    ToolbarItemGroup (placement: .confirmationAction) {
+                        Spacer()
+                        ShareLink(
+                            item: "\(shoppingItem.name)を買い忘れないようにしよう！"
+                        ) {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundColor(Color.foreground)
+                        }
+                        Button(action: { isShowingDeleteAlert = true}) {
+                            Image(systemName: "trash").foregroundColor(Color.foreground)
+                        }
+                        .alert("このアイテムを削除しますか？", isPresented: $isShowingDeleteAlert) {
+                            Button("キャンセル") {
+                                isShowingDeleteAlert = false
+                            }
+                            //                        NavigationLink(destination: HomeView()) {
                             Button("削除") {
                                 print("secondary button action fired")
                                 NotificationManager().deleteNotification(shoppingItemIndentifier: [shoppingItem.id ?? ""])
@@ -227,21 +228,22 @@ struct EditItemView: View {
                                 }
                                 NotificationManager().fetchAllRegisteredNotifications()
                             }
+                        }
                     }
                 }
-            }
-            .fullScreenCover(isPresented: $isLocationAlermScreenPresented) {
-                MapView(pinCoordinate: $pinCoordinate)
-            }
-        }
-        .task {
-            do {
-                categoryList = try await CategoryRepository().fetchCategories()
-                for category in categoryList {
-                    categoryItemList.append(CategoryItem(category: category))
+                .fullScreenCover(isPresented: $isLocationAlermScreenPresented) {
+                    MapView(pinCoordinate: $pinCoordinate)
                 }
-            } catch {
-                print(error)
+            }
+            .task {
+                do {
+                    categoryList = try await CategoryRepository().fetchCategories()
+                    for category in categoryList {
+                        categoryItemList.append(CategoryItem(category: category))
+                    }
+                } catch {
+                    print(error)
+                }
             }
         }
     }

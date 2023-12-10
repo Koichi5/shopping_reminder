@@ -55,23 +55,25 @@ struct MapView: View {
     @State var selectedTab: Int = 1
     
     var body: some View {
-        NavigationStack {
-            TabView(selection: $selectedTab) {
-                MapViewWithPinMode(pinCoordinate: $pinCoordinate, pinDropped: $pinDropped)
-                    .tabItem {
-                        Image(systemName: "mappin.circle")
-                        Text("ピンドラッグモード版")
-                    }.tag(1)
-                MapViewWithCross(pinCoordinate: $pinCoordinate, pinDropped: $pinDropped)
-                    .tabItem {
-                        Image(systemName: "plus.viewfinder")
-                        Text("十字版")
-                    }.tag(2)
-            }
-            .padding()
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    BackButtonView()
+        if #available(iOS 16.0, *) {
+            NavigationStack {
+                TabView(selection: $selectedTab) {
+                    MapViewWithPinMode(pinCoordinate: $pinCoordinate, pinDropped: $pinDropped)
+                        .tabItem {
+                            Image(systemName: "mappin.circle")
+                            Text("ピンドラッグモード版")
+                        }.tag(1)
+                    MapViewWithCross(pinCoordinate: $pinCoordinate, pinDropped: $pinDropped)
+                        .tabItem {
+                            Image(systemName: "plus.viewfinder")
+                            Text("十字版")
+                        }.tag(2)
+                }
+                .padding()
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        BackButtonView()
+                    }
                 }
             }
         }

@@ -24,7 +24,7 @@ struct EntryAuthView: View {
         case password
         case retypePassword
     }
-    @FocusState private var focusedField: Field?
+//    @FocusState private var focusedField: Field?
     @State var isShowAppleAlert: Bool = false
     @State var appleAlertMessage: String = ""
     @State var isRegisterSuccess: Bool = false
@@ -80,7 +80,6 @@ struct EntryAuthView: View {
     }
     
     // MARK: - Firebase用
-    @available(iOS 13, *)
     private func sha256(_ input: String) -> String {
         let inputData = Data(input.utf8)
         let hashedData = SHA256.hash(data: inputData)
@@ -100,10 +99,10 @@ struct EntryAuthView: View {
                         "メールアドレス",
                         text: self.$validationViewModel.signUpEmail
                     )
-                    .focused($focusedField, equals: .email)
-                    .onChange(of: focusedField, perform: { newValue in
-                        isTextfieldEditting = true
-                    })
+//                    .focused($focusedField, equals: .email)
+//                    .onChange(of: focusedField, perform: { newValue in
+//                        isTextfieldEditting = true
+//                    })
                     .padding(.vertical)
                     .padding(.leading)
                     .overlay(
@@ -119,10 +118,10 @@ struct EntryAuthView: View {
                     ZStack (alignment: .trailing) {
                         if isHidePassword {
                             SecureField.init("パスワード", text: self.$validationViewModel.signUpPassword)
-                                .focused($focusedField, equals: .password)
-                                .onChange(of: focusedField, perform: { newValue in
-                                    isTextfieldEditting = true
-                                })
+//                                .focused($focusedField, equals: .password)
+//                                .onChange(of: focusedField, perform: { newValue in
+//                                    isTextfieldEditting = true
+//                                })
                                 .textContentType(.newPassword)
                                 .padding(.vertical)
                                 .padding(.leading)
@@ -132,10 +131,10 @@ struct EntryAuthView: View {
                                 )
                         } else {
                             TextField.init("パスワード", text: self.$validationViewModel.signUpPassword)
-                                .focused($focusedField, equals: .password)
-                                .onChange(of: focusedField, perform: { newValue in
-                                    isTextfieldEditting = true
-                                })
+//                                .focused($focusedField, equals: .password)
+//                                .onChange(of: focusedField, perform: { newValue in
+//                                    isTextfieldEditting = true
+//                                })
                                 .textContentType(.newPassword)
                                 .padding(.vertical)
                                 .padding(.leading)
@@ -156,10 +155,10 @@ struct EntryAuthView: View {
                     ZStack (alignment: .trailing) {
                         if isHideRetypePassword {
                             SecureField.init("パスワード（確認）", text: self.$validationViewModel.signUpRetypePassword)
-                                .focused($focusedField, equals: .retypePassword)
-                                .onChange(of: focusedField, perform: { newValue in
-                                    isTextfieldEditting = true
-                                })
+//                                .focused($focusedField, equals: .retypePassword)
+//                                .onChange(of: focusedField, perform: { newValue in
+//                                    isTextfieldEditting = true
+//                                })
                                 .textContentType(.newPassword)
                                 .padding(.vertical)
                                 .padding(.leading)
@@ -169,10 +168,10 @@ struct EntryAuthView: View {
                                 )
                         } else {
                             TextField.init("パスワード（確認）", text: self.$validationViewModel.signUpRetypePassword)
-                                .focused($focusedField, equals: .retypePassword)
-                                .onChange(of: focusedField, perform: { newValue in
-                                    isTextfieldEditting = true
-                                })
+//                                .focused($focusedField, equals: .retypePassword)
+//                                .onChange(of: focusedField, perform: { newValue in
+//                                    isTextfieldEditting = true
+//                                })
                                 .textContentType(.newPassword)
                                 .padding(.vertical)
                                 .padding(.leading)
@@ -439,8 +438,8 @@ extension UIApplication {
     }
 }
 
-struct EntryAuthView_Previews: PreviewProvider {
-    static var previews: some View {
-        EntryAuthView()
-    }
-}
+//struct EntryAuthView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        EntryAuthView()
+//    }
+//}

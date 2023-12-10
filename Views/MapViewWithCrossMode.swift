@@ -73,12 +73,13 @@ struct MapWithCross: View {
         .sync($locationManager.region, with: $region)
     }
 }
+
 struct MapViewWithCross: View {
     @StateObject var locationManager = LocationManager()
     
     @Binding var pinCoordinate: CLLocationCoordinate2D
     @Binding var pinDropped: Bool
-    @Environment(\.dismiss) var dismiss
+//    @Environment(\.dismiss) var dismiss
 
 //    var pinName: String
     
@@ -106,7 +107,8 @@ struct MapViewWithCross: View {
                         print("pin fixed")
                         print("current latitude: \(pinCoordinate.latitude)")
                         print("current longitude: \(pinCoordinate.longitude)")
-                        dismiss()
+                        // TODO: dismiss window
+//                        dismiss()
                     } else {
                         print("current pin location is nil")
                     }
@@ -134,7 +136,11 @@ struct MapViewWithCross_PreviewHost: View {
     @State var pinDropped: Bool = false
     
     var body: some View {
-        MapViewWithCross(pinCoordinate: $pinCoordinate, pinDropped: $pinDropped)
+        if #available(iOS 15.0, *) {
+            MapViewWithCross(pinCoordinate: $pinCoordinate, pinDropped: $pinDropped)
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }
 

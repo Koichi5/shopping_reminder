@@ -12,7 +12,6 @@ struct AddItemView: View {
     enum Field: Hashable {
         case itemName
     }
-    @FocusState private var focusedField: Field?
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     @ObservedObject var locationManager = LocationManager()
     @Binding var isShowSheet: Bool
@@ -60,85 +59,89 @@ struct AddItemView: View {
             )
             List {
                 Section(header: sectionHeader(title: "メモ", isExpanded: $isDetailSettingOn)) {
-                    isDetailSettingOn
-                    ?
-                    TextField("メモ", text: $itemMemo, axis: .vertical)
-                        .listRowBackground(Color.clear)
-                        .padding(.horizontal)
-                        .padding(.bottom, 30)
-                    : nil
+                    if isDetailSettingOn {
+                        if #available(iOS 16.0, *) {
+                            TextField("メモ", text: $itemMemo, axis: .vertical)
+                                .listRowBackground(Color.clear)
+                                .padding(.horizontal)
+                                .padding(.bottom, 30)
+                        } else {
+                            TextField("メモ", text: $itemMemo)
+                                .listRowBackground(Color.clear)
+                                .padding(.horizontal)
+                                .padding(.bottom, 30)
+                        }
+                    }
                 }
                 Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
-                    isAlermSettingOn ?
-                    Button(action: { isTimeAlermSettingOn.toggle() }) {
-                        VStack {
-                            HStack {
-                                Text("時間で設定")
-                                Spacer()
-                                Image(systemName: isTimeAlermSettingOn ? "chevron.up" : "chevron.down")
+                    if isAlermSettingOn {
+                        Button(action: { isTimeAlermSettingOn.toggle() }) {
+                            VStack {
+                                HStack {
+                                    Text("時間で設定")
+                                    Spacer()
+                                    Image(systemName: isTimeAlermSettingOn ? "chevron.up" : "chevron.down")
+                                }
                             }
                         }
+                        .foregroundColor(Color.gray)
+                        .padding(.leading)
                     }
-                    .foregroundColor(Color.gray)
-                    .padding(.leading)
-                    : nil
-                    isTimeAlermSettingOn && isAlermSettingOn
-                    ?
-                    ItemDigitPicker(
-                        selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
-                    )
-                    .frame(height: 100)
-                    .listRowBackground(Color.clear)
-                    : nil
-                    isTimeAlermSettingOn && isAlermSettingOn
-                    ? Toggle(isOn: $isAlermRepeatOn) {
-                        Text("繰り返し")
-                            .font(.roundedFont())
-                            .foregroundColor(Color.gray)
+                    if isTimeAlermSettingOn && isAlermSettingOn {
+                        ItemDigitPicker(
+                            selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
+                        )
+                        .frame(height: 100)
+                        .listRowBackground(Color.clear)
                     }
-                    .listRowBackground(Color.clear)
-                    .padding(.horizontal)
-                    : nil
-                    isAlermSettingOn
-                    ? Button(action: {
-                        if (
-                            locationManager.authorizationStatus == CLAuthorizationStatus.denied || locationManager.authorizationStatus == CLAuthorizationStatus.notDetermined || locationManager.authorizationStatus == CLAuthorizationStatus.restricted
-                        ) {
-                            locationManager.requestPremission()
+                    if isTimeAlermSettingOn && isAlermSettingOn {
+                        Toggle(isOn: $isAlermRepeatOn) {
+                            Text("繰り返し")
+                                .font(.roundedFont())
+                                .foregroundColor(Color.gray)
                         }
-                        isLocationAlermScreenPresented = true
-                    }) {
-                        VStack {
-                            HStack {
-                                Text("場所を設定")
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                            }
-                        }
-                    }
-                    .foregroundColor(Color.gray)
-                    .listRowBackground(Color.clear)
-                    .padding(.leading)
-                    : nil
-                }
-                Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
-                    isUrlSettingOn
-                    ?
-                    TextField("URL", text: $itemUrl)
                         .listRowBackground(Color.clear)
                         .padding(.horizontal)
-                    : nil
+                    }
+                    if isAlermSettingOn {
+                        Button(action: {
+                            if (
+                                locationManager.authorizationStatus == CLAuthorizationStatus.denied || locationManager.authorizationStatus == CLAuthorizationStatus.notDetermined || locationManager.authorizationStatus == CLAuthorizationStatus.restricted
+                            ) {
+                                locationManager.requestPremission()
+                            }
+                            isLocationAlermScreenPresented = true
+                        }) {
+                            VStack {
+                                HStack {
+                                    Text("場所を設定")
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                }
+                            }
+                        }
+                        .foregroundColor(Color.gray)
+                        .listRowBackground(Color.clear)
+                        .padding(.leading)
+                    }
+                }
+                Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
+                    if isUrlSettingOn {
+                        TextField("URL", text: $itemUrl)
+                            .listRowBackground(Color.clear)
+                            .padding(.horizontal)
+                    }
                 }
             }
             .listStyle(.plain)
             HStack(alignment: .center) {
-                TextField("アイテム名", text: $itemName)
-                    .padding(10)
-                    .overlay(
-                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
-                            .stroke(Color.foreground, lineWidth: 1.0)
-                    )
-                    .focused($focusedField, equals: .itemName)
+                    TextField("アイテム名", text: $itemName)
+                        .padding(10)
+                        .overlay(
+                            RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                                .stroke(Color.foreground, lineWidth: 1.0)
+                        )
+                
                 Button(action: {
                     print("-- current pin location latitude: \(pinCoordinate.latitude)")
                     print("-- current pin location longitude: \(pinCoordinate.longitude)")
@@ -219,10 +222,6 @@ struct AddItemView: View {
             .padding(.bottom)
         }
         .onAppear {
-            screen = UIScreen.main.bounds.size
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
-                focusedField = .itemName
-            }
             Task {
                 do {
                     categoryList = try await CategoryRepository().fetchCategories()

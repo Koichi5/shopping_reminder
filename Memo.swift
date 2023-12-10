@@ -121,11 +121,16 @@ struct MemoView: View {
             }
         }
         .sheet(isPresented: $isShowSheet) {
-            SecondView(isShowSheet: $isShowSheet)
+            if #available(iOS 15.0, *) {
+                SecondView(isShowSheet: $isShowSheet)
+            } else {
+                // Fallback on earlier versions
+            }
         }
     }
 }
 
+@available(iOS 15.0, *)
 struct SecondView: View {
     // フォーカスが当たるTextFieldを、判断するためのenumを作成します。
     enum Field: Hashable {

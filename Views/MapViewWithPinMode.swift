@@ -19,63 +19,73 @@ struct MapWithPinMode: View {
     @State var region: MKCoordinateRegion = MKCoordinateRegion()
     
     var body: some View {
-        GeometryReader { geometry in
-            let items: [PinLocationInfo] = pinDropped ? [PinLocationInfo(location: pinCoordinate)] : []
-            ZStack (alignment: .topTrailing) {
-                Map(coordinateRegion: $region,
-                    interactionModes: isPinSettingMode ? [] : . all,
-                    showsUserLocation: true,
-                    userTrackingMode: nil,
-                    annotationItems: items,
-                    annotationContent: { place in
-                    MapAnnotation(coordinate: place.location, anchorPoint: CGPoint(x: 0.0, y: 0.0)) {
-                        HStack {
-                            Image(systemName: "mappin.circle.fill")
-                                .scaleEffect(1.5)
-    //                        Text(place.name)
-    //                            .padding(.leading, -8)
+        if #available(iOS 17.0, *) {
+            GeometryReader { geometry in
+                let items: [PinLocationInfo] = pinDropped ? [PinLocationInfo(location: pinCoordinate)] : []
+                ZStack (alignment: .topTrailing) {
+                    Map(coordinateRegion: $region,
+                        interactionModes: isPinSettingMode ? [] : . all,
+                        showsUserLocation: true,
+                        userTrackingMode: nil,
+                        annotationItems: items,
+                        annotationContent: { place in
+                        MapAnnotation(coordinate: place.location, anchorPoint: CGPoint(x: 0.0, y: 0.0)) {
+                            HStack {
+                                Image(systemName: "mappin.circle.fill")
+                                    .scaleEffect(1.5)
+        //                        Text(place.name)
+        //                            .padding(.leading, -8)
+                            }
+                            .foregroundColor(Color(hex: "7CC7E8"))
+                            .offset(x: -12)
                         }
-                        .foregroundColor(Color(hex: "7CC7E8"))
-                        .offset(x: -12)
-                    }
-                })
-                .sync($locationManager.region, with: $region)
-                .gesture(drag(geometry))
-                .onTapGesture { gestureValue in
-                    if !isPinSettingMode {
-                        return
-                    }
-                    print("tap fired")
-                    let frame = geometry.frame(in: .local)
-                    let midX = frame.midX
-                    let midY = frame.midY
-                    let relativeX = (gestureValue.x - midX) / frame.width
-                    let relativeY = (gestureValue.y - midY) / frame.height
-                    
-                    print("tap gesture relativeX: \(relativeX)")
-                    print("tap gesture relativeY: \(relativeY)")
+                    })
+                    .sync($locationManager.region, with: $region)
+                    .gesture(drag(geometry))
+                    .onTapGesture { gestureValue in
+                        if !isPinSettingMode {
+                            return
+                        }
+                        print("tap fired")
+                        let frame = geometry.frame(in: .local)
+                        let midX = frame.midX
+                        let midY = frame.midY
+                        let relativeX = (gestureValue.x - midX) / frame.width
+                        let relativeY = (gestureValue.y - midY) / frame.height
+                        
+                        print("tap gesture relativeX: \(relativeX)")
+                        print("tap gesture relativeY: \(relativeY)")
 
-                    let distanceInDegreesX = locationManager.region.span.longitudeDelta * relativeX
-                    let distanceInDegreesY = locationManager.region.span.latitudeDelta * relativeY
-                    pinCoordinate = CLLocationCoordinate2D(latitude: locationManager.region.center.latitude - distanceInDegreesY,
-                                                           longitude: locationManager.region.center.longitude + distanceInDegreesX)
-                    pinDropped = true
+                        let distanceInDegreesX = locationManager.region.span.longitudeDelta * relativeX
+                        let distanceInDegreesY = locationManager.region.span.latitudeDelta * relativeY
+                        pinCoordinate = CLLocationCoordinate2D(latitude: locationManager.region.center.latitude - distanceInDegreesY,
+                                                               longitude: locationManager.region.center.longitude + distanceInDegreesX)
+                        pinDropped = true
+                    }
+                    Button(action: {
+                        locationManager.startUpdatingLocation()
+                    }) {
+                        Image(systemName: "location.circle.fill")
+                            .foregroundColor(Color.blue)
+                            .scaleEffect(1.5)
+                    }
+                    .padding()
                 }
-                Button(action: {
-                    locationManager.startUpdatingLocation()
-                }) {
-                    Image(systemName: "location.circle.fill")
-                        .foregroundColor(Color.blue)
-                        .scaleEffect(1.5)
-                }
-                .padding()
             }
-        }
-        .onAppear {
-            isPinSettingMode = true
-        }
-        .onDisappear {
-            isPinSettingMode = false
+            .onAppear {
+                isPinSettingMode = true
+            }
+            .onDisappear {
+                isPinSettingMode = false
+            }
+        } else {
+            VStack {
+                HStack {
+                    Spacer()
+                    Text("ピンモードはiOS17.0以上で使用可能です")
+                    Spacer()
+                }
+            }
         }
     }
     
@@ -112,7 +122,6 @@ struct MapViewWithPinMode: View {
     @Binding var pinDropped: Bool
 //    var pinName: String
     @State var isPinSettingMode: Bool = false
-    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack {
@@ -137,7 +146,8 @@ struct MapViewWithPinMode: View {
                         print("pin fixed")
                         print("current latitude: \(pinCoordinate.latitude)")
                         print("current longitude: \(pinCoordinate.longitude)")
-                        dismiss()
+                        // TODO: dismiss window
+//                        dismiss()
                     } else {
                         print("current pin location is nil")
                     }

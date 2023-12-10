@@ -17,20 +17,20 @@ struct HomeView: View {
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
 //    @State private var currentDarkModeOn: Bool = false
     @State private var categories: [String] = []
-    @FocusState private var focusedField: Field?
     @State private var itemName = ""
     @State private var showingMenu: Bool = false
     @State private var isShowSheet: Bool = false
     @State private var isShowSetting: Bool = false
     @State private var existCategoryList: [Category] = []
     var body: some View {
+        if #available(iOS 16.0, *) {
         NavigationStack {
-                VStack(alignment: .leading) {
-                    ItemView()
-                }
-                .navigationBarTitle("ホーム")
-                .navigationViewStyle(StackNavigationViewStyle())
-
+            VStack(alignment: .leading) {
+                ItemView()
+            }
+            .navigationBarTitle("ホーム")
+            .navigationViewStyle(StackNavigationViewStyle())
+            
             .toolbar {
                 ToolbarItem(placement: .destructiveAction) {
                     Button(action: {
@@ -56,14 +56,15 @@ struct HomeView: View {
             AddItemView(isShowSheet: $isShowSheet)
         }
         .fullScreenCover(isPresented: $isShowSetting) {
-            SettingView()
+            SettingView(isShowSetting: $isShowSetting)
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
-}
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView()
     }
 }
+
+//struct HomeView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        HomeView()
+//    }
+//}

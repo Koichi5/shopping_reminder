@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CategoryFieldRow: View {
-    var focusedField: FocusState<UUID?>.Binding
+//    var focusedField: FocusState<UUID?>.Binding
     @State var textfieldUUID: UUID = UUID()
     @Binding var category: Category
     @State private var isNameEditing: Bool = false
@@ -37,7 +37,7 @@ struct CategoryFieldRow: View {
                     isNameEditing = false
                 }
             )
-            .focused(focusedField, equals: textfieldUUID)
+//            .focused(focusedField, equals: textfieldUUID)
             Spacer()
             isNameEditing
             ? Button(action: {

@@ -15,56 +15,58 @@ struct ItemComponent: View {
     @State var isUrlLinkPresented = false
     @State var isShowItemDetail = false
     var body: some View {
-//        Navigation View にすると Card のビューがおかしくなるので注意
-        NavigationStack {
-            HStack {
-                Circle()
-                    .fill(shoppingItem.category.color.colorData)
-                    .frame(width: 10, height: 10)
-                    .padding(.horizontal)
-                Text("\(shoppingItem.name)")
-                    .font(.roundedFont())
-                Spacer()
-                shoppingItem.customURL == "" ? nil :
-                Menu {
-                    Button(action: {
-                        print("is url link presented")
-                        if let url = URL(string: shoppingItem.customURL ?? "") {
-                            if(shoppingItem.customURL == "") {
-                                print("custom url is nil")
+        //        Navigation View にすると Card のビューがおかしくなるので注意
+        if #available(iOS 16.0, *) {
+            NavigationStack {
+                HStack {
+                    Circle()
+                        .fill(shoppingItem.category.color.colorData)
+                        .frame(width: 10, height: 10)
+                        .padding(.horizontal)
+                    Text("\(shoppingItem.name)")
+                        .font(.roundedFont())
+                    Spacer()
+                    shoppingItem.customURL == "" ? nil :
+                    Menu {
+                        Button(action: {
+                            print("is url link presented")
+                            if let url = URL(string: shoppingItem.customURL ?? "") {
+                                if(shoppingItem.customURL == "") {
+                                    print("custom url is nil")
+                                }
+                                UIApplication.shared.open(url, options: [.universalLinksOnly: false], completionHandler: { completed in
+                                    print(completed)
+                                })
                             }
-                            UIApplication.shared.open(url, options: [.universalLinksOnly: false], completionHandler: { completed in
-                                print(completed)
-                            })
+                        }) {
+                            Text("URLを開く")
                         }
-                    }) {
-                        Text("URLを開く")
+                    } label: {
+                        Image(systemName: "link")
+                            .foregroundColor(Color.foreground)
                     }
-                } label: {
-                    Image(systemName: "link")
-                        .foregroundColor(Color.foreground)
+                    Button(action: {
+                        isEditPresented.toggle()
+                    }) {
+                        Image(systemName: "pencil")
+                            .foregroundColor(Color.foreground)
+                    }
                 }
-                Button(action: {
-                    isEditPresented.toggle()
-                }) {
-                    Image(systemName: "pencil")
-                        .foregroundColor(Color.foreground)
+                .padding()
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(shoppingItem.category.color.colorData, lineWidth: 1.5)
+                )
+                .navigationDestination(isPresented: $isEditPresented) {
+                    EditItemView(isShowSheet: $isEditPresented, shoppingItem: shoppingItem)
                 }
-            }
-            .padding()
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(shoppingItem.category.color.colorData, lineWidth: 1.5)
-            )
-            .navigationDestination(isPresented: $isEditPresented) {
-                EditItemView(isShowSheet: $isEditPresented, shoppingItem: shoppingItem)
-            }
-            .onLongPressGesture {
-                //                self.isShowItemDetail.toggle()
-            }
-            .contextMenu {
-                Group {
-                    shoppingItem.memo == nil || shoppingItem.memo == "" ? Text("メモは記録されていません") : Text(shoppingItem.memo!)
+                .onLongPressGesture {
+                    //                self.isShowItemDetail.toggle()
+                }
+                .contextMenu {
+                    Group {
+                        shoppingItem.memo == nil || shoppingItem.memo == "" ? Text("メモは記録されていません") : Text(shoppingItem.memo!)
+                    }
                 }
             }
         }

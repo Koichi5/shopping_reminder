@@ -36,6 +36,7 @@ extension Color {
 //    static let onTertiaryContainer = Color("OnTertiaryContainer")
 }
 
+@available(iOS 15.0, *)
 var colorList: [Color] = [
     Color.red,
     Color.orange,

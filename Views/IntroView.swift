@@ -41,8 +41,8 @@ struct IntroView: View {
     }
 }
 
-struct IntroView_Previews: PreviewProvider {
-    static var previews: some View {
-        IntroView()
-    }
-}
+//struct IntroView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        IntroView()
+//    }
+//}

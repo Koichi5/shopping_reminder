@@ -22,39 +22,42 @@ struct CategoryFieldRow: View {
     }
     
     var body: some View {
-        HStack {
-            Circle()
-                .foregroundColor(self.$category.color.wrappedValue.colorData)
-                .frame(width: 10, height: 10)
-                .padding(.horizontal)
-            TextField(
-                "",
-                text: self.$category.name,
-                onEditingChanged: { onEditing in
-                    isNameEditing = onEditing
-                },
-                onCommit: {
-                    isNameEditing = false
-                }
-            )
-//            .focused(focusedField, equals: textfieldUUID)
-            Spacer()
-            isNameEditing
-            ? Button(action: {
-                currentTask?.cancel()
-                currentTask = Task {
-                    do {
-                        try await updateCategoryName(categoryId: category.id ?? "", categoryName: self.category.name)
-                    } catch {
-                        print(error)
+        VStack {
+            HStack {
+                Circle()
+                    .foregroundColor(self.$category.color.wrappedValue.colorData)
+                    .frame(width: 10, height: 10)
+                    .padding(.horizontal)
+                TextField(
+                    "",
+                    text: self.$category.name,
+                    onEditingChanged: { onEditing in
+                        isNameEditing = onEditing
+                    },
+                    onCommit: {
+                        isNameEditing = false
                     }
+                )
+                //            .focused(focusedField, equals: textfieldUUID)
+                Spacer()
+                isNameEditing
+                ? Button(action: {
+                    currentTask?.cancel()
+                    currentTask = Task {
+                        do {
+                            try await updateCategoryName(categoryId: category.id ?? "", categoryName: self.category.name)
+                        } catch {
+                            print(error)
+                        }
+                    }
+                    isNameEditing = false
+                }) {
+                    Text("変更")
+                    
                 }
-                isNameEditing = false
-            }) {
-                Text("変更")
-                
+                : nil
             }
-            : nil
+            Divider()
         }
     }
 }

@@ -12,7 +12,8 @@ import FirebaseFirestoreSwift
 
 class CategoryRepository: ObservableObject {
     @ObservedObject private var shoppingItemRepository = ShoppingItemRepository()
-    static var db = Firestore.firestore()
+    var db = Firestore.firestore()
+    let currentUser = AuthModel().getCurrentUser()
     var categories: [Category] = []
     
     @Published var categoryList = [Category](){
@@ -29,13 +30,12 @@ class CategoryRepository: ObservableObject {
     
     func addCategoryListener() async throws -> Void {
         print("-- add CATEGORY listener fired --")
-        let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
             print("current user is nil")
         } else {
-            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+            let userRef = db.collection("users").document(currentUser!.uid)
             let categoriesRef = userRef.collection("categories").order(by: "color")
-            let listener = categoriesRef.addSnapshotListener(includeMetadataChanges: true) { (documentSnapshot, error) in
+            _ = categoriesRef.addSnapshotListener(includeMetadataChanges: true) { (documentSnapshot, error) in
                 guard let documentSnapshot = documentSnapshot else {
                     print("Error fetching document: \(error!)")
                     return
@@ -61,7 +61,7 @@ class CategoryRepository: ObservableObject {
                                 fatalError("\(error)")
                             }
                             guard let data = snap?.documents else {
-                                print("データがなかった？")
+                                print("データがなかった")
                                 return
                             }
                             print(data)
@@ -99,16 +99,13 @@ class CategoryRepository: ObservableObject {
     
     func addCategory(category: Category) async throws -> Void {
         var docId = ""
-        let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
             print("current user is nil")
         } else {
-            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+            let userRef = db.collection("users").document(currentUser!.uid)
             let categoriesRef = userRef.collection("categories")
             docId = categoriesRef.document().documentID
             do {
-                //                let newDocReference = try categoriesRef.addDocument(from: category)
-                //                print("Category stored with new document reference: \(newDocReference)")
                 try categoriesRef.document(docId).setData(from: category)
                 try await categoriesRef.document(docId).updateData([
                     "id": docId
@@ -121,11 +118,10 @@ class CategoryRepository: ObservableObject {
     }
     
     func updateCategoryName(categoryId: String, categoryName: String) async throws -> Void {
-        let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
             print("current user is nil")
         } else {
-            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+            let userRef = db.collection("users").document(currentUser!.uid)
             let categoriesRef = userRef.collection("categories").document(categoryId)
             do {
                 try await categoriesRef.updateData([
@@ -138,11 +134,10 @@ class CategoryRepository: ObservableObject {
     }
     
     func updateCategoryColor(categoryId: String, categoryColorNum: Int) async throws -> Void {
-        let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
             print("current user is nil")
         } else {
-            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+            let userRef = db.collection("users").document(currentUser!.uid)
             let categoriesRef = userRef.collection("categories").document(categoryId)
             do {
                 try await categoriesRef.updateData([
@@ -156,11 +151,10 @@ class CategoryRepository: ObservableObject {
     
     func fetchCategories() async throws -> [Category] {
         var result: [Category] = []
-        let currentUser = AuthModel().getCurrentUser()
         if currentUser == nil {
             print("current user is nil")
         } else {
-            let userRef = Firestore.firestore().collection("users").document(currentUser!.uid)
+            let userRef = db.collection("users").document(currentUser!.uid)
             let categoriesRef = userRef.collection("categories")
             do {
                 let querySnapshot = try await categoriesRef.getDocuments()
@@ -177,5 +171,19 @@ class CategoryRepository: ObservableObject {
             }
         }
         return result
+    }
+    
+    func deleteCategory(categoryId: String) async throws -> Void {
+        if currentUser == nil {
+            print("current user is nil")
+        } else {
+            let userRef = db.collection("users").document(currentUser!.uid)
+            let categoriesRef = userRef.collection("categories").document(categoryId)
+            do {
+                try await categoriesRef.delete()
+            } catch {
+                print(error)
+            }
+        }
     }
 }

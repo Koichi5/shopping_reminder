@@ -16,7 +16,8 @@ struct GoogleSignInButton: View {
         Button(action: {
             Task {
                 do {
-                    try await AuthViewModel().signInWithGoogle()
+                    let isSigninWithGoogleSucceeded = await AuthViewModel().signInWithGoogle()
+                    print("isSigninWithGoogleSucceeded: \(isSigninWithGoogleSucceeded)")
                 }
             }
         }) {

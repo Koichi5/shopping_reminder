@@ -52,9 +52,9 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
         
-        guard let location = lastScreenLocation else {
-            return
-        }
+//        guard let location = lastScreenLocation else {
+//            return
+//        }
     }
     
     func startUpdatingLocation() {

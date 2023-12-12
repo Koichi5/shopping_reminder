@@ -143,9 +143,6 @@ struct AddItemView: View {
                         )
                 
                 Button(action: {
-                    print("-- current pin location latitude: \(pinCoordinate.latitude)")
-                    print("-- current pin location longitude: \(pinCoordinate.longitude)")
-                    print("-- current selected category: \(selectedCategory)")
                     if (itemName != "") {
                         if (selectedCategory != nil) {
                             VibrationHelper().feedbackVibration()

@@ -24,7 +24,7 @@ class UserDefaultsHelper: ObservableObject {
 //        self.isDarkModeOn = isDarkModeOn
 //    }
     init() {
-        isVibrationAllowed = UserDefaults.standard.bool(forKey: "isVibrationAllowed") ?? true
+        isVibrationAllowed = UserDefaults.standard.bool(forKey: "isVibrationAllowed")
 //        isDarkModeOn = UserDefaults.standard.bool(forKey: "isDarkModeOn") ?? false
 //        print("current isDarkModeOn is: \(isDarkModeOn)")
     }

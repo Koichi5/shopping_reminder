@@ -30,7 +30,6 @@ struct CategoryItemList: View {
                                 if (categoryItemList[index].isSelected) {
                                     selectedCategory = categoryItem.category
 //                                    isSomeCategorySelected = true
-                                    print("selected: \(selectedCategory)")
                                 }
                             }
                             VibrationHelper().feedbackVibration()

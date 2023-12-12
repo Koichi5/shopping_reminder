@@ -39,7 +39,7 @@ struct ShoppingReminderApp: App {
                     }
                     .onAppear{
                         GIDSignIn.sharedInstance.restorePreviousSignIn{ user,error in
-                            print("logged in as: \(user?.userID)")
+                            print("logged in as: \(String(describing: user?.userID))")
                         }
                     }
             }

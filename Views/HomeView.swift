@@ -15,7 +15,7 @@ struct HomeView: View {
     }
     @ObservedObject private var shoppingItemRepository = ShoppingItemRepository()
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
-//    @State private var currentDarkModeOn: Bool = false
+    //    @State private var currentDarkModeOn: Bool = false
     @State private var categories: [String] = []
     @State private var itemName = ""
     @State private var showingMenu: Bool = false
@@ -24,42 +24,45 @@ struct HomeView: View {
     @State private var existCategoryList: [Category] = []
     var body: some View {
         if #available(iOS 16.0, *) {
-        NavigationStack {
-            VStack(alignment: .leading) {
-                ItemView()
-            }
-            .navigationBarTitle("ホーム")
-            .navigationViewStyle(StackNavigationViewStyle())
-            
-            .toolbar {
-                ToolbarItem(placement: .destructiveAction) {
-                    Button(action: {
-                        isShowSetting.toggle()
-                    }) {
-                        Image(systemName: "gearshape")
-                            .foregroundColor(Color.foreground)
+            NavigationStack {
+                VStack(alignment: .leading) {
+                    ItemView()
+                }
+                .navigationBarTitle("ホーム")
+                .navigationViewStyle(StackNavigationViewStyle())
+                
+                .toolbar {
+                    ToolbarItem(placement: .destructiveAction) {
+                        Button(action: {
+                            isShowSetting.toggle()
+                        }) {
+                            Image(systemName: "gearshape")
+                                .foregroundColor(Color.foreground)
+                        }
+                    }
+                    ToolbarItemGroup(placement: .bottomBar) {
+                        Spacer()
+                        Button(action: {
+                            isShowSheet.toggle()
+                        }) {
+                            Image(systemName:"plus")
+                                .foregroundColor(Color.foreground)
+                        }
                     }
                 }
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Spacer()
-                    Button(action: {
-                        isShowSheet.toggle()
-                    }) {
-                        Image(systemName:"plus")
-                            .foregroundColor(Color.foreground)
-                    }
-                }
+            }
+            .navigationBarBackButtonHidden(true)
+            .sheet(isPresented: $isShowSheet) {
+                AddItemView(isShowSheet: $isShowSheet)
+            }
+            .fullScreenCover(isPresented: $isShowSetting) {
+                SettingView(isShowSetting: $isShowSetting)
+            }
+            .ignoresSafeArea(.keyboard, edges: .bottom)
+            .onAppear {
+                UpdateNoticeHelper.shared.fire()
             }
         }
-        .navigationBarBackButtonHidden(true)
-        .sheet(isPresented: $isShowSheet) {
-            AddItemView(isShowSheet: $isShowSheet)
-        }
-        .fullScreenCover(isPresented: $isShowSetting) {
-            SettingView(isShowSetting: $isShowSetting)
-        }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
-    }
     }
 }
 

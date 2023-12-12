@@ -19,6 +19,9 @@ struct SettingView: View {
     )
     let notificaitonManager = NotificationManager()
     let shareHelper = ShareHelper()
+    private func addCategory(category: Category) async throws {
+        try await CategoryRepository().addCategory(category: category)
+    }
     @ObservedObject var userDefaultsHelper = UserDefaultsHelper()
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -26,15 +29,25 @@ struct SettingView: View {
                 List {
                     Section("カテゴリ") {
                         sectionHeader(title: "カテゴリ", isExpanded: $isCategorySettingOn)
-                        isCategorySettingOn
-                        ?
-                        ForEach(self.categoryList.indices, id: \.self) { index in
-                            CategoryFieldRow(
-                                category: self.$categoryList[index]
-                            )
-                            
+                        if isCategorySettingOn {
+                            VStack {
+                                ForEach(self.categoryList.indices, id: \.self) { index in
+                                    CategoryFieldRow(
+                                        category: self.$categoryList[index]
+                                    )
+                                    .padding(.vertical, 5)
+                                }
+                                HStack {
+                                    NavigationLink("カテゴリ追加") {
+                                        AddCategoryView()
+                                            .navigationTitle("カテゴリ追加")
+                                    }
+                                    .padding(.leading)
+                                    .padding(.vertical, 5)
+                                    Spacer()
+                                }
+                            }
                         }
-                        : nil
                     }
                     .listStyle(.automatic)
                     Section("システム") {

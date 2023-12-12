@@ -230,12 +230,11 @@ struct EntryAuthView: View {
                     Button(action: {
                         Task {
                             do {
-                                try await Auth.auth().signInAnonymously() { authResult, error in
+                                Auth.auth().signInAnonymously() { authResult, error in
                                     if (authResult?.user != nil) {
                                         FirebaseUserRepository().addFirebaseUser(user: authResult!.user)
                                         isSignInAnnonymouslySuccess = true
                                     } else {
-                                        print(error)
                                         print("Sign in annonymously failed")
                                     }
                                 }
@@ -261,9 +260,9 @@ struct EntryAuthView: View {
                                 }
                                 let config = GIDConfiguration(clientID: clientID)
                                 GIDSignIn.sharedInstance.configuration = config
-                                guard let windowScene = await UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                      let window = await windowScene.windows.first,
-                                      let rootViewController = await window.rootViewController else {
+                                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                      let window = windowScene.windows.first,
+                                      let rootViewController = window.rootViewController else {
                                     print("There is no root view controller!")
                                     isAlertShown = true
                                     throw CustomAuthError.failed
@@ -285,12 +284,9 @@ struct EntryAuthView: View {
                                     
                                     let result = try await Auth.auth().signIn(with: credential)
                                     let firebaseUser = result.user
-                                    if (firebaseUser != nil) {
-                                        FirebaseUserRepository().addFirebaseUser(user: result.user)
+                                        FirebaseUserRepository().addFirebaseUser(user: firebaseUser)
                                         isGoogleSignInSuccess = true
                                         print("is google sign in success in func: \(self.isGoogleSignInSuccess)")
-                                    }
-                                    print("User \(firebaseUser.uid) signed in with email \(firebaseUser.email ?? "unknown")")
                                 }
                                 catch {
                                     print(error.localizedDescription)

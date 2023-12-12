@@ -27,6 +27,6 @@ class ShareHelper: ObservableObject {
 
     func shareText(shareText: String) {
         let items = [shareText] as [Any]
-        let activityVS = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        _ = UIActivityViewController(activityItems: items, applicationActivities: nil)
     }
 }

@@ -41,10 +41,11 @@ struct ItemView: View {
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                             .padding()
                                         ForEach (shoppingItemRepository.shoppingItemList) { shoppingItem in
-                                            shoppingItem.category.name == categoryName
-                                            ? ItemComponent(shoppingItem: shoppingItem).padding(.horizontal)
-                                            : nil
-                                        }.padding(.bottom)
+                                            if shoppingItem.category.name == categoryName {
+                                                ItemComponent(shoppingItem: shoppingItem).padding(.horizontal)
+                                            }
+                                        }
+                                        .padding(.bottom)
                                     }
                                 }
                             }

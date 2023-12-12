@@ -59,6 +59,7 @@ struct ItemComponent: View {
                 )
                 .navigationDestination(isPresented: $isEditPresented) {
                     EditItemView(isShowSheet: $isEditPresented, shoppingItem: shoppingItem)
+                        .background(Color(UIColor.systemGroupedBackground))
                 }
                 .onLongPressGesture {
                     //                self.isShowItemDetail.toggle()

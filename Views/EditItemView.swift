@@ -47,90 +47,87 @@ struct EditItemView: View {
                     Spacer()
                     List {
                         Section(header: sectionHeader(title: "メモ", isExpanded: $isDetailSettingOn)) {
-                            isDetailSettingOn
-                            ?
-                            TextField("メモ", text: $itemMemo, axis: .vertical)
-                                .listRowBackground(Color.clear)
+                            if isDetailSettingOn {
+                                TextField(
+                                    "メモ",
+                                    text: $itemMemo, axis: .vertical)
                                 .padding(.horizontal)
                                 .padding(.bottom, 30)
-                            : nil
+                            }
                         }
                         .onAppear {
                             isDetailSettingOn = shoppingItem.isDetailSettingOn
                             itemMemo = shoppingItem.memo ?? ""
                         }
                         Section(header: sectionHeader(title: "アラーム", isExpanded: $isAlermSettingOn)) {
-                            isAlermSettingOn ?
-                            Button(action: { isTimeAlermSettingOn.toggle() }) {
-                                VStack {
-                                    HStack {
-                                        Text("時間で設定")
-                                        Spacer()
-                                        Image(systemName: isTimeAlermSettingOn ? "chevron.up" : "chevron.down")
+                            if isAlermSettingOn {
+                                Button(action: { isTimeAlermSettingOn.toggle() }) {
+                                    VStack {
+                                        HStack {
+                                            Text("時間で設定")
+                                            Spacer()
+                                            Image(systemName: isTimeAlermSettingOn ? "chevron.up" : "chevron.down")
+                                        }
                                     }
                                 }
+                                .foregroundColor(Color.gray)
+                                .padding(.leading)
                             }
-                            .foregroundColor(Color.gray)
-                            .padding(.leading)
-                            : nil
-                            isTimeAlermSettingOn && isAlermSettingOn
-                            ?
-                            ItemDigitPicker(
-                                selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
-                            ).onAppear {
-                                let arr:[String] = shoppingItem.alermCycleString?.components(separatedBy: " ") ?? ["1", "時間ごと"]
-                                selectedDigitsValue = arr[0]
-                                selectedUnitsValue = arr[1]
-                            }
-                            .frame(height: 100)
-                            .listRowBackground(Color.clear)
-                            : nil
-                            isTimeAlermSettingOn && isAlermSettingOn ?
-                            Toggle("繰り返し", isOn: $isAlermRepeatOn)
-                                .listRowBackground(Color.clear)
-                                .padding(.horizontal) : nil
-                            isAlermSettingOn
-                            ? Button(action: {
-                                if (
-                                    locationManager.authorizationStatus == CLAuthorizationStatus.denied || locationManager.authorizationStatus == CLAuthorizationStatus.notDetermined || locationManager.authorizationStatus == CLAuthorizationStatus.restricted
-                                ) {
-                                    locationManager.requestPremission()
+                            if isTimeAlermSettingOn && isAlermSettingOn {
+                                ItemDigitPicker(
+                                    selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
+                                ).onAppear {
+                                    let arr:[String] = shoppingItem.alermCycleString?.components(separatedBy: " ") ?? ["1", "時間ごと"]
+                                    selectedDigitsValue = arr[0]
+                                    selectedUnitsValue = arr[1]
                                 }
-                                isLocationAlermScreenPresented = true
-                            }) {
-                                VStack {
-                                    HStack {
-                                        Text("場所を設定")
-                                        Spacer()
-                                        Image(systemName: "chevron.right")
+                                .frame(height: 100)
+                            }
+                            if isTimeAlermSettingOn && isAlermSettingOn {
+                                Toggle("繰り返し", isOn: $isAlermRepeatOn)
+                                    .foregroundColor(Color.gray)
+                                
+                                .padding(.horizontal)}
+                            if isAlermSettingOn {
+                                Button(action: {
+                                    if (
+                                        locationManager.authorizationStatus == CLAuthorizationStatus.denied || locationManager.authorizationStatus == CLAuthorizationStatus.notDetermined || locationManager.authorizationStatus == CLAuthorizationStatus.restricted
+                                    ) {
+                                        locationManager.requestPremission()
+                                    }
+                                    isLocationAlermScreenPresented = true
+                                }) {
+                                    VStack {
+                                        HStack {
+                                            Text("場所を設定")
+                                            Spacer()
+                                            Image(systemName: "chevron.right")
+                                        }
                                     }
                                 }
+                                .foregroundColor(Color.gray)
+                                .padding(.leading)
+                                .onAppear {
+                                    pinCoordinate = CLLocationCoordinate2D(latitude: shoppingItem.latitude ?? 0.0, longitude: shoppingItem.longitude ?? 0.0)
+                                }
                             }
-                            .foregroundColor(Color.gray)
-                            .listRowBackground(Color.clear)
-                            .padding(.leading)
-                            .onAppear {
-                                pinCoordinate = CLLocationCoordinate2D(latitude: shoppingItem.latitude ?? 0.0, longitude: shoppingItem.longitude ?? 0.0)
-                            }
-                            : nil
                         }
                         .onAppear {
                             isAlermSettingOn = shoppingItem.isAlermSettingOn
                         }
                         Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
-                            isUrlSettingOn ?
-                            TextField("URL", text: $itemUrl)
-                                .listRowBackground(Color.clear)
-                                .padding(.horizontal)
-                                .padding(.bottom)
-                                .frame(height: isUrlSettingOn ? 40 : 0)
-                            : nil
+                            if isUrlSettingOn {
+                                TextField("URL", text: $itemUrl)
+                                    .padding(.horizontal)
+                                    .padding(.bottom)
+                                    .frame(height: isUrlSettingOn ? 40 : 0)
+                            }
                         }
                         .onAppear {
                             isUrlSettingOn = shoppingItem.customURL != ""
                             itemUrl = shoppingItem.customURL ?? ""
                         }
-                    }.listStyle(.plain)
+                    }
                     ButtonHelper(
                         buttonText: "変更",
                         buttonAction: {

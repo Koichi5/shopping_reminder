@@ -52,7 +52,8 @@ struct AddItemView: View {
                             .foregroundColor(Color.foreground)
                     }.padding()
                 }
-            }.padding(.vertical)
+            }
+            .padding(.vertical)
             CategoryItemList(
                 categoryItemList: $categoryItemList,
                 selectedCategory: $selectedCategory
@@ -62,12 +63,10 @@ struct AddItemView: View {
                     if isDetailSettingOn {
                         if #available(iOS 16.0, *) {
                             TextField("メモ", text: $itemMemo, axis: .vertical)
-                                .listRowBackground(Color.clear)
                                 .padding(.horizontal)
                                 .padding(.bottom, 30)
                         } else {
                             TextField("メモ", text: $itemMemo)
-                                .listRowBackground(Color.clear)
                                 .padding(.horizontal)
                                 .padding(.bottom, 30)
                         }
@@ -92,7 +91,6 @@ struct AddItemView: View {
                             selectedDigitsValue: $selectedDigitsValue, selectedUnitsValue: $selectedUnitsValue
                         )
                         .frame(height: 100)
-                        .listRowBackground(Color.clear)
                     }
                     if isTimeAlermSettingOn && isAlermSettingOn {
                         Toggle(isOn: $isAlermRepeatOn) {
@@ -100,7 +98,6 @@ struct AddItemView: View {
                                 .font(.roundedFont())
                                 .foregroundColor(Color.gray)
                         }
-                        .listRowBackground(Color.clear)
                         .padding(.horizontal)
                     }
                     if isAlermSettingOn {
@@ -121,19 +118,16 @@ struct AddItemView: View {
                             }
                         }
                         .foregroundColor(Color.gray)
-                        .listRowBackground(Color.clear)
                         .padding(.leading)
                     }
                 }
                 Section(header: sectionHeader(title: "URLから買い物", isExpanded: $isUrlSettingOn)) {
                     if isUrlSettingOn {
                         TextField("URL", text: $itemUrl)
-                            .listRowBackground(Color.clear)
                             .padding(.horizontal)
                     }
                 }
             }
-            .listStyle(.plain)
             HStack(alignment: .center) {
                     TextField("アイテム名", text: $itemName)
                         .padding(10)
@@ -261,3 +255,15 @@ extension AddItemView {
         .foregroundColor(Color.gray)
     }
 }
+
+private extension View {
+    @ViewBuilder
+    func ultraThinMaterialIfAvailable() -> some View {
+        if #available(iOS 16.4, *) {
+            presentationBackground(Material.thick)
+        } else {
+            self
+        }
+    }
+}
+

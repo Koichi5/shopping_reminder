@@ -54,6 +54,8 @@ struct HomeView: View {
             .navigationBarBackButtonHidden(true)
             .sheet(isPresented: $isShowSheet) {
                 AddItemView(isShowSheet: $isShowSheet)
+                    .background(Color(UIColor.systemGroupedBackground))
+                    .edgesIgnoringSafeArea(.all)
             }
             .fullScreenCover(isPresented: $isShowSetting) {
                 SettingView(isShowSetting: $isShowSetting)

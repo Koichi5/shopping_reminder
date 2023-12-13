@@ -210,7 +210,7 @@ struct AddItemView: View {
                 .padding(.horizontal, 10)
             }
             .padding(.horizontal)
-            .padding(.bottom)
+            .padding(.bottom, 40)
         }
         .onAppear {
             Task {

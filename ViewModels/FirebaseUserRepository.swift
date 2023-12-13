@@ -12,7 +12,7 @@ import FirebaseFirestore
 class FirebaseUserRepository {
     let db = Firestore.firestore()
     let currentUser: User? = AuthModel.shared.getCurrentUser()
-    func addFirebaseUser(user: User) {
+    func addFirebaseUser() {
         if (currentUser?.uid == nil) {
             print("current user's uid is nil")
         }

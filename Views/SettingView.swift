@@ -17,6 +17,7 @@ struct SettingView: View {
         color: CategoryColor.gray,
         style: CategoryStyle(color: CategoryColor.gray)
     )
+    @ObservedObject var authViewModel: AuthViewModel = AuthViewModel()
     let notificaitonManager = NotificationManager()
     let shareHelper = ShareHelper()
     private func addCategory(category: Category) async throws {
@@ -99,7 +100,7 @@ struct SettingView: View {
                             secondaryButtonText: "ログアウト",
                             primaryButtonAction: nil,
                             secondaryButtonAction: {
-                                AuthViewModel().signOut()
+                                authViewModel.signOut()
                             }
                         )
                         .padding(.bottom, 7)
@@ -113,8 +114,9 @@ struct SettingView: View {
                             secondaryButtonText: "削除",
                             primaryButtonAction: nil,
                             secondaryButtonAction: {
-                                AuthViewModel().deleteUser()
-                            })
+                                authViewModel.deleteUser()
+                            }
+                        )
                     }
                 }
                 .navigationBarTitle("設定")
@@ -127,6 +129,9 @@ struct SettingView: View {
                                 .foregroundColor(Color.foreground)
                         })
                     }
+                }
+                .fullScreenCover(isPresented: $authViewModel.isSignedOut) {
+                    EntryAuthView()
                 }
             }
             .onAppear {

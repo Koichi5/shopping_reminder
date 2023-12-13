@@ -93,322 +93,251 @@ struct EntryAuthView: View {
     @State  var currentNonce:String?
     var body: some View {
         NavigationView(content: {
-            VStack (alignment: .leading){
-                Group{
-                    TextField.init(
-                        "メールアドレス",
-                        text: self.$validationViewModel.signUpEmail
-                    )
-//                    .focused($focusedField, equals: .email)
-//                    .onChange(of: focusedField, perform: { newValue in
-//                        isTextfieldEditting = true
-//                    })
-                    .padding(.vertical)
-                    .padding(.leading)
-                    .overlay(
-                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
-                            .stroke(Color.foreground, lineWidth: 1.0)
-                    )
-                    .padding(.bottom, !self.validationViewModel.invalidSignUpMailMessage.isEmpty ? 0 : 10)
-                    if !self.validationViewModel.invalidSignUpMailMessage.isEmpty {
-                        Text(self.validationViewModel.invalidSignUpMailMessage)
-                            .foregroundColor(.error)
-                            .font(.caption)
-                    }
-                    ZStack (alignment: .trailing) {
-                        if isHidePassword {
-                            SecureField.init("パスワード", text: self.$validationViewModel.signUpPassword)
-//                                .focused($focusedField, equals: .password)
-//                                .onChange(of: focusedField, perform: { newValue in
-//                                    isTextfieldEditting = true
-//                                })
-                                .textContentType(.newPassword)
-                                .padding(.vertical)
-                                .padding(.leading)
-                                .overlay(
-                                    RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
-                                        .stroke(Color.foreground, lineWidth: 1.0)
-                                )
-                        } else {
-                            TextField.init("パスワード", text: self.$validationViewModel.signUpPassword)
-//                                .focused($focusedField, equals: .password)
-//                                .onChange(of: focusedField, perform: { newValue in
-//                                    isTextfieldEditting = true
-//                                })
-                                .textContentType(.newPassword)
-                                .padding(.vertical)
-                                .padding(.leading)
-                                .overlay(
-                                    RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
-                                        .stroke(Color.foreground, lineWidth: 1.0)
-                                )
-                        }
-                        Button(action: {
-                            isHidePassword.toggle()
-                        }) {
-                            Image(systemName: self.isHidePassword ? "eye.slash" : "eye")
-                                .foregroundColor(Color.foreground)
-                        }.padding()
-                    }
-                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
-                    .padding(.bottom, 10)
-                    ZStack (alignment: .trailing) {
-                        if isHideRetypePassword {
-                            SecureField.init("パスワード（確認）", text: self.$validationViewModel.signUpRetypePassword)
-//                                .focused($focusedField, equals: .retypePassword)
-//                                .onChange(of: focusedField, perform: { newValue in
-//                                    isTextfieldEditting = true
-//                                })
-                                .textContentType(.newPassword)
-                                .padding(.vertical)
-                                .padding(.leading)
-                                .overlay(
-                                    RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
-                                        .stroke(Color.foreground, lineWidth: 1.0)
-                                )
-                        } else {
-                            TextField.init("パスワード（確認）", text: self.$validationViewModel.signUpRetypePassword)
-//                                .focused($focusedField, equals: .retypePassword)
-//                                .onChange(of: focusedField, perform: { newValue in
-//                                    isTextfieldEditting = true
-//                                })
-                                .textContentType(.newPassword)
-                                .padding(.vertical)
-                                .padding(.leading)
-                                .overlay(
-                                    RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
-                                        .stroke(Color.foreground, lineWidth: 1.0)
-                                )
-                        }
-                        Button(action: {
-                            isHideRetypePassword.toggle()
-                        }) {
-                            Image(systemName: self.isHideRetypePassword ? "eye.slash" : "eye")
-                                .foregroundColor(Color.foreground)
-                        }.padding()
-                    }
-                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
-                    .padding(.bottom, !self.validationViewModel.invalidPasswordMessage.isEmpty ? 0 : 10)
-                    
-                    if !self.validationViewModel.invalidPasswordMessage.isEmpty {
-                        Text(self.validationViewModel.invalidPasswordMessage)
-                            .foregroundColor(.error)
-                            .font(.caption)
-                    }
-                    Button(action: {
-                        Auth.auth().createUser(
-                            withEmail: self.validationViewModel.signUpEmail,
-                            password: self.validationViewModel.signUpPassword) { result, error in
-                                if (result?.user) != nil {
-                                    FirebaseUserRepository().addFirebaseUser(user: result!.user)
-                                    isRegisterSuccess = true
-                                } else {
-                                    isAlertShown = true
-                                }
-                            }
-                        Task{
-                            ShoppingItemRepository().removeCurrentSnapshotListener()
-                            try await ShoppingItemRepository().addUserSnapshotListener()
-                        }
-                    }) {
-                        Text("新規登録")
-                            .fontWeight(.bold)
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, minHeight: 48)
-                            .background(!self.validationViewModel.canSignUpSend ? Color.gray.cornerRadius(10) : Color.blue.cornerRadius(10))
-                        //                    }
-                    }
-                    .disabled(!self.validationViewModel.canSignUpSend)
-                    .padding(.bottom)
-                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
-                    NavigationLink(destination: LoginAuthView().navigationBarBackButtonHidden(true)) {
-                        Text("アカウントをお持ちの方はこちら")
-                            .font(.roundedBoldFont())
-                    }
-                    .padding(.bottom)
-                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
-                    Button(action: {
-                        Task {
-                            do {
-                                Auth.auth().signInAnonymously() { authResult, error in
-                                    if (authResult?.user != nil) {
-                                        FirebaseUserRepository().addFirebaseUser(user: authResult!.user)
-                                        isSignInAnnonymouslySuccess = true
-                                    } else {
-                                        print("Sign in annonymously failed")
-                                    }
-                                }
-                            }
-                        }
-                    }) {
-                        Text("アカウントなしで使用")
-                            .font(.roundedBoldFont())
-                    }
-                    .padding(.bottom)
-                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
-                }
-                Divider()
-                    .background(Color.foreground)
-                    .padding(.bottom)
-                Group {
-                    Button(action: {
-                        Task {
-                            do {
-                                print("sign in with google fired !")
-                                guard let clientID = FirebaseApp.app()?.options.clientID else {
-                                    fatalError("No client ID found in Firebase configuration")
-                                }
-                                let config = GIDConfiguration(clientID: clientID)
-                                GIDSignIn.sharedInstance.configuration = config
-                                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                      let window = windowScene.windows.first,
-                                      let rootViewController = window.rootViewController else {
-                                    print("There is no root view controller!")
-                                    isAlertShown = true
-                                    throw CustomAuthError.failed
-                                }
-                                do {
-                                    let userAuthentication = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
-                                    
-                                    let user = userAuthentication.user
-                                    guard let idToken = user.idToken else {
-                                        print("error occured during google sign in")
-                                        isAlertShown = true
-                                        throw CustomAuthError.failed
-                                    }
-                                    let accessToken = user.accessToken
-                                    let credential = GoogleAuthProvider.credential(
-                                        withIDToken: idToken.tokenString,
-                                        accessToken: accessToken.tokenString
-                                    )
-                                    
-                                    let result = try await Auth.auth().signIn(with: credential)
-                                    let firebaseUser = result.user
-                                        FirebaseUserRepository().addFirebaseUser(user: firebaseUser)
-                                        isGoogleSignInSuccess = true
-                                        print("is google sign in success in func: \(self.isGoogleSignInSuccess)")
-                                }
-                                catch {
-                                    print(error.localizedDescription)
-                                }
-                            }
-                        }
-                    }) {
-                        HStack {
-                            Spacer()
-                            Image("GoogleIcon")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                            Spacer()
-                            Text("Google でサインイン")
-                                .foregroundColor(Color.foreground)
-                            Spacer()
-                        }
-                        .padding(.vertical, 15)
+            ScrollView {
+                VStack (alignment: .leading) {
+                    Group{
+                        TextField.init(
+                            "メールアドレス",
+                            text: self.$validationViewModel.signUpEmail
+                        )
+                        .padding(.vertical)
+                        .padding(.leading)
                         .overlay(
                             RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
                                 .stroke(Color.foreground, lineWidth: 1.0)
                         )
-                        .padding(.bottom)
-                    }
-                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
-                    SignInWithAppleButton(.signIn) { request in
-                        request.requestedScopes = [.email,.fullName]
-                        let nonce = randomNonceString()
-                        currentNonce = nonce
-                        request.nonce = sha256(nonce)
+                        .padding(.bottom, !self.validationViewModel.invalidSignUpMailMessage.isEmpty ? 0 : 10)
+                        if !self.validationViewModel.invalidSignUpMailMessage.isEmpty {
+                            Text(self.validationViewModel.invalidSignUpMailMessage)
+                                .foregroundColor(.error)
+                                .font(.caption)
+                        }
+                        ZStack (alignment: .trailing) {
+                            if isHidePassword {
+                                SecureField.init("パスワード", text: self.$validationViewModel.signUpPassword)
+                                    .textContentType(.newPassword)
+                                    .padding(.vertical)
+                                    .padding(.leading)
+                                    .overlay(
+                                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                                            .stroke(Color.foreground, lineWidth: 1.0)
+                                    )
+                            } else {
+                                TextField.init("パスワード", text: self.$validationViewModel.signUpPassword)
+                                    .textContentType(.newPassword)
+                                    .padding(.vertical)
+                                    .padding(.leading)
+                                    .overlay(
+                                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                                            .stroke(Color.foreground, lineWidth: 1.0)
+                                    )
+                            }
+                            Button(action: {
+                                isHidePassword.toggle()
+                            }) {
+                                Image(systemName: self.isHidePassword ? "eye.slash" : "eye")
+                                    .foregroundColor(Color.foreground)
+                            }
+                            .padding()
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
+                        .padding(.bottom, 10)
+                        ZStack (alignment: .trailing) {
+                            if isHideRetypePassword {
+                                SecureField.init("パスワード（確認）", text: self.$validationViewModel.signUpRetypePassword)
+                                    .textContentType(.newPassword)
+                                    .padding(.vertical)
+                                    .padding(.leading)
+                                    .overlay(
+                                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                                            .stroke(Color.foreground, lineWidth: 1.0)
+                                    )
+                            } else {
+                                TextField.init("パスワード（確認）", text: self.$validationViewModel.signUpRetypePassword)
+                                    .textContentType(.newPassword)
+                                    .padding(.vertical)
+                                    .padding(.leading)
+                                    .overlay(
+                                        RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                                            .stroke(Color.foreground, lineWidth: 1.0)
+                                    )
+                            }
+                            Button(action: {
+                                isHideRetypePassword.toggle()
+                            }) {
+                                Image(systemName: self.isHideRetypePassword ? "eye.slash" : "eye")
+                                    .foregroundColor(Color.foreground)
+                            }
+                            .padding()
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
+                        .padding(.bottom, !self.validationViewModel.invalidPasswordMessage.isEmpty ? 0 : 10)
                         
-                    } onCompletion: { result in
-                        switch result {
-                        case .success(let authResults):
-                            let appleIDCredential = authResults.credential as? ASAuthorizationAppleIDCredential
-                            
-                            guard let nonce = currentNonce else {
-                                fatalError("Invalid state: A login callback was received, but no login request was sent.")
-                            }
-                            guard let appleIDToken = appleIDCredential?.identityToken else {
-                                fatalError("Invalid state: A login callback was received, but no login request was sent.")
-                            }
-                            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
-                                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
-                                return
-                            }
-                            
-                            let credential = OAuthProvider.credential(withProviderID: "apple.com",idToken: idTokenString,rawNonce: nonce)
-                            print("credential: \(credential)")
-                            Auth.auth().signIn(with: credential) { result, error in
-                                if result?.user != nil{
-                                    print("result data: \(String(describing: result))")
-                                    FirebaseUserRepository().addFirebaseUser(user: result!.user)
-                                    isAppleSignInSuccess = true
-                                    print("ログイン完了")
-                                } else {
-                                    print("apple sign in error: \(String(describing: error))")
-                                    isAlertShown = true
-                                }
-                            }
-                            Task {
+                        if !self.validationViewModel.invalidPasswordMessage.isEmpty {
+                            Text(self.validationViewModel.invalidPasswordMessage)
+                                .foregroundColor(.error)
+                                .font(.caption)
+                        }
+                        Button(action: {
+                            authViewModel.createUserWithEmailAndPassword(email: self.validationViewModel.signUpEmail, password: self.validationViewModel.signUpPassword)
+                            Task{
                                 ShoppingItemRepository().removeCurrentSnapshotListener()
                                 try await ShoppingItemRepository().addUserSnapshotListener()
                             }
-                        case .failure(let error):
-                            appleAlertMessage = error.localizedDescription
-                            isShowAppleAlert = true
-                            print("Authentication failed: \(error.localizedDescription)")
-                            break
+                        }) {
+                            Text("新規登録")
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.white)
+                                .frame(maxWidth: .infinity, minHeight: 48)
+                                .background(!self.validationViewModel.canSignUpSend ? Color.gray.cornerRadius(10) : Color.blue.cornerRadius(10))
                         }
-                    }
-                    .signInWithAppleButtonStyle(isDarkMode ? .white : .black)
-                    .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
-                    HStack{
-                        Spacer()
-                        Text("登録することで")
-                            .font(.caption)
+                        .disabled(!self.validationViewModel.canSignUpSend)
+                        .padding(.bottom)
+                        .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
+                        NavigationLink(destination: LoginAuthView().navigationBarBackButtonHidden(true)) {
+                            Text("アカウントをお持ちの方はこちら")
+                                .font(.roundedBoldFont())
+                        }
+                        .padding(.bottom)
+                        .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
                         Button(action: {
-                            if let url = URL(string: termsOfserviceUrl) {
-                                UIApplication.shared.open(url, options: [.universalLinksOnly: false], completionHandler: { completed in
-                                    print(completed)
-                                })
+                            Task {
+                                do {
+                                    try await authViewModel.signInAnnonymously()
+                                }
                             }
                         }) {
-                            Text("利用規約")
-                                .font(.caption)
+                            Text("アカウントなしで使用")
+                                .font(.roundedBoldFont())
                         }
-                        Text("と")
-                            .font(.caption)
+                        .padding(.bottom)
+                        .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
+                    }
+                    Divider()
+                        .background(Color.foreground)
+                        .padding(.bottom)
+                    Group {
                         Button(action: {
-                            if let url = URL(string: privacyPolicyUrl) {
-                                UIApplication.shared.open(url, options: [.universalLinksOnly: false], completionHandler: { completed in
-                                    print(completed)
-                                })
+                            Task {
+                                do {
+                                    let isGooglSignInSucceeded = await authViewModel.signInWithGoogle()
+                                    print("isGooglSignInSucceeded: \(isGooglSignInSucceeded)")
+                                }
                             }
                         }) {
-                            Text("プライバシーポリシー")
-                                .font(.caption)
+                            HStack {
+                                Spacer()
+                                Image("GoogleIcon")
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
+                                Spacer()
+                                Text("Google でサインイン")
+                                    .foregroundColor(Color.foreground)
+                                Spacer()
+                            }
+                            .padding(.vertical, 15)
+                            .overlay(
+                                RoundedRectangle(cornerSize: CGSize(width: 8.0, height: 8.0))
+                                    .stroke(Color.foreground, lineWidth: 1.0)
+                            )
+                            .padding(.bottom)
                         }
-                        Spacer()
-                    }
-                    HStack {
-                        Spacer()
-                        Text("に同意したことになります。")
-                            .font(.caption)
-                        Spacer()
+                        .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
+                        SignInWithAppleButton(.signIn) { request in
+                            request.requestedScopes = [.email,.fullName]
+                            let nonce = randomNonceString()
+                            currentNonce = nonce
+                            request.nonce = sha256(nonce)
+                        } onCompletion: { result in
+                            switch result {
+                            case .success(let authResults):
+                                let appleIDCredential = authResults.credential as? ASAuthorizationAppleIDCredential
+                                
+                                guard let nonce = currentNonce else {
+                                    fatalError("Invalid state: A login callback was received, but no login request was sent.")
+                                }
+                                guard let appleIDToken = appleIDCredential?.identityToken else {
+                                    fatalError("Invalid state: A login callback was received, but no login request was sent.")
+                                }
+                                guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                                    print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                                    return
+                                }
+                                
+                                let credential = OAuthProvider.credential(withProviderID: "apple.com",idToken: idTokenString,rawNonce: nonce)
+                                print("credential: \(credential)")
+                                Auth.auth().signIn(with: credential) { result, error in
+                                    if result?.user != nil{
+                                        print("result data: \(String(describing: result))")
+                                        FirebaseUserRepository().addFirebaseUser()
+                                        isAppleSignInSuccess = true
+                                        print("ログイン完了")
+                                    } else {
+                                        print("apple sign in error: \(String(describing: error))")
+                                        isAlertShown = true
+                                    }
+                                }
+                                Task {
+                                    ShoppingItemRepository().removeCurrentSnapshotListener()
+                                    try await ShoppingItemRepository().addUserSnapshotListener()
+                                }
+                            case .failure(let error):
+                                appleAlertMessage = error.localizedDescription
+                                isShowAppleAlert = true
+                                print("Authentication failed: \(error.localizedDescription)")
+                                break
+                            }
+                        }
+                        .signInWithAppleButtonStyle(isDarkMode ? .white : .black)
+                        .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 56)
+                        HStack{
+                            Spacer()
+                            Text("登録することで")
+                                .font(.caption)
+                            Button(action: {
+                                if let url = URL(string: termsOfserviceUrl) {
+                                    UIApplication.shared.open(url, options: [.universalLinksOnly: false], completionHandler: { completed in
+                                        print(completed)
+                                    })
+                                }
+                            }) {
+                                Text("利用規約")
+                                    .font(.caption)
+                            }
+                            Text("と")
+                                .font(.caption)
+                            Button(action: {
+                                if let url = URL(string: privacyPolicyUrl) {
+                                    UIApplication.shared.open(url, options: [.universalLinksOnly: false], completionHandler: { completed in
+                                        print(completed)
+                                    })
+                                }
+                            }) {
+                                Text("プライバシーポリシー")
+                                    .font(.caption)
+                            }
+                            Spacer()
+                        }
+                        HStack {
+                            Spacer()
+                            Text("に同意したことになります。")
+                                .font(.caption)
+                            Spacer()
+                        }
                     }
                 }
             }
             .padding()
-            .fullScreenCover(isPresented: $isRegisterSuccess) {
-                IntroView()
-            }
-            .fullScreenCover(isPresented: $isGoogleSignInSuccess) {
+            .fullScreenCover(isPresented: $authViewModel.isRegisterSuccess) {
                 IntroView()
             }
             .fullScreenCover(isPresented: $isAppleSignInSuccess) {
                 IntroView()
             }
-            .fullScreenCover(isPresented: $isSignInAnnonymouslySuccess) {
-                IntroView()
+            .fullScreenCover(isPresented: $authViewModel.isLoginSuccess) {
+                HomeView()
             }
+
             .alert(isPresented: $isAlertShown) {
                 Alert(title: Text("登録に失敗しました。再度お試しください"))
             }

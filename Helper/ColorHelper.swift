@@ -23,6 +23,7 @@ extension Color {
     static let foreground = Color("Foreground")
     static let itemCard = Color("ItemCard")
     static let error = Color("Error")
+    static let logo = Color("Logo")
 //    static let errorContainer = Color("ErrorContainer")
 //    static let primary = Color("Primary")
 //    static let primaryContainer = Color("PrimaryContainer")

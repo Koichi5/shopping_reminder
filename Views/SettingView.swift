@@ -41,7 +41,7 @@ struct SettingView: View {
                                 HStack {
                                     NavigationLink("カテゴリ追加") {
                                         AddCategoryView()
-                                            .navigationTitle("カテゴリ追加")
+                                            .background(Color(UIColor.systemGroupedBackground))
                                     }
                                     .padding(.leading)
                                     .padding(.vertical, 5)
